@@ -1,0 +1,21 @@
+﻿@{ 
+    string textBox = "<input type=\"text\" />";
+
+}
+@Html.Raw(textBox)
+<table  class="table" id="td_01">
+    <tr><td>aaa</td></tr>
+
+</table>
+@section scripts
+    {
+    <script>
+        function insertContent() {
+            var tb = document.getElementById("td_01");
+            var newTr = tb.insertRow(0);//添加新行，trIndex就是要添加的位置
+            var newTd1 = newTr.insertCell();
+            newTd1.innerHTML = "bbb";
+        }
+        //var t2 = window.setInterval(insertContent, 3000);
+    </script>
+}

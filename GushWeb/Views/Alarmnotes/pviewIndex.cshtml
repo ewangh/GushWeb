@@ -1,0 +1,21 @@
+﻿@model IEnumerable<t_alarmnotes>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @ConvertHelper.AmplitudeConvert(item.Closed, item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Time)
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", new { id = item.Code })
+        </td>
+    </tr>
+}

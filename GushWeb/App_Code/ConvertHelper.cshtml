@@ -1,0 +1,12 @@
+﻿@helper AmplitudeConvert(decimal? closed, decimal? price)
+{
+    if (closed.HasValue && closed != 0 && price.HasValue && price != 0)
+    {
+        @Math.Round((float)(price / closed - 1) * 100, 2)
+        @:%
+    }
+    else
+    {
+        @String.Empty
+    }
+}

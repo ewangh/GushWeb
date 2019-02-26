@@ -1,0 +1,61 @@
+﻿@model IEnumerable<t_alarmnotes>
+
+@{
+    ViewBag.Title = "Index";
+
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "tb",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+}
+@using (Ajax.BeginForm("Index", ajaxOption))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Time)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tb">
+            @Html.Partial("pviewIndex", Model)
+        </tbody>
+    </table>
+}
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        function onBegin() {
+        }
+        function onSuccess() {
+        }
+        function onFailure() {
+        }
+        function onComplete() {
+        }
+        function insertAsyn() {
+            $("form").submit();
+        }
+        var timer = window.setInterval(insertAsyn, 9000);
+    </script>
+}

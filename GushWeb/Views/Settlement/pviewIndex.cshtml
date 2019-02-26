@@ -1,0 +1,21 @@
+﻿@model IEnumerable<t_settlement>
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @ConvertHelper.AmplitudeConvert(item.Price, item.cPrice)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", new { id = item.Code })
+        </td>
+    </tr>
+}
