@@ -35,10 +35,14 @@ namespace GushWeb.Controllers
                         else if (codeArray[i].StartsWith("600"))
                             codeArray[i] = SHprefix + codeArray[i];
                     }
-                    //t_settlement = db.SettlementList.Where(v => codeArray.Contains(v.Code)).Where(v => v.Date.CompareTo(dt) < 0).GroupBy(v=>v.Date).ToList();
-                    var obj = db.SettlementList.Where(v => codeArray.Contains(v.Code)).OrderByDescending(v => v.Date).FirstOrDefault();
-                    if (obj != null)
-                        t_settlement.Add(obj);
+                    var group = from p in db.SettlementList
+                                where codeArray.Contains(p.Code)
+                                group p by p.Code into g
+                                select new { g.Key, notes = g.OrderByDescending(d => d.Date).FirstOrDefault() };
+                    foreach (var obj in group)
+                    {
+                        t_settlement.Add(obj.notes);
+                    }
                 };
             }
             return View(t_settlement);
@@ -59,10 +63,14 @@ namespace GushWeb.Controllers
                         else if (codeArray[i].StartsWith("600"))
                             codeArray[i] = SHprefix + codeArray[i];
                     }
-                    //t_settlement = db.SettlementList.Where(v => codeArray.Contains(v.Code)).Where(v => v.Date.CompareTo(dt) < 0).GroupBy(v=>v.Date).ToList();
-                    var obj = db.SettlementList.Where(v => codeArray.Contains(v.Code)).OrderByDescending(v => v.Date).FirstOrDefault();
-                    if (obj != null)
-                        t_settlement.Add(obj);
+                    var group = from p in db.SettlementList
+                                where codeArray.Contains(p.Code)
+                                group p by p.Code into g
+                                select new { g.Key, notes = g.OrderByDescending(d => d.Date).FirstOrDefault() };
+                    foreach (var obj in group)
+                    {
+                        t_settlement.Add(obj.notes);
+                    }
                 };
             }
             return PartialView("pviewIndex", t_settlement);
@@ -186,10 +194,17 @@ namespace GushWeb.Controllers
                         else if (codeArray[i].StartsWith("600"))
                             codeArray[i] = SHprefix + codeArray[i];
                     }
-                    //t_settlement = db.SettlementList.Where(v => codeArray.Contains(v.Code)).Where(v => v.Date.CompareTo(dt) < 0).GroupBy(v=>v.Date).ToList();
-                    var obj = db.SettlementList.Where(v => codeArray.Contains(v.Code)).OrderByDescending(v => v.Date).FirstOrDefault();
-                    if (obj != null)
-                        t_settlement.Add(obj);
+                    var group = from p in db.SettlementList
+                                where codeArray.Contains(p.Code)
+                                group p by p.Code into g
+                                select new { g.Key, notes = g.OrderByDescending(d=>d.Date).FirstOrDefault() };
+                    foreach (var obj in group)
+                    {
+                        t_settlement.Add(obj.notes);
+                    }
+                    //var obj = db.SettlementList.Where(v => codeArray.Contains(v.Code)).OrderByDescending(v=>v.Date).FirstOrDefault();
+                    //if (obj != null)
+                    //    t_settlement.Add(obj);
                 };
             }
             return Json(t_settlement);
