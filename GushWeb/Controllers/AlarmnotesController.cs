@@ -21,7 +21,7 @@ namespace GushWeb.Controllers
         // GET: Alarmnotes
         public ActionResult Index()
         {
-            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price<d.Closed*1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time);
+            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price<d.Closed*1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).ThenBy(d=>d.Code);
             if(Request.IsAjaxRequest())
                 return PartialView("pviewIndex", pageData.ToList());
             return View(pageData);
