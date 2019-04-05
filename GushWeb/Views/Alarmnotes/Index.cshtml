@@ -13,12 +13,13 @@
         OnSuccess = "onSuccess()",
         OnFailure = "onFailure()",
         OnComplete = "onComplete()",
-        InsertionMode = InsertionMode.Replace
+        InsertionMode = InsertionMode.InsertAfter
     };
 }
 @using (Ajax.BeginForm("Index", ajaxOption))
 {
-    <table class="table">
+    @Html.Hidden("codes",(string)ViewBag.Codes)
+    <table class="table" name="list">
         <thead>
             <tr>
                 <th>
@@ -56,6 +57,6 @@
         function insertAsyn() {
             $("form").submit();
         }
-        var timer = window.setInterval(insertAsyn, 9000);
+        var timer = window.setInterval(insertAsyn, 19000);
     </script>
 }
