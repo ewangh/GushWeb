@@ -19,30 +19,25 @@ namespace GushWeb.Controllers
         readonly int pageSize = 30;
         readonly string dt = DateTime.Now.ToString("yyyy-MM-dd");
         // GET: Alarmnotes
-        public ActionResult Index(string codes)
+        public ActionResult Index()
         {
             var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price<d.Closed*1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time);
+            ViewBag.Codes = string.Join(",", pageData.ToList().ConvertAll(d => d.Code).ToArray());
+            return View(pageData);
+        }
+
+        [HttpPost]
+        public ActionResult IndexAsyn(string codes)
+        {
+            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
             ViewBag.Codes = string.Join(",", pageData.ToList().ConvertAll(d => d.Code).ToArray());
             if (Request.IsAjaxRequest() && !codes.IsNullOrEmpty())
             {
                 string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-                return PartialView("pviewIndex", pageData.Where(p => !codeArray.Contains(p.Code)));
+                pageData.Where(p => !codeArray.Contains(p.Code));
             }
-            return View(pageData);
+            return PartialView("pviewIndex", pageData);
         }
-
-        //[HttpPost]
-        //public ActionResult IndexAsyn(string codes)
-        //{
-        //    var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time);
-        //    ViewBag.Codes = string.Join(",",pageData.ToList().ConvertAll(d => d.Code).ToArray());
-        //    if (Request.IsAjaxRequest() && !codes.IsNullOrEmpty())
-        //    {
-        //        string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-        //        return PartialView("pviewIndex", pageData.Where(p => !codeArray.Contains(p.Code)));
-        //    }
-        //    return View(pageData);
-        //}
 
         // GET: Alarmnotes/Details/5
         public ActionResult Details(string id)

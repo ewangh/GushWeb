@@ -16,7 +16,7 @@
         InsertionMode = InsertionMode.InsertAfter
     };
 }
-@using (Ajax.BeginForm("Index", ajaxOption))
+@using (Ajax.BeginForm("IndexAsyn", ajaxOption))
 {
     @Html.Hidden("codes",(string)ViewBag.Codes)
     <table class="table" name="list">
@@ -57,6 +57,6 @@
         function insertAsyn() {
             $("form").submit();
         }
-        var timer = window.setInterval(insertAsyn, 19000);
+        var timer = window.setInterval(insertAsyn, 9000);
     </script>
 }
