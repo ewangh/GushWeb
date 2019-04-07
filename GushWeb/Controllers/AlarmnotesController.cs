@@ -17,7 +17,7 @@ namespace GushWeb.Controllers
     {
         private GushDBContext db = new GushDBContext();
         readonly int pageSize = 30;
-        readonly string dt = DateTime.Now.AddDays(-92).ToString("yyyy-MM-dd");
+        readonly string dt = DateTime.Now.ToString("yyyy-MM-dd");
         // GET: Alarmnotes
         public ActionResult Index(string codes)
         {
