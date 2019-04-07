@@ -34,7 +34,7 @@ namespace GushWeb.Controllers
             if (Request.IsAjaxRequest() && !codes.IsNullOrEmpty())
             {
                 string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-                pageData.Where(p => !codeArray.Contains(p.Code));
+                pageData = pageData.Where(p => !codeArray.Contains(p.Code));
             }
             return PartialView("pviewIndex", pageData);
         }
