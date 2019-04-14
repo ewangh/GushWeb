@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Details";
 }
-<form class="form-horizontal" role="form" method="post" id="mainForm" Autocomplete ="on">
+<form class="form-horizontal" role="form" method="post" id="mainForm" Autocomplete="on">
     <div class="input-group" style="margin:15px 0px">
         @Html.TextBox("code", ViewData["stockCode"], new { @class = "form-control pull-right", @placeholder = "Search codes" })
         <span class="input-group-btn">
@@ -81,9 +81,9 @@
 
         function calculateBp() {
             var result = [];
+            result.push(data0.values[0][5]);
             for (var i = 0, len = data0.values.length; i < len; i++) {
-                if(i>0)
-                result.push(data0.values[i-1][5]);
+                result.push(data0.values[i][5]);
                 // alert(result);
             }
             return result;
@@ -91,9 +91,9 @@
 
         function calculateCp() {
             var result = [];
+            result.push(data0.values[0][6]);
             for (var i = 0, len = data0.values.length; i < len; i++) {
-                if(i>0)
-                result.push(data0.values[i-1][6]);
+                result.push(data0.values[i][6]);
                 // alert(result);
             }
             return result;
