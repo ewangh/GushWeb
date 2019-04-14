@@ -82,7 +82,8 @@
         function calculateBp() {
             var result = [];
             for (var i = 0, len = data0.values.length; i < len; i++) {
-                result.push(data0.values[i][5]);
+                if(i>0)
+                result.push(data0.values[i-1][5]);
                 // alert(result);
             }
             return result;
@@ -91,7 +92,8 @@
         function calculateCp() {
             var result = [];
             for (var i = 0, len = data0.values.length; i < len; i++) {
-                result.push(data0.values[i][6]);
+                if(i>0)
+                result.push(data0.values[i-1][6]);
                 // alert(result);
             }
             return result;
