@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<t_alarmnotes>
 @foreach (var item in Model)
 {
+    @Html.Hidden("codes",item.Code)
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Code)

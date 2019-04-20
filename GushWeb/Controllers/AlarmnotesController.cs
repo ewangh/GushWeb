@@ -21,21 +21,20 @@ namespace GushWeb.Controllers
         // GET: Alarmnotes
         public ActionResult Index()
         {
-            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price<d.Closed*1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time);
-            ViewBag.Codes = string.Join(",", pageData.ToList().ConvertAll(d => d.Code).ToArray());
+            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time);
+            int i = pageData.ToList().Count();
             return View(pageData);
         }
 
         [HttpPost]
-        public ActionResult IndexAsyn(string codes)
+        public ActionResult IndexAsyn(FormCollection collection)
         {
+            string codes = collection["codes"];
             var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
-            ViewBag.Codes = string.Join(",", pageData.ToList().ConvertAll(d => d.Code).ToArray());
             if (Request.IsAjaxRequest() && !codes.IsNullOrEmpty())
             {
                 string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
                 pageData = pageData.Where(p => !codeArray.Contains(p.Code));
-                ViewBag.Codes = string.Join(",", pageData.ToList().ConvertAll(d => d.Code).ToArray());
             }
             return PartialView("pviewIndex", pageData);
         }
