@@ -35,6 +35,7 @@ namespace GushWeb.Controllers
             {
                 string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
                 pageData = pageData.Where(p => !codeArray.Contains(p.Code));
+                ViewBag.Codes = string.Join(",", pageData.ToList().ConvertAll(d => d.Code).ToArray());
             }
             return PartialView("pviewIndex", pageData);
         }
