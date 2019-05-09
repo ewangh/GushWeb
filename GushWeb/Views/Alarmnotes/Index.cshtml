@@ -76,7 +76,7 @@
                     var tagPrice = parseFloat($(this).attr("tag"));
                     if (tagPrice.isNaN) tagPrice=0;
                     var color = tagPrice > price ? "green" : "red";
-                    $(this).append(change);
+                    $(this).html(change);
                     $(this).css("color", color);
                 }
             });
