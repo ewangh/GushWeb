@@ -7,19 +7,21 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Code)
-            
+
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            @ConvertHelper.AmplitudeConvert(item.Closed, item.Price)
+            <span name="@item.Code" tag="@item.Price"></span>
+            <span>/</span>
+            <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Time)
         </td>
         <td>
-            @Html.ActionLink("Details", "Details", new {id = item.Code})
+            @Html.ActionLink("Details", "Details", new { id = item.Code })
         </td>
     </tr>
 }

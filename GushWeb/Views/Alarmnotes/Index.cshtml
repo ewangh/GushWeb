@@ -40,22 +40,54 @@
             @Html.Partial("pviewIndex", Model)
         </tbody>
     </table>
+    @Html.Hidden("abc", "i")
+    @Html.Hidden("abc", "love")
+    @Html.Hidden("abc", "u")
 }
 @section scripts
 {
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/stockData.js"></script>
     <script>
         function onBegin() {
         }
+
         function onSuccess() {
         }
+
         function onFailure() {
         }
+
         function onComplete() {
         }
-        function insertAsyn() {
-            $("form").submit();
+
+        //function insertAsyn() {
+        //    $("form").submit();
+        //}
+
+        var timer = setInterval(function () { $("form").submit(); }, 9000);
+        (function() {
+            updateDataChange(getCodes, updateChange, 6000);
+        })()
+
+        function updateChange(code, price, change) {
+            $("span").each(function() {
+                if ($(this).attr("name") == code) {
+                    var tagPrice = parseFloat($(this).attr("tag"));
+                    if (tagPrice.isNaN) tagPrice=0;
+                    var color = tagPrice > price ? "green" : "red";
+                    $(this).append(change);
+                    $(this).css("color", color);
+                }
+            });
         }
-        var timer = window.setInterval(insertAsyn, 9000);
+
+        function getCodes() {
+            var arry = new Array();
+            $("[type=hidden][name='codes']").each(function() {
+                arry.push($(this).val());
+            });
+            return arry;
+        }
     </script>
 }
