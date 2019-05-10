@@ -21,7 +21,7 @@ namespace GushWeb.Controllers
         // GET: Alarmnotes
         public ActionResult Index()
         {
-            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time);
+            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time);
             int i = pageData.ToList().Count();
             return View(pageData);
         }
@@ -30,7 +30,7 @@ namespace GushWeb.Controllers
         public ActionResult IndexAsyn(FormCollection collection)
         {
             string codes = collection["codes"];
-            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
+            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
             if (Request.IsAjaxRequest() && !codes.IsNullOrEmpty())
             {
                 string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);

@@ -13,7 +13,7 @@
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            <span name="@item.Code" tag="@item.Price"></span>
+            <span name="@item.Code" tag="@item.Price">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
             <span>|</span>
             <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
         </td>
