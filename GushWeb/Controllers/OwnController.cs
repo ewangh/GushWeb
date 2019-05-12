@@ -163,8 +163,12 @@ namespace GushWeb.Controllers
             return View();
         }
 
-        public ActionResult CpLook()
+        private static string _code = "";
+        public ActionResult Test03(string code)
         {
+            ViewData.Model = _code;
+            _code = code;
+            ViewBag.LastError = "alert('ok')";
             return View();
         }
     }

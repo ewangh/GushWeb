@@ -1,0 +1,11 @@
+﻿@using (Html.BeginForm())
+{
+    <input type="text" name="code"/>
+    <input type="submit" value="submit"/>
+    <span>result is:</span>
+    @Model
+}
+<script type="text/javascript">
+    var lastError = '@Html.Raw(Ajax.JavaScriptStringEncode(ViewBag.LastError))';
+    //alert(lastError);
+</script>

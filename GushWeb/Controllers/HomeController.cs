@@ -11,8 +11,7 @@ namespace GushWeb.Controllers
         //[Authorize(Roles = "")]
         public ActionResult Index()
         {
-            ViewBag.Title = "Gush Com";
-            return View();
+            return RedirectToAction("Index", "Alarmnotes");
         }
 
         //public ActionResult NotFound()
