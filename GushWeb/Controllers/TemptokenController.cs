@@ -28,18 +28,22 @@ namespace GushWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string token)
+        public ActionResult Login([Bind(Include = "Token")]TempToken tokenObj)
         {
-            string nodeName = "tempTokens";
-            var dt = DateTime.Today;
-            var cookies = XmlSetting.GetNodes(nodeName, dt).ConvertAll(d=>d.Token);
-            if (!cookies.IsNullOrEmpty() && cookies.Contains(token))
+            if (ModelState.IsValid)
             {
-                Response.Cookies[nodeName].Value = token;
-                return RedirectToAction("Index", "Alarmnotes", new { date = Today });
+                string nodeName = "tempTokens";
+                var dt = DateTime.Today;
+                var cookies = XmlSetting.GetNodes(nodeName, dt).ConvertAll(d => d.Token);
+                if (!cookies.IsNullOrEmpty() && cookies.Contains(tokenObj.Token))
+                {
+                    Response.Cookies[nodeName].Value = tokenObj.Token;
+                    return RedirectToAction("Index", "Alarmnotes", new {date = Today});
+                }
+
+                ModelState.AddModelError("token", "Error Token");
             }
 
-            ModelState.AddModelError("token", "Error Token");
             return View();
         }
 
@@ -50,7 +54,7 @@ namespace GushWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(string email)
+        public ActionResult Register([Bind(Include = "Email")]TempToken tokenObj)
         {
             if (ModelState.IsValid)
             {

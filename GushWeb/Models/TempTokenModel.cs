@@ -12,15 +12,15 @@ namespace GushWeb.Models
     public class TempToken
     {
         [DisplayName("Token")]
-        [Required(ErrorMessage = "{0}必填")]
+        [Required(ErrorMessage = "{0} can not be empty")]
         [Description("{0}作为临时Token")]
         public string Token { get; set; }
 
         [DisplayName("IsUsed")]
         public bool IsUsed { get; set; }
 
-        [DisplayName("邮箱")]
-        [Required(ErrorMessage = "{0}必填")]
+        [DisplayName("邮箱地址")]
+        [Required(ErrorMessage = "请输入 {0}")]
         [Description("{0}接收Token")]
         [MaxLength(250, ErrorMessage = "{0}超过长度{1}位")]
         [DataType(DataType.EmailAddress)]
