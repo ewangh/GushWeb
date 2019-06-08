@@ -30,6 +30,8 @@ namespace GushWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login([Bind(Include = "Token")]TempToken tokenObj)
         {
+            //TODO
+            ModelState.Remove("Email");
             if (ModelState.IsValid)
             {
                 string nodeName = "tempTokens";
@@ -56,6 +58,8 @@ namespace GushWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register([Bind(Include = "Email")]TempToken tokenObj)
         {
+            //TODO
+            ModelState.Remove("Token");
             if (ModelState.IsValid)
             {
                 //if (!String.IsNullOrWhiteSpace(email))
