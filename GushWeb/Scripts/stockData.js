@@ -14,7 +14,7 @@ function getStockData(getCodes, func) {
                 var elements = eval("hq_str_s_" + item);
                 if (typeof (elements) != "undefined") {
                     var eleArray = elements.split(",");
-                    func(item, eleArray[1], eleArray[3]);
+                    func(item, eleArray[1]);
                 }
             });
         }

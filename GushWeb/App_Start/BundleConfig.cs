@@ -21,7 +21,8 @@ namespace GushWeb
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/ownStyle.css"));
 
             bundles.Add(new StyleBundle("~/bundles/echarts").Include(
                       "~/Scripts/echarts.min.js"));

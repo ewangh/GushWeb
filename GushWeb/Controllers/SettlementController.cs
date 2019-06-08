@@ -15,7 +15,6 @@ namespace GushWeb.Controllers
     public class SettlementController : BaseController
     {
         private GushDBContext db = new GushDBContext();
-        readonly string dt = DateTime.Now.ToString("yyyy-MM-dd");
         readonly string SZprefix = "sz";
         readonly string SHprefix = "sh";
 

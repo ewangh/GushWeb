@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GushWeb.Utility;
 
 namespace GushWeb.Controllers
 {
     public class BaseController : Controller
     {
+        protected string Today
+        {
+            get { return DateTime.Today.ToYYYYMMDD(); }
+        }
+    
+
         protected override void HandleUnknownAction(string actionName)
         {
             try

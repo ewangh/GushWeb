@@ -3,26 +3,51 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GushLibrary.Models;
+using GushWeb.ActionFilters;
 using GushWeb.Models;
 using GushWeb.Utility;
 using PagedList;
 
 namespace GushWeb.Controllers
 {
+    [AlarmnotesActionFilters]
     public class AlarmnotesController : BaseController
     {
         private GushDBContext db = new GushDBContext();
-        readonly int pageSize = 30;
-        readonly string dt = DateTime.Now.ToString("yyyy-MM-dd");
+        const int pageSize = 30;
         // GET: Alarmnotes
-        public ActionResult Index()
+
+        private Expression<Func<t_alarmnotes, bool>> getExpression(string date, string[] array = null)
         {
-            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time);
-            int i = pageData.ToList().Count();
+            Expression<Func<t_alarmnotes, bool>> expression = t => true;
+            //expression = expression.And(d => d.Date.CompareTo(date) == 0 && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0);
+            expression = expression.And(d => d.Date.CompareTo(date) == 0);
+            expression = expression.And(d => !d.Name.ToLower().Contains("st"));
+            expression = expression.And(d => d.Price < d.Closed * 1.097m);
+            expression = expression.And(d => d.Time.CompareTo("09:32:03") < 0);
+            if (!array.IsNullOrEmpty())
+            {
+                expression.And(p => !array.Contains(p.Code));
+            }
+
+            return expression;
+        }
+
+
+        public ActionResult Index(string date)
+        {
+            var datePage = AlarmnotesSingleton.GetObj().GetDatePage(ref date);
+            ViewBag.Prev = datePage.PrevDate;
+            ViewBag.Current = datePage.CurrentDate;
+            ViewBag.Next = datePage.NextDate;
+
+            var expression = getExpression(date);
+            var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time);
             return View(pageData);
         }
 
@@ -30,12 +55,15 @@ namespace GushWeb.Controllers
         public ActionResult IndexAsyn(FormCollection collection)
         {
             string codes = collection["codes"];
-            var pageData = db.AlarmNotesList.Where(d => d.Date == dt && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
-            if (Request.IsAjaxRequest() && !codes.IsNullOrEmpty())
+            //var pageData = db.AlarmNotesList.Where(d => d.Date == dt && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
+            if (!Request.IsAjaxRequest() || codes.IsNullOrEmpty())
             {
-                string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-                pageData = pageData.Where(p => !codeArray.Contains(p.Code));
+                return PartialView("pviewIndex", new List<t_alarmnotes>());
             }
+            string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
+            var expression = getExpression(Today, codeArray);
+            var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time);
+
             return PartialView("pviewIndex", pageData);
         }
 
@@ -48,7 +76,7 @@ namespace GushWeb.Controllers
             }
             t_settlement obj = (from v in db.SettlementList
                                 where v.Code == id
-                                select v).Where(v => v.Date.CompareTo(dt) < 0).OrderByDescending(v => v.Date).FirstOrDefault();
+                                select v).Where(v => v.Date.CompareTo(Today) < 0).OrderByDescending(v => v.Date).FirstOrDefault();
             if (obj == null)
             {
                 return HttpNotFound();
@@ -140,7 +168,7 @@ namespace GushWeb.Controllers
 
         public ActionResult ProductList(int p = 1)
         {
-            var pageData = db.AlarmNotesList.Where(d => d.Date == dt).OrderBy(d => d.Time);
+            var pageData = db.AlarmNotesList.Where(d => d.Date == Today).OrderBy(d => d.Time);
             if (pageData.Count() < pageSize)
             {
                 return View(pageData.ToList());

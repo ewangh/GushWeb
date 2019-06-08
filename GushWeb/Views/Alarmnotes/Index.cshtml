@@ -1,4 +1,5 @@
-﻿@model IEnumerable<t_alarmnotes>
+﻿@using System.Text
+@model IEnumerable<t_alarmnotes>
 
 @{
     ViewBag.Title = "Index";
@@ -15,27 +16,44 @@
         OnComplete = "onComplete()",
         InsertionMode = InsertionMode.InsertAfter
     };
+
+    
 }
+<div class="input-group  pull-right" style="margin:15px 0px 5px 0px">
+    @if (ViewBag.Prev != null)
+    {
+        <input class="btn btn-default" style="border-radius:20px" type="button" value=" < " onclick="jump('@ViewBag.Prev');"/>
+    }
+    @if (ViewBag.Current != null)
+    {
+        <span style="margin: 0px 30px">@ViewBag.Current</span>
+    }
+    @if (ViewBag.Next != null)
+    {
+        <input class="btn btn-default" style="border-radius:20px" type="button" value=" > " onclick="jump('@ViewBag.Next');" />
+    }
+</div>
+
 @using (Ajax.BeginForm("IndexAsyn", ajaxOption))
 {
     <table class="table" name="list">
         <thead>
-        <tr>
-            <th></th>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)%
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Time)
-            </th>
-            <th></th>
-        </tr>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)%
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Time)
+                </th>
+                <th></th>
+            </tr>
         </thead>
         <tbody id="tb">
             @Html.Partial("pviewIndex", Model)
@@ -58,24 +76,36 @@
 
         function onComplete() {
         }
+        function jump(date) {
+            window.location.href = '@Url.Action("Index")?date=' + date;
+        }
 
-        //function insertAsyn() {
-        //    $("form").submit();
-        //}
+        var now = new Date();
+        var today = now.getFullYear() +
+            "-" +
+            ((now.getMonth() + 1) < 10 ? "0" : "") +
+            (now.getMonth() + 1) +
+            "-" +
+            (now.getDate() < 10 ? "0" : "") +
+            now.getDate();
 
-        var timer = setInterval(function () { $("form").submit(); }, 9000);
         (function() {
+            var currentDate = '@ViewBag.Current';
+            if (currentDate==today) {
+                var timer = setInterval(function () { $("form").submit(); }, 9000);
+            }
             updateDataChange(getCodes, updateChange, 6000);
         })()
 
-        function updateChange(code, price, change) {
+        function updateChange(code, price) {
             $("span").each(function() {
                 if ($(this).attr("name") == code) {
                     var tagPrice = parseFloat($(this).attr("tag"));
-                    if (tagPrice.isNaN) tagPrice=0;
-                    var color = tagPrice > price ? "green" : "red";
-                    $(this).html(change);
-                    $(this).css("color", color);
+                    if (!tagPrice.isNaN || tagPrice != 0) {
+                        var color = tagPrice > price ? "green" : "red";
+                        $(this).html(((price / tagPrice-1)*100).toFixed(2));
+                        $(this).css("color", color);
+                    }
                 }
             });
         }

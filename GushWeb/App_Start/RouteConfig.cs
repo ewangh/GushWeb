@@ -16,7 +16,7 @@ namespace GushWeb
             routes.MapRoute(
                 name: "Default",//指定路由名
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "TempToken", action = "Login", id = UrlParameter.Optional }
             );
         }
     }
