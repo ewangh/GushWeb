@@ -29,7 +29,6 @@
 <table class="table">
     <thead>
     <tr>
-        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.Code)
         </th>
@@ -50,7 +49,7 @@
     </tbody>
 </table>
 <p>
-    @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "" }, null)
+    @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
 </p>
 }
 @section scripts

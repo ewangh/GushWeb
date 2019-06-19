@@ -12,47 +12,24 @@ namespace GushWeb.Utility
 {
     public class XmlSetting
     {
-        readonly static string resPath = Path.Combine(HttpRuntime.AppDomainAppPath, "App_Data","TempTokenRes.xml");
-        readonly static string expireDate="expireDate";
+        readonly static string resPath = Path.Combine(HttpRuntime.AppDomainAppPath, "App_Data", "TempTokenRes.xml");
+        readonly static string expireDate = "expireDate";
         readonly static string isUsed = "isUsed";
         readonly static string nodeValue = "value";
 
-        public static List<TempToken> GetNodes(string nodeName,DateTime date)
+        public static List<TempToken> GetNodes(string nodeName, DateTime date)
         {
-            List<TempToken> nodes = new List<TempToken>();
-            XmlDocument doc = new XmlDocument();
-            doc.Load(resPath);
-            XmlNode xn = doc.SelectSingleNode(nodeName);
-            // 得到根节点的所有子节点
-            XmlNodeList xnls = xn.ChildNodes;
-            foreach (XmlNode xn1 in xnls)
-            {
-                XmlElement xe = (XmlElement)xn1;
-                try
+            XElement xml = XElement.Load(resPath);
+            var xnls = xml.Elements()
+                .Where(d => d.Attribute(isUsed).Value.ToLower() == "false"  && DateTime.Parse(d.Attribute(expireDate).Value) > date)
+                .ToList().ConvertAll(d => new TempToken()
                 {
-                    bool enable = bool.Parse(xe.GetAttribute(isUsed));
-                    if(enable)
-                        continue;
-                    var dt = DateTime.Parse(xe.GetAttribute(expireDate));
-                    if (dt > date)
-                    {
-                        var tk = new TempToken()
-                        {
-                            Token = xe.GetAttribute(nodeValue),
-                            IsUsed = false,
-                            ExpireDate = dt,
-                        };
-                        nodes.Add(tk);
-                    }
-                }
-                catch (Exception e)
-                {
-                    
-                }
-                
-            }
+                    Token = d.Attribute(nodeValue).Value,
+                    IsUsed = false,
+                    ExpireDate = DateTime.Parse(d.Attribute(expireDate).Value),
+                });
 
-            return nodes;
+            return xnls;
         }
     }
 }

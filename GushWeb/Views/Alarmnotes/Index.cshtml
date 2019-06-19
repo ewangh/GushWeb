@@ -19,7 +19,7 @@
 
     
 }
-<div class="input-group  pull-right" style="margin:15px 0px 5px 0px">
+<div class="input-group" style="margin:15px 0px 10px 0px;margin-left:auto; margin-right:auto ">
     @if (ViewBag.Prev != null)
     {
         <input class="btn btn-default" style="border-radius:20px" type="button" value=" < " onclick="jump('@ViewBag.Prev');"/>
@@ -90,8 +90,7 @@
             now.getDate();
 
         (function() {
-            var currentDate = '@ViewBag.Current';
-            if (currentDate==today) {
+            if (isToday()) {
                 var timer = setInterval(function () { $("form").submit(); }, 9000);
             }
             updateDataChange(getCodes, updateChange, 6000);
@@ -100,14 +99,29 @@
         function updateChange(code, price) {
             $("span").each(function() {
                 if ($(this).attr("name") == code) {
-                    var tagPrice = parseFloat($(this).attr("tag"));
-                    if (!tagPrice.isNaN || tagPrice != 0) {
-                        var color = tagPrice > price ? "green" : "red";
-                        $(this).html(((price / tagPrice-1)*100).toFixed(2));
-                        $(this).css("color", color);
+                    var tagPrice = parseFloat($(this).attr("tagp"));
+                    var tagClosed = parseFloat($(this).attr("tagc"));
+                    if (isToday()) {
+                        if (!tagClosed.isNaN || tagClosed != 0) {
+                            var color = tagPrice > price ? "green" : "red";
+                            $(this).html(((price / tagClosed-1)*100).toFixed(2));
+                            $(this).css("color", color);
+                        }
+                    } else {
+                        if (!tagPrice.isNaN || tagPrice != 0) {
+                            var color = tagPrice > price ? "green" : "red";
+                            $(this).html(((price / tagPrice - 1) * 100).toFixed(2));
+                            $(this).css("color", color);
+                        }
                     }
+                    
                 }
             });
+        }
+
+        function isToday() {
+            var currentDate = '@ViewBag.Current';
+            return currentDate == today;
         }
 
         function getCodes() {

@@ -32,7 +32,7 @@ namespace GushWeb.Controllers
             expression = expression.And(d => d.Time.CompareTo("09:32:03") < 0);
             if (!array.IsNullOrEmpty())
             {
-                expression.And(p => !array.Contains(p.Code));
+                expression=expression.And(p => !array.Contains(p.Code));
             }
 
             return expression;

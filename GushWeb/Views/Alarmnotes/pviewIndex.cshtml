@@ -1,4 +1,5 @@
-﻿@model IEnumerable<t_alarmnotes>
+﻿@using GushWeb.Utility
+@model IEnumerable<t_alarmnotes>
 @foreach (var item in Model)
 {
     <tr>
@@ -13,7 +14,7 @@
             @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
-            <span name="@item.Code" tag="@item.Price">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
+            <span name="@item.Code" tagp="@item.Price" tagc="@item.Closed">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
             <span>|</span>
             <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
         </td>
