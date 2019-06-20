@@ -1,8 +1,4 @@
-﻿function updateDataChange(getCodes,func,hz) {
-    var timer = setInterval(function () { getStockData(getCodes, func) }, hz);
-}
-
-function getStockData(getCodes, func) {
+﻿function getStockData(getCodes, func) {
     var codes = getCodes();
     $.ajax({
         dataType: 'script',

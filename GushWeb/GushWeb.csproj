@@ -222,6 +222,7 @@
     <Compile Include="Controllers\OwnController.cs" />
     <Compile Include="Controllers\SettlementController.cs" />
     <Compile Include="Controllers\TemptokenController.cs" />
+    <Compile Include="Helpers\CacheHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\TempTokenModel.cs" />

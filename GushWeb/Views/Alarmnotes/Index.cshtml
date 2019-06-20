@@ -64,6 +64,7 @@
         }
 
         function onComplete() {
+            getStockData(getCodes, updateChange);
         }
         function jump(date) {
             window.location.href = '@Url.Action("Index")?date=' + date;
@@ -80,9 +81,9 @@
 
         (function() {
             if (isToday()) {
-                var timer = setInterval(function () { $("form").submit(); }, 9000);
+                var timer = setInterval(function () { $("form").submit(); }, 6000);
             }
-            updateDataChange(getCodes, updateChange, 6000);
+            getStockData(getCodes, updateChange);
         })()
 
         function updateChange(code, price) {
