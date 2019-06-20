@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using GushLibrary.Models;
@@ -52,7 +53,7 @@ namespace GushWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult IndexAsyn(FormCollection collection)
+        public async Task<ActionResult> IndexAsyn(FormCollection collection)
         {
             string codes = collection["codes"];
             //var pageData = db.AlarmNotesList.Where(d => d.Date == dt && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
@@ -62,7 +63,7 @@ namespace GushWeb.Controllers
             }
             string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
             var expression = getExpression(Today, codeArray);
-            var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time);
+            var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
 
             return PartialView("pviewIndex", pageData);
         }
