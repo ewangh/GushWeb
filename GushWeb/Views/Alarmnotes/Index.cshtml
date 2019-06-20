@@ -17,21 +17,10 @@
         InsertionMode = InsertionMode.InsertAfter
     };
 
-    
+
 }
-<div class="input-group" style="margin:15px 0px 10px 0px;margin-left:auto; margin-right:auto ">
-    @if (ViewBag.Prev != null)
-    {
-        <input class="btn btn-default" style="border-radius:20px" type="button" value=" < " onclick="jump('@ViewBag.Prev');"/>
-    }
-    @if (ViewBag.Current != null)
-    {
-        <span style="margin: 0px 30px">@ViewBag.Current</span>
-    }
-    @if (ViewBag.Next != null)
-    {
-        <input class="btn btn-default" style="border-radius:20px" type="button" value=" > " onclick="jump('@ViewBag.Next');" />
-    }
+<div class="input-group" style="margin:15px 0px 10px 0px">
+    @ControlHelper.DateControl(@ViewBag.Prev, @ViewBag.Current, @ViewBag.Next)
 </div>
 
 @using (Ajax.BeginForm("IndexAsyn", ajaxOption))
@@ -114,7 +103,7 @@
                             $(this).css("color", color);
                         }
                     }
-                    
+
                 }
             });
         }

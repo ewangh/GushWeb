@@ -1,0 +1,15 @@
+﻿@helper DateControl(string prev, string current, string next)
+{
+    if (@prev != null)
+    {
+    <input class="btn btn-default" style="border-radius:20px" type="button" value=" < " onclick="jump('@prev');" />
+    }
+    if (@current != null)
+    {
+        <span style="margin: 0px 30px">@current</span>
+    }
+    if (@next != null)
+    {
+        <input class="btn btn-default" style="border-radius:20px" type="button" value=" > " onclick="jump('@next');" />
+    }
+}
