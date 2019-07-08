@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.WebPages;
 using GushLibrary.Models;
 using GushWeb.Models;
 
@@ -46,6 +47,18 @@ namespace GushWeb.Controllers
             }
             return View(t_settlement);
         }
+
+        public ActionResult Index2(string date)
+        {
+            List<t_settlement> t_settlement = new List<t_settlement>();
+            if (date.IsDateTime())
+            {
+                
+
+            }
+            return View(t_settlement);
+        }
+
         [HttpPost]
         public ActionResult IndexAsyn(string codes)
         {
@@ -196,7 +209,7 @@ namespace GushWeb.Controllers
                     var group = from p in db.SettlementList
                                 where codeArray.Contains(p.Code)
                                 group p by p.Code into g
-                                select new { g.Key, notes = g.OrderByDescending(d=>d.Date).FirstOrDefault() };
+                                select new { g.Key, notes = g.OrderByDescending(d => d.Date).FirstOrDefault() };
                     foreach (var obj in group)
                     {
                         t_settlement.Add(obj.notes);
@@ -221,7 +234,7 @@ namespace GushWeb.Controllers
                     code = SHprefix + code;
                 settlementList = db.SettlementList.Where(d => d.Code == code).OrderBy(d => d.Date).ToList();
             }
-            
+
             return Json(settlementList);
         }
     }

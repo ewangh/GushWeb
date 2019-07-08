@@ -1,0 +1,75 @@
+﻿@model IEnumerable<t_settlement>
+
+@{
+    ViewBag.Title = "Index";
+
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "tb",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+}
+@using (Ajax.BeginForm("IndexAsyn", ajaxOption))
+{
+    <div class="input-group" style="margin:15px 0px">
+        @Html.TextBox("codes", null, new { @class = "form-control pull-right", @placeholder = "Search codes" })
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </span>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody id="tb">
+        @Html.Partial("pviewIndex", Model)
+        </tbody>
+    </table>
+    <p>
+        @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
+    </p>
+}
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        function onBegin() {
+            //显示
+            loading.show();
+        }
+        function onSuccess() {
+            //影藏
+            loading.hide();
+        }
+        function onFailure() {
+            alert('请求错误');
+            //影藏
+            loading.hide();
+        }
+        function onComplete() {
+        }
+    </script>
+}

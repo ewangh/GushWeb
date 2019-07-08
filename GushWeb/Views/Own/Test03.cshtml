@@ -1,11 +1,12 @@
-﻿@using (Html.BeginForm())
-{
-    <input type="text" name="code"/>
-    <input type="submit" value="submit"/>
-    <span>result is:</span>
-    @Model
-}
+﻿<input id="txt_url" type="text" />
+<input id="btn_enter" type="button" value="enter"/>
+<div>
+    <iframe id="frm" scrolling="auto" width="100%" height="1000"></iframe>
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
-    var lastError = '@Html.Raw(Ajax.JavaScriptStringEncode(ViewBag.LastError))';
-    //alert(lastError);
+    $("#btn_enter").on('click', function () {
+        var url = $("#txt_url").val();
+        $("#frm").attr("src", url);
+    })
 </script>

@@ -13,6 +13,11 @@ namespace GushWeb.Helpers
             CacheDictionary.Add(key, value);
         }
 
+        public static void Remove(string key)
+        {
+            CacheDictionary.Remove(key);
+        }
+
         /// <summary>
         /// 获取缓存
         /// </summary>
