@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GushWeb", "GushWeb\GushWeb.csproj", "{6604BBC5-DA39-4D3C-A6FA-238F3201E8E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GushLibrary", "..\GushLibrary\GushLibrary.csproj", "{D7E92C62-3A5D-4153-835A-137402C599E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GushLibrary", "..\..\wpf\newGushClient\newGushClient\GushLibrary\GushLibrary.csproj", "{D7E92C62-3A5D-4153-835A-137402C599E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -16,6 +16,7 @@ namespace GushWeb.Controllers
     public class SettlementController : BaseController
     {
         private GushDBContext db = new GushDBContext();
+        private GushProcContext proc = new GushProcContext();
         readonly string SZprefix = "sz";
         readonly string SHprefix = "sh";
 
@@ -23,6 +24,7 @@ namespace GushWeb.Controllers
         public ActionResult Index(string codes)
         {
             List<t_settlement> t_settlement = new List<t_settlement>();
+
             if (!String.IsNullOrWhiteSpace(codes))
             {
                 string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
@@ -45,18 +47,20 @@ namespace GushWeb.Controllers
                     }
                 };
             }
+
             return View(t_settlement);
         }
 
         public ActionResult Index2(string date)
         {
-            List<t_settlement> t_settlement = new List<t_settlement>();
+            List<t_opennotes> t_opennotes = new List<t_opennotes>();
+
             if (date.IsDateTime())
             {
-                
-
+                t_opennotes = proc.ProcServer.ExecOpenPro(date).ToList();
             }
-            return View(t_settlement);
+
+            return View(t_opennotes);
         }
 
         [HttpPost]
@@ -86,6 +90,19 @@ namespace GushWeb.Controllers
                 };
             }
             return PartialView("pviewIndex", t_settlement);
+        }
+
+        [HttpPost]
+        public ActionResult Index2Asyn(string date)
+        {
+            List<t_opennotes> t_opennotes = new List<t_opennotes>();
+
+            if (date.IsDateTime())
+            {
+                t_opennotes = proc.ProcServer.ExecOpenPro(date).ToList();
+            }
+
+            return PartialView("pviewIndexBydate", t_opennotes);
         }
 
         // GET: Settlement/Details/5

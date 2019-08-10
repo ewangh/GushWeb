@@ -1,15 +1,15 @@
-﻿@model IEnumerable<t_settlement>
+﻿@model IEnumerable<t_opennotes>
 @foreach (var item in Model)
 {
     <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Rise)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.Code)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @ConvertHelper.AmplitudeConvert(item.Price, item.cPrice)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Date)

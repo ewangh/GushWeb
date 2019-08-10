@@ -22,7 +22,7 @@
             @Html.DisplayFor(modelItem => item.Time)
         </td>
         <td>
-            @Html.ActionLink("Details", "Details", new { id = item.Code })
+            @Html.ActionLink("Details", "Details", new { id = item.Code }, new { target = "_blank" })
         </td>
     </tr>
 }

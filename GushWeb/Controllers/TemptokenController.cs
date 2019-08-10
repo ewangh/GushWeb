@@ -40,7 +40,8 @@ namespace GushWeb.Controllers
                 if (!cookies.IsNullOrEmpty() && cookies.Contains(tokenObj.Token))
                 {
                     Response.Cookies[nodeName].Value = tokenObj.Token;
-                    return RedirectToAction("Index", "Alarmnotes", new {date = Today});
+                    //return RedirectToAction("Index", "Alarmnotes", new {date = Today});
+                    return RedirectToAction("Index", "Alarmnotes");
                 }
 
                 ModelState.AddModelError("token", "Error Token");

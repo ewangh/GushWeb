@@ -11,7 +11,7 @@ namespace GushWeb.Controllers
         //[Authorize(Roles = "")]
         public ActionResult Index()
         {
-            return RedirectToAction("Index", "Alarmnotes",new {date=Today});
+            return RedirectToAction("Index", "Alarmnotes");
         }
 
         //public ActionResult NotFound()

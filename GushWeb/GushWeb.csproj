@@ -225,6 +225,7 @@
     <Compile Include="Helpers\CacheHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AlarmQueue.cs" />
     <Compile Include="Models\TempTokenModel.cs" />
     <Compile Include="Utility\CookieDocument.cs" />
     <Compile Include="Utility\MyExtensions.cs" />
@@ -246,6 +247,7 @@
     <Content Include="App_Data\MemberRegisterEMailTemplate.htm" />
     <Content Include="App_Data\TempTokenRes.xml" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -286,6 +288,7 @@
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>Resource1.designer.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\echarts.min.js" />
@@ -415,6 +418,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Temptoken\Register.cshtml" />
     <Content Include="Views\Settlement\Index2.cshtml" />
+    <Content Include="Views\Settlement\pviewIndexBydate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />
@@ -425,16 +429,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GushLibrary\GushLibrary.csproj">
-      <Project>{d7e92c62-3a5d-4153-835a-137402c599e6}</Project>
-      <Name>GushLibrary</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\wpf\newGushClient\newGushClient\GushLibrary\GushLibrary.csproj">
+      <Project>{d7e92c62-3a5d-4153-835a-137402c599e6}</Project>
+      <Name>GushLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

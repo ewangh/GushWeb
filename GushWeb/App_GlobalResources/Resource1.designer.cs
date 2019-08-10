@@ -79,6 +79,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 历史 的本地化字符串。
+        /// </summary>
+        internal static string history {
+            get {
+                return ResourceManager.GetString("history", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 登陆 的本地化字符串。
         /// </summary>
         internal static string login {

@@ -20,6 +20,7 @@ namespace GushWeb
                       "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/bootstrap-datetimepicker.min.css",
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/ownStyle.css"));

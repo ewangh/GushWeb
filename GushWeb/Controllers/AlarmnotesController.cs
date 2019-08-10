@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Antlr.Runtime.Tree;
 using GushLibrary.Models;
 using GushWeb.ActionFilters;
 using GushWeb.Models;
@@ -42,10 +43,17 @@ namespace GushWeb.Controllers
 
         public ActionResult Index(string date)
         {
-            var datePage = AlarmnotesSingleton.GetObj().GetDatePage(ref date);
-            ViewBag.Prev = datePage.PrevDate;
-            ViewBag.Current = datePage.CurrentDate;
-            ViewBag.Next = datePage.NextDate;
+            if (!String.IsNullOrEmpty(date))
+            {
+                var datePage = AlarmnotesSingleton.GetObj().GetDatePage(ref date);
+                ViewBag.Prev = datePage.PrevDate;
+                ViewBag.Current = datePage.CurrentDate;
+                ViewBag.Next = datePage.NextDate;
+            }
+            else
+            {
+                date = Today;
+            }
 
             var expression = getExpression(date);
             var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time);

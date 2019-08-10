@@ -64,7 +64,11 @@
         }
 
         function onComplete() {
-            getStockData(getCodes, updateChange);
+            asyncGetStockData(getCodes).then(function (dataArray) {
+                dataArray.forEach(function (item, index) {
+                    updateChange(item[6], item[1]);
+                });
+            });
         }
         function jump(date) {
             window.location.href = '@Url.Action("Index")?date=' + date;
@@ -83,7 +87,11 @@
             if (isToday()) {
                 var timer = setInterval(function () { $("form").submit(); }, 6000);
             }
-            getStockData(getCodes, updateChange);
+            asyncGetStockData(getCodes).then(function (dataArray) {
+                dataArray.forEach(function(item, index) {
+                    updateChange(item[6], item[1]);
+                });
+            });
         })()
 
         function updateChange(code, price) {

@@ -13,7 +13,12 @@ namespace GushWeb.Controllers
         {
             get { return DateTime.Today.ToYYYYMMDD(); }
         }
-    
+
+        protected string Time
+        {
+            get { return DateTime.Now.ToLongTimeString(); }
+        }
+
 
         protected override void HandleUnknownAction(string actionName)
         {

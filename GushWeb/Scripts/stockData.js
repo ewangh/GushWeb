@@ -1,8 +1,9 @@
-﻿function getStockData(getCodes, func) {
+﻿async function asyncGetStockData(getCodes) {
     var codes = getCodes();
-    $.ajax({
+    var dataArray = new Array();
+    await $.ajax({
         dataType: 'script',
-        async: true,
+        async: false,
         url: 'http://hq.sinajs.cn/list=' + getStockStr(codes),
         cache: true,
         success: function (msg) {
@@ -10,11 +11,13 @@
                 var elements = eval("hq_str_s_" + item);
                 if (typeof (elements) != "undefined") {
                     var eleArray = elements.split(",");
-                    func(item, eleArray[1]);
+                    eleArray.push(item);
+                    dataArray.push(eleArray);
                 }
             });
         }
     });
+    return dataArray;
 }
 
 function getStockStr(codes) {
