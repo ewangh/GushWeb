@@ -88,7 +88,7 @@ namespace Resources {
         }
         
         /// <summary>
-        ///  查找类似 登陆 的本地化字符串。
+        ///  查找类似 登录 的本地化字符串。
         /// </summary>
         internal static string login {
             get {

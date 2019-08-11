@@ -124,7 +124,7 @@
     <value>邮箱</value>
   </data>
   <data name="login" xml:space="preserve">
-    <value>登陆</value>
+    <value>登录</value>
   </data>
   <data name="logout" xml:space="preserve">
     <value>注销</value>
