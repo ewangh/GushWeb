@@ -9,15 +9,9 @@ namespace GushWeb.Controllers
 {
     public class BaseController : Controller
     {
-        protected string Today
-        {
-            get { return DateTime.Today.ToYYYYMMDD(); }
-        }
+        protected string Today=> DateTime.Today.ToYYYYMMDD();
 
-        protected string Time
-        {
-            get { return DateTime.Now.ToLongTimeString(); }
-        }
+        protected string Time=> DateTime.Now.ToLongTimeString();
 
 
         protected override void HandleUnknownAction(string actionName)
