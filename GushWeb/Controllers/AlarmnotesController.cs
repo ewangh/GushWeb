@@ -53,6 +53,7 @@ namespace GushWeb.Controllers
             else
             {
                 date = Today;
+                ViewBag.Current = Today;
             }
 
             var expression = getExpression(date);
