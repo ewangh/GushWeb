@@ -4,10 +4,7 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-
 <div>
-    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Code)
@@ -32,12 +29,12 @@
         </dd>
 
         @*<dt>
-        </dt>
+            </dt>
 
-        <dd>
-            @Html.Label("|")
-            @Html.DisplayFor(model => model.bPrice)
-        </dd>*@
+            <dd>
+                @Html.Label("|")
+                @Html.DisplayFor(model => model.bPrice)
+            </dd>*@
 
         <dt>
             @Html.DisplayNameFor(model => model.Price)
@@ -55,6 +52,13 @@
             @Html.DisplayFor(model => model.Date)
         </dd>
 
+        <dt>
+            Dateline
+        </dt>
+
+        <dd>
+            @Html.ActionLink("Details", "Details", "Settlement", new { id = Model.Code },null)
+        </dd>
     </dl>
 </div>
 <p>

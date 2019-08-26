@@ -10,13 +10,12 @@ namespace GushWeb.ActionFilters
 {
     public class AlarmnotesActionFilters : ActionFilterAttribute
     {
-        private readonly string nodeName = "tempTokens";
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var dt = DateTime.Today;
 
-            var cookie = filterContext.HttpContext.Request.Cookies[nodeName];
-            var cookies = CacheHelper.GetCache("token", () => XmlSetting.GetNodes(nodeName, dt));
+            var cookie = filterContext.HttpContext.Request.Cookies[ConfigEntity.NodeName];
+            var cookies = CacheHelper.GetCache("token", () => XmlSetting.GetNodes(ConfigEntity.NodeName, dt));
 
             bool isCheck = false;
 

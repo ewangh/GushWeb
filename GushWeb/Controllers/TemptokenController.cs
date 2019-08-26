@@ -8,17 +8,17 @@ using System.Linq;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace GushWeb.Controllers
 {
 
     public class TemptokenController : BaseController
     {
-        readonly string pwSalt = ConfigurationManager.AppSettings["passwordSalt"];
-        readonly string emailAccount = ConfigurationManager.AppSettings["emailAccount"];
-        readonly string emailPwd = ConfigurationManager.AppSettings["emailPassword"];
-        readonly string emailSmtp = ConfigurationManager.AppSettings["emailSmtp"];
-        
+        private readonly string emailAccount = ConfigEntity.emailAccount;
+        readonly string emailPwd = ConfigEntity.emailPwd;
+        readonly string emailSmtp = ConfigEntity.emailSmtp;
+
         // GET: Temptoken
         //[TempTokenActionFilters]
         public ActionResult Login()
@@ -34,12 +34,12 @@ namespace GushWeb.Controllers
             ModelState.Remove("Email");
             if (ModelState.IsValid)
             {
-                string nodeName = "tempTokens";
                 var dt = DateTime.Today;
-                var cookies = XmlSetting.GetNodes(nodeName, dt).ConvertAll(d => d.Token);
-                if (!cookies.IsNullOrEmpty() && cookies.Contains(tokenObj.Token))
+                var cookies = XmlSetting.GetNodes(ConfigEntity.NodeName, dt).ConvertAll(d => d?.Token);
+                var aa = tokenObj.Token.ToSalt(ConfigEntity.tknSalt);
+                if (!cookies.IsNullOrEmpty() && cookies.Contains(tokenObj?.Token.ToSalt(ConfigEntity.tknSalt)))
                 {
-                    Response.Cookies[nodeName].Value = tokenObj.Token;
+                    Response.Cookies[ConfigEntity.NodeName].Value = tokenObj.Token.ToSalt(ConfigEntity.tknSalt);
                     //return RedirectToAction("Index", "Alarmnotes", new {date = Today});
                     return RedirectToAction("Index", "Alarmnotes");
                 }

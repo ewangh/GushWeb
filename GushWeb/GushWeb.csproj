@@ -227,6 +227,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AlarmQueue.cs" />
     <Compile Include="Models\TempTokenModel.cs" />
+    <Compile Include="Utility\ConfigEntity.cs" />
     <Compile Include="Utility\CookieDocument.cs" />
     <Compile Include="Utility\MyExtensions.cs" />
     <Compile Include="Utility\PredicateExtensions.cs" />

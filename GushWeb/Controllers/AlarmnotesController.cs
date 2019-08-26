@@ -34,7 +34,7 @@ namespace GushWeb.Controllers
             expression = expression.And(d => d.Time.CompareTo("09:32:03") < 0);
             if (!array.IsNullOrEmpty())
             {
-                expression=expression.And(p => !array.Contains(p.Code));
+                expression = expression.And(p => !array.Contains(p.Code));
             }
 
             return expression;
@@ -64,9 +64,9 @@ namespace GushWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> IndexAsyn(FormCollection collection)
         {
-            string codes = collection["codes"];
+            string codes = collection["codes"]??string.Empty;
             //var pageData = db.AlarmNotesList.Where(d => d.Date == dt && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
-            if (!Request.IsAjaxRequest() || codes.IsNullOrEmpty())
+            if (!Request.IsAjaxRequest())
             {
                 return PartialView("pviewIndex", new List<t_alarmnotes>());
             }

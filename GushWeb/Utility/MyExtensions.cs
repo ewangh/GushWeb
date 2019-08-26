@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 
 namespace GushWeb.Utility
 {
@@ -45,6 +46,11 @@ namespace GushWeb.Utility
         public static bool IsNullOrEmpty<T>(this T[] array)
         {
             return array == null || array.Length == 0;
+        }
+
+        public static string ToSalt(this string value, string salt)
+        {
+            return FormsAuthentication.HashPasswordForStoringInConfigFile(salt + value, "SHA1");
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Xml;
 using System.Xml.Linq;
 using GushWeb.Models;
@@ -21,10 +22,10 @@ namespace GushWeb.Utility
         {
             XElement xml = XElement.Load(resPath);
             var xnls = xml.Elements()
-                .Where(d => d.Attribute(isUsed).Value.ToLower() == "false"  && DateTime.Parse(d.Attribute(expireDate).Value) > date)
+                .Where(d => d.Attribute(isUsed).Value.ToLower() == "false" && DateTime.Parse(d.Attribute(expireDate).Value) > date)
                 .ToList().ConvertAll(d => new TempToken()
                 {
-                    Token = d.Attribute(nodeValue).Value,
+                    Token = d.Attribute(nodeValue)?.Value.ToSalt(ConfigEntity.tknSalt),
                     IsUsed = false,
                     ExpireDate = DateTime.Parse(d.Attribute(expireDate).Value),
                 });

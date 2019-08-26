@@ -8,15 +8,16 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using System.Web.UI;
+using GushWeb.Utility;
 
 namespace GushWeb.Controllers
 {
     public class MemberController : BaseController
     {
-        readonly string pwSalt = ConfigurationManager.AppSettings["passwordSalt"];
-        readonly string emailAccount = ConfigurationManager.AppSettings["emailAccount"];
-        readonly string emailPwd = ConfigurationManager.AppSettings["emailPassword"];
-        readonly string emailSmtp = ConfigurationManager.AppSettings["emailSmtp"];
+        readonly string pwSalt = ConfigEntity.pwSalt;
+        readonly string emailAccount = ConfigEntity.emailAccount;
+        readonly string emailPwd = ConfigEntity.emailPwd;
+        readonly string emailSmtp = ConfigEntity.emailSmtp;
 
         WebDBContext db = new WebDBContext();
 
