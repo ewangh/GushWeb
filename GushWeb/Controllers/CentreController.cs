@@ -10,6 +10,7 @@ using GushLibrary.Models;
 
 namespace GushWeb.Controllers
 {
+    [Authorize]
     public class CentreController : BaseController
     {
         // GET: Centre
@@ -18,6 +19,7 @@ namespace GushWeb.Controllers
             return View();
         }
 
+        [HttpPost]
         public ActionResult UpdateToken()
         {
             CacheHelper.Clear();

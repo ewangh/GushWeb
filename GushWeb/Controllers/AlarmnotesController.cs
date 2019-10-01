@@ -23,7 +23,6 @@ namespace GushWeb.Controllers
         private GushDBContext db = new GushDBContext();
         const int pageSize = 30;
         // GET: Alarmnotes
-
         private Expression<Func<t_alarmnotes, bool>> getExpression(string date, string[] array = null)
         {
             Expression<Func<t_alarmnotes, bool>> expression = t => true;

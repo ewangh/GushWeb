@@ -8,10 +8,16 @@ using GushWeb.Utility;
 
 namespace GushWeb.ActionFilters
 {
-    public class AlarmnotesActionFilters : ActionFilterAttribute
+    public class AlarmnotesActionFilters : AuthorizeAttribute
     {
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
+            return httpContext.User.Identity.IsAuthenticated;
+        }
+
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            //base.OnAuthorization(filterContext);
             var dt = DateTime.Today;
 
             var cookie = filterContext.HttpContext.Request.Cookies[ConfigEntity.NodeName];
@@ -26,7 +32,6 @@ namespace GushWeb.ActionFilters
 
             if (!isCheck)
                 filterContext.Result = new RedirectResult("/Temptoken/Login");
-
         }
     }
 }
