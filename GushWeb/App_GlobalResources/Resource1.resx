@@ -147,4 +147,7 @@
   <data name="history" xml:space="preserve">
     <value>历史</value>
   </data>
+  <data name="update" xml:space="preserve">
+    <value>更新</value>
+  </data>
 </root>

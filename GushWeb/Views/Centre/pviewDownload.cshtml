@@ -1,0 +1,32 @@
+﻿@model IEnumerable<string>
+@{
+    GushDBContext db = new GushDBContext();
+    const int pageSize = 10;
+    var list = db.SettlementList.GroupBy(d => d.Date).Select(g => (new { date = g.Key, count = g.Count() })).OrderByDescending(t => t.date).Take(10);
+}
+@using (Html.BeginForm())
+{
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Date
+            </th>
+            <th>
+                Count
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in list)
+                {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.date)
+            </td>
+            <td>@Html.DisplayFor(modelItem => item.count)</td>
+        </tr>
+                }
+    </tbody>
+</table>
+}

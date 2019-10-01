@@ -35,7 +35,7 @@ namespace GushWeb.Controllers
             if (ModelState.IsValid)
             {
                 var dt = DateTime.Today;
-                var cookies = XmlSetting.GetNodes(ConfigEntity.NodeName, dt).ConvertAll(d => d?.Token);
+                var cookies = XmlSetting.GetNodesByDate(ConfigEntity.NodeName, dt).ConvertAll(d => d?.Token);
                 var aa = tokenObj.Token.ToSalt(ConfigEntity.tknSalt);
                 if (!cookies.IsNullOrEmpty() && cookies.Contains(tokenObj?.Token.ToSalt(ConfigEntity.tknSalt)))
                 {

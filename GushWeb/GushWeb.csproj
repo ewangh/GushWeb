@@ -216,6 +216,7 @@
     <Compile Include="Controllers\AlarmnotesController.cs" />
     <Compile Include="Controllers\AlarmnotesSingleton.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CentreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -420,6 +421,10 @@
     <Content Include="Views\Temptoken\Register.cshtml" />
     <Content Include="Views\Settlement\Index2.cshtml" />
     <Content Include="Views\Settlement\pviewIndexBydate.cshtml" />
+    <Content Include="Views\Centre\Index.cshtml" />
+    <Content Include="Views\Centre\pviewDownload.cshtml" />
+    <Content Include="Views\Centre\pviewToken.cshtml" />
+    <Content Include="Views\Centre\pviewTokenContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

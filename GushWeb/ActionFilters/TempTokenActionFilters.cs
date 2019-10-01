@@ -15,7 +15,7 @@ namespace GushWeb.ActionFilters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var dt = DateTime.Today;
-            var cookies = XmlSetting.GetNodes(nodeName,dt).ConvertAll(d=>d.Token.ToSalt(tknSalt));
+            var cookies = XmlSetting.GetNodesByDate(nodeName,dt).ConvertAll(d=>d.Token.ToSalt(tknSalt));
             var cuttentCookie = filterContext.HttpContext.Request.Cookies[nodeName];
 
             bool isCheck = false;

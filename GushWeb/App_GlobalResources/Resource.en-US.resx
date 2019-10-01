@@ -147,4 +147,7 @@
   <data name="unknow" xml:space="preserve">
     <value>Unknow</value>
   </data>
+  <data name="update" xml:space="preserve">
+    <value>Update</value>
+  </data>
 </root>

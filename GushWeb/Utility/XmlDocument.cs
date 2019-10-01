@@ -17,17 +17,30 @@ namespace GushWeb.Utility
         readonly static string expireDate = "expireDate";
         readonly static string isUsed = "isUsed";
         readonly static string nodeValue = "value";
+        readonly static XElement xml = XElement.Load(resPath);
 
-        public static List<TempToken> GetNodes(string nodeName, DateTime date)
+        public static List<TempToken> GetNodesByDate(string nodeName, DateTime date)
         {
-            XElement xml = XElement.Load(resPath);
             var xnls = xml.Elements()
                 .Where(d => d.Attribute(isUsed).Value.ToLower() == "false" && DateTime.Parse(d.Attribute(expireDate).Value) > date)
                 .ToList().ConvertAll(d => new TempToken()
                 {
                     Token = d.Attribute(nodeValue)?.Value.ToSalt(ConfigEntity.tknSalt),
                     IsUsed = false,
-                    ExpireDate = DateTime.Parse(d.Attribute(expireDate).Value),
+                    ExpireDate = DateTime.Parse(d.Attribute(expireDate)?.Value),
+                });
+
+            return xnls;
+        }
+
+        public static List<TempToken> GetNodes(string nodeName)
+        {
+            var xnls = xml.Elements()
+                .ToList().ConvertAll(d => new TempToken()
+                {
+                    Token = d.Attribute(nodeValue)?.Value,
+                    IsUsed = Boolean.Parse(d.Attribute(isUsed)?.Value),
+                    ExpireDate = DateTime.Parse(d.Attribute(expireDate)?.Value),
                 });
 
             return xnls;

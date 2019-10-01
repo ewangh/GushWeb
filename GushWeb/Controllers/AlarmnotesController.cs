@@ -40,7 +40,6 @@ namespace GushWeb.Controllers
             return expression;
         }
 
-
         public ActionResult Index(string date)
         {
             if (!String.IsNullOrEmpty(date))

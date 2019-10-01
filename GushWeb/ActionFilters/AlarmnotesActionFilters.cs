@@ -15,7 +15,7 @@ namespace GushWeb.ActionFilters
             var dt = DateTime.Today;
 
             var cookie = filterContext.HttpContext.Request.Cookies[ConfigEntity.NodeName];
-            var cookies = CacheHelper.GetCache("token", () => XmlSetting.GetNodes(ConfigEntity.NodeName, dt));
+            var cookies = CacheHelper.GetCache("token", () => XmlSetting.GetNodesByDate(ConfigEntity.NodeName, dt));
 
             bool isCheck = false;
 

@@ -1,0 +1,39 @@
+﻿@using GushWeb.Helpers;
+@using GushWeb.Utility;
+@model IEnumerable<TempToken>
+@{
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "tb_token",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        OnSuccess = "onTokenSuccess()",
+        InsertionMode = InsertionMode.Replace
+    };
+    var cookies = CacheHelper.GetCache("token", () => XmlSetting.GetNodes(ConfigEntity.NodeName));
+}
+@using (Ajax.BeginForm("UpdateToken", ajaxOption))
+{
+    <input type="submit" class="btn btn-default" value="@Resources.Resource1.update" />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Token)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ExpireDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsUsed)
+                </th>
+            </tr>
+        </thead>
+        <tbody id="tb_token">
+            @Html.Partial("pviewTokenContent", cookies)
+        </tbody>
+    </table>
+}

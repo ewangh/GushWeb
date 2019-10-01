@@ -149,5 +149,14 @@ namespace Resources {
                 return ResourceManager.GetString("unknow", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///  查找类似 更新 的本地化字符串。
+        /// </summary>
+        internal static string update {
+            get {
+                return ResourceManager.GetString("update", resourceCulture);
+            }
+        }
     }
 }

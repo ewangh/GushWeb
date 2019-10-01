@@ -1,0 +1,39 @@
+﻿@Html.AntiForgeryToken()
+
+<div style="padding:20px">
+    <ul class="nav nav-tabs" role="navigation">
+        <li class="active"><a href="#downloadmng" data-toggle="tab">Download</a></li>
+        <li><a href="#tokenmng" data-toggle="tab">Token</a></li>
+        @*<li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="myTabDrop">Html5前端<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop">
+                <li><a href="#html5" data-toggle="tab">Html5</a></li>
+                <li><a href="#css3" data-toggle="tab">Css3</a></li>
+                <li><a href="#javascript" data-toggle="tab">Javascript</a></li>
+                <li><a href="#jquery" data-toggle="tab">jQuery</a></li>
+                <li><a href="#jqueryui" data-toggle="tab">jQueryUI</a></li>
+                <li><a href="#bootstrap" data-toggle="tab">Bootstrap</a></li>
+                <li><a href="#cnet" data-toggle="tab">C#.Net</a></li>
+                <li><a href="#mssql" data-toggle="tab">MsSql</a></li>
+            </ul>
+        </li>*@
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <br />
+        <div class="tab-pane fade in active" id="downloadmng">
+            @Html.Partial("pviewDownload", null)
+        </div>
+        <div class="tab-pane fade" id="tokenmng">
+            @Html.Partial("pviewToken", null)
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        function onTokenSuccess() {
+            alert('更新成功');
+        }
+    </script>
+}
