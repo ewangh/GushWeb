@@ -71,41 +71,41 @@ function calculateZT() {
     return result;
 }
 
-function calculateOp() {
-    var result = [];
-    for (var i = 0, len = data0.values.length; i < len; i++) {
-        result.push(data0.values[i][0]);
-        // alert(result);
-    }
-    return result;
-}
+//function calculateOp() {
+//    var result = [];
+//    for (var i = 0, len = data0.values.length; i < len; i++) {
+//        result.push(data0.values[i][0]);
+//        // alert(result);
+//    }
+//    return result;
+//}
 
-function calculateLp() {
-    var result = [];
-    for (var i = 0, len = data0.values.length; i < len; i++) {
-        result.push(data0.values[i][2]);
-        // alert(result);
-    }
-    return result;
-}
+//function calculateLp() {
+//    var result = [];
+//    for (var i = 0, len = data0.values.length; i < len; i++) {
+//        result.push(data0.values[i][2]);
+//        // alert(result);
+//    }
+//    return result;
+//}
 
-function calculateHp() {
-    var result = [];
-    for (var i = 0, len = data0.values.length; i < len; i++) {
-        result.push(data0.values[i][3]);
-        // alert(result);
-    }
-    return result;
-}
+//function calculateHp() {
+//    var result = [];
+//    for (var i = 0, len = data0.values.length; i < len; i++) {
+//        result.push(data0.values[i][3]);
+//        // alert(result);
+//    }
+//    return result;
+//}
 
-function calculateCl() {
-    var result = [];
-    for (var i = 0, len = data0.values.length; i < len; i++) {
-        result.push(data0.values[i][1]);
-        // alert(result);
-    }
-    return result;
-}
+//function calculateCl() {
+//    var result = [];
+//    for (var i = 0, len = data0.values.length; i < len; i++) {
+//        result.push(data0.values[i][1]);
+//        // alert(result);
+//    }
+//    return result;
+//}
 
 function splitData(myChart) {
     option = {
@@ -120,7 +120,7 @@ function splitData(myChart) {
             }
         },
         legend: {   //图例控件，点击图例控制哪些系列不现实
-            data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30', 'cP', 'bP', 'ZT', 'oP', 'lP', 'cL', 'hP']
+            data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30', 'cP', 'bP']//, 'ZT', 'oP', 'lP', 'cL', 'hP'
         },
         grid: {     //直角坐标系
             show: true,
@@ -319,42 +319,42 @@ function splitData(myChart) {
                     normal: { opacity: 0.5 }
                 }
             },
-            {
-                name: 'oP',
-                type: 'line',
-                data: calculateOp(),
-                smooth: true,
-                lineStyle: {
-                    normal: { opacity: 0.5 }
-                }
-            },
-            {
-                name: 'lP',
-                type: 'line',
-                data: calculateLp(),
-                smooth: true,
-                lineStyle: {
-                    normal: { opacity: 0.5 }
-                }
-            },
-            {
-                name: 'cL',
-                type: 'line',
-                data: calculateCl(),
-                smooth: true,
-                lineStyle: {
-                    normal: { opacity: 0.5 }
-                }
-            },
-            {
-                name: 'hP',
-                type: 'line',
-                data: calculateHp(),
-                smooth: true,
-                lineStyle: {
-                    normal: { opacity: 0.5 }
-                }
-            },
+            //{
+            //    name: 'oP',
+            //    type: 'line',
+            //    data: calculateOp(),
+            //    smooth: true,
+            //    lineStyle: {
+            //        normal: { opacity: 0.5 }
+            //    }
+            //},
+            //{
+            //    name: 'lP',
+            //    type: 'line',
+            //    data: calculateLp(),
+            //    smooth: true,
+            //    lineStyle: {
+            //        normal: { opacity: 0.5 }
+            //    }
+            //},
+            //{
+            //    name: 'cL',
+            //    type: 'line',
+            //    data: calculateCl(),
+            //    smooth: true,
+            //    lineStyle: {
+            //        normal: { opacity: 0.5 }
+            //    }
+            //},
+            //{
+            //    name: 'hP',
+            //    type: 'line',
+            //    data: calculateHp(),
+            //    smooth: true,
+            //    lineStyle: {
+            //        normal: { opacity: 0.5 }
+            //    }
+            //},
         ]
     };
     // 使用刚指定的配置项和数据显示图表

@@ -166,6 +166,7 @@
   <ItemGroup>
     <Compile Include="ActionFilters\AlarmnotesActionFilters.cs" />
     <Compile Include="ActionFilters\TempTokenActionFilters.cs" />
+    <Compile Include="ActionFilters\TokenCheckFilter.cs" />
     <Compile Include="App_GlobalResources\Resource.en-US.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -213,8 +214,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AlarmnotesApiController.cs" />
     <Compile Include="Controllers\AlarmnotesController.cs" />
     <Compile Include="Controllers\AlarmnotesSingleton.cs" />
+    <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CentreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -223,6 +226,7 @@
     <Compile Include="Controllers\OwnController.cs" />
     <Compile Include="Controllers\SettlementController.cs" />
     <Compile Include="Controllers\TemptokenController.cs" />
+    <Compile Include="Controllers\TokenApiController.cs" />
     <Compile Include="Helpers\CacheHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />

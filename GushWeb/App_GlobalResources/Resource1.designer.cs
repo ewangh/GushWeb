@@ -61,11 +61,29 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 后台 的本地化字符串。
+        /// </summary>
+        internal static string backend {
+            get {
+                return ResourceManager.GetString("backend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 返回 的本地化字符串。
         /// </summary>
         internal static string backto {
             get {
                 return ResourceManager.GetString("backto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 日K 的本地化字符串。
+        /// </summary>
+        internal static string dayK {
+            get {
+                return ResourceManager.GetString("dayK", resourceCulture);
             }
         }
         
@@ -102,6 +120,15 @@ namespace Resources {
         internal static string logout {
             get {
                 return ResourceManager.GetString("logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 更多 的本地化字符串。
+        /// </summary>
+        internal static string more {
+            get {
+                return ResourceManager.GetString("more", resourceCulture);
             }
         }
         

@@ -150,4 +150,13 @@
   <data name="update" xml:space="preserve">
     <value>更新</value>
   </data>
+  <data name="backend" xml:space="preserve">
+    <value>后台</value>
+  </data>
+  <data name="dayK" xml:space="preserve">
+    <value>日K</value>
+  </data>
+  <data name="more" xml:space="preserve">
+    <value>更多</value>
+  </data>
 </root>

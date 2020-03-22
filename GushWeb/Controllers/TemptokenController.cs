@@ -12,7 +12,7 @@ using System.Web.Security;
 
 namespace GushWeb.Controllers
 {
-
+    [AllowAnonymous]
     public class TemptokenController : BaseController
     {
         private readonly string emailAccount = ConfigEntity.emailAccount;

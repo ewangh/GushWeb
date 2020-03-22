@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="backend" xml:space="preserve">
+    <value>Back-End</value>
+  </data>
   <data name="backto" xml:space="preserve">
     <value>Backto</value>
+  </data>
+  <data name="dayK" xml:space="preserve">
+    <value>Day-Kline</value>
   </data>
   <data name="email" xml:space="preserve">
     <value>Email</value>
@@ -131,6 +137,9 @@
   </data>
   <data name="logout" xml:space="preserve">
     <value>Logout</value>
+  </data>
+  <data name="more" xml:space="preserve">
+    <value>More</value>
   </data>
   <data name="password" xml:space="preserve">
     <value>Password</value>

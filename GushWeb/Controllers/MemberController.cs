@@ -114,19 +114,20 @@ namespace GushWeb.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(string email, string password, string returnUrl)
         {
             if (ValidateUser(email, password))
             {
-                FormsAuthentication.SetAuthCookie(email, false);
+                FormsAuthentication.SetAuthCookie(email, true);
                 if (String.IsNullOrWhiteSpace(returnUrl))
                     return RedirectToAction("Index", "Home");
-                else
-                    return Redirect(returnUrl);
+                //else
+                //    return Redirect(returnUrl);
             }
-            ModelState.AddModelError("", "你输入的账号或者密码有误");
+            ModelState.AddModelError("password", "你输入的账号或者密码有误");
             return View();
         }
         [HttpPost]

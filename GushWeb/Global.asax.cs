@@ -30,5 +30,14 @@ namespace GushWeb
             ViewEngines.Engines.Add(new RazorViewEngine());
             ViewEngines.Engines.Add(new WebFormViewEngine());
         }
+
+        /// <summary>
+        /// 重写Application_PostAuthorizeRequest
+        /// </summary>
+        protected void Application_PostAuthorizeRequest()
+        {
+            //对Session的支持，不然运行调用会直接异常
+            HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
+        }
     }
 }
