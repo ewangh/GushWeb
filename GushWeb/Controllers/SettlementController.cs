@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.WebPages;
 using GushLibrary.Models;
 using GushWeb.Models;
+using GushWeb.Utility;
 
 namespace GushWeb.Controllers
 {
@@ -106,7 +107,7 @@ namespace GushWeb.Controllers
         }
 
         // GET: Settlement/Details/5
-        public ActionResult Details(string id,string date)
+        public ActionResult Details(string id, string date)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -240,7 +241,7 @@ namespace GushWeb.Controllers
             return Json(t_settlement);
         }
         [HttpPost]
-        public JsonResult GetKLine(string code)
+        public JsonResult GetKLine(string code, string date)
         {
             List<t_settlement> settlementList = new List<t_settlement>();
             if (!String.IsNullOrWhiteSpace(code))
@@ -253,7 +254,32 @@ namespace GushWeb.Controllers
                 settlementList = db.SettlementList.Where(d => d.Code == code).OrderBy(d => d.Date).ToList();
             }
 
-            return Json(settlementList);
+            var CoordDate = date ?? Today;
+            var ZeroDate = DateTime.Parse(CoordDate).AddMonths(-1).ToYYYYMMDD();
+
+            return Json(settlementList.Select(d=>new
+            {
+                Id=d.Id,
+                Code =d.Code,
+                Name =d.Name,
+                Date =d.Date,
+                Opening =d.Opening,
+                Closed =d.Closed,
+                Highest=d.Highest,
+                Lower=d.Lower,
+                Price=d.Price,
+                Volume=d.Volume,
+                bPrice=d.bPrice,
+                cPrice=d.cPrice,
+                dPrice=d.dPrice,
+                ePrice=d.ePrice,
+                fPrice=d.fPrice,
+                gPrice=d.gPrice,
+                Time=d.Time,
+                Isst=d.Isst,
+                CoordDate= CoordDate,
+                ZeroDate= ZeroDate,
+            }));
         }
     }
 }

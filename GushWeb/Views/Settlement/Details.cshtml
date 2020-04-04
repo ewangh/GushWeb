@@ -4,6 +4,7 @@
 <form class="form-horizontal" role="form" method="post" id="mainForm" Autocomplete="on">
     <div class="input-group" style="margin:15px 0px">
         @Html.TextBox("code", ViewData["stockCode"], new { @class = "form-control pull-right", @placeholder = "Search codes" })
+        @Html.Hidden("date", ViewData["stockDate"]);
         <span class="input-group-btn">
             <button id="btn_search" class="btn btn-default" type="button">
                 <span class="glyphicon glyphicon-search"></span>

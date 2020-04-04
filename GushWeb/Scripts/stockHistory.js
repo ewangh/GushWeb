@@ -10,7 +10,9 @@
             //数据数组，即数组中除日期外的数据
             //alert(rawData[i]);
             values.push(fruits);
-            stockName = item.Name
+            stockName = item.Name;
+            coordDate = item.CoordDate;
+            zeroDate = item.ZeroDate;
         });
         window.data0 = {
             stockName: stockName,
@@ -314,7 +316,7 @@ function splitData(myChart) {
         areas: [
             {
                 brushType: 'lineX',
-                coordRange: ['2016-06-02', '2016-06-20'],
+                coordRange: [data0.zeroDate, data0.coordDate],
                 xAxisIndex: 0
             }
         ]
