@@ -121,7 +121,8 @@ namespace GushWeb.Controllers
         {
             if (ValidateUser(email, password))
             {
-                FormsAuthentication.SetAuthCookie(email, true);
+                FormsAuthentication.SetAuthCookie(email, false);
+
                 if (String.IsNullOrWhiteSpace(returnUrl))
                     return RedirectToAction("Index", "Home");
                 //else
@@ -130,7 +131,8 @@ namespace GushWeb.Controllers
             ModelState.AddModelError("password", "你输入的账号或者密码有误");
             return View();
         }
-        [HttpPost]
+
+        
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
@@ -245,6 +247,8 @@ namespace GushWeb.Controllers
                 return View();
             }
         }
+
+
         [ChildActionOnly]
         private string MailBody(string filePath, Member member)
         {

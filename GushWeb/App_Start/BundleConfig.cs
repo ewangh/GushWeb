@@ -19,11 +19,20 @@ namespace GushWeb
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
+            bundles.Add(new ScriptBundle("~/runoob/bootstrap_new").Include(
+                "~/Scripts/runoob/jquery-3.3.1.min.js",
+                "~/Scripts/runoob/bootstrap.min.js"
+                ));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap-datetimepicker.min.css",
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
                       "~/Content/ownStyle.css"));
+
+            bundles.Add(new StyleBundle("~/runoob/css").Include(
+                "~/Content/runoob/bootstrap.min.css",
+                "~/Content/runoob/layoutit.css"));
 
             bundles.Add(new StyleBundle("~/bundles/echarts").Include(
                       "~/Scripts/echarts.min.js"));

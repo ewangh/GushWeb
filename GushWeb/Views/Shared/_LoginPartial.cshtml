@@ -1,40 +1,31 @@
 ﻿@if (User.Identity.IsAuthenticated)
 {
-    using (Html.BeginForm("Logout", "Member", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        <div class="btn-group navbar-right">
-            <a data-toggle="dropdown" id="a_dropdown" style="display: none"></a>
-            <ul class="nav navbar-nav">
-                <li><a href="javascript:dropdown();">@Resources.Resource1.more</a></li>
-            </ul>
-            <ul class="dropdown-menu">
-                <li>@Html.ActionLink(@Resources.Resource1.backend, "Index", "Centre")</li>
-                <li>@Html.ActionLink(@Resources.Resource1.dayK, "Index2", "Settlement")</li>
-                <li>
-                    <a href="#">更多设置</a>
-                </li>
-                <li class="divider">
-                </li>
-                <li class="dropdown-submenu">
-                    <a tabindex="-1" href="#">更多选项</a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#">操作</a>
-                        </li>
-                        <li>
-                            <a href="#">设置栏目</a>
-                        </li>
-                        <li>
-                            <a href="#">更多设置</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+
         <ul class="nav navbar-nav navbar-right">
             <li>@Html.ActionLink(User.Identity.Name, "Index", "Settlement")</li>
-            <li><a href="javascript:if (confirm('Logout?'))document.getElementById('logoutForm').submit()">@Resources.Resource1.logout</a></li>
+            <li class="dropdown">
+                <a href=" " class="dropdown-toggle" data-toggle="dropdown">
+                    @Resources.Resource1.more
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        @Html.ActionLink(@Resources.Resource1.backend, "Index", "Centre")
+                    </li>
+                    <li>
+                        @Html.ActionLink(@Resources.Resource1.dayK, "Index2", "Settlement")
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        @Html.ActionLink(User.Identity.Name, "Index", "Settlement")
+                    </li>
+                </ul>
+            </li>
+            <li><a href="javascript:if (confirm('Logout?'))document.getElementById('logoutLink').click()">@Resources.Resource1.logout</a></li>
+            <li>@Html.ActionLink(@Resources.Resource1.logout, "Logout", "Member", new{ },new { id = "logoutLink", style = "display:none" })</li>
         </ul>
     }
 }
@@ -44,11 +35,5 @@ else
         <li>@Html.ActionLink(@Resources.Resource1.login, "Login", "Member")</li>
         <li>@Html.ActionLink(@Resources.Resource1.register, "#")</li>
     </ul>
-    
-}
 
-<script type="text/javascript">
-    function dropdown() {
-        document.getElementById("a_dropdown").click();
-    }
-</script>
+}
