@@ -109,7 +109,7 @@ function splitData(myChart) {
         legend: {
             bottom: 10,
             left: 'center',
-            data: ['Dow-Jones index', 'MA5', 'MA10', 'MA20', 'MA30']
+            data: ['Dow-Jones index', 'bPrice', 'cPrice', 'ZT']
         },
         tooltip: {
             trigger: 'axis',
@@ -275,27 +275,27 @@ function splitData(myChart) {
                 }
             },
             {
-                name: 'MA10',
+                name: 'bPrice',
                 type: 'line',
-                data: calculateMA(10, data),
+                data: calculateBp(),
                 smooth: true,
                 lineStyle: {
                     opacity: 0.5
                 }
             },
             {
-                name: 'MA20',
+                name: 'cPrice',
                 type: 'line',
-                data: calculateMA(20, data),
+                data: calculateCp(),
                 smooth: true,
                 lineStyle: {
                     opacity: 0.5
                 }
             },
             {
-                name: 'MA30',
+                name: 'ZT',
                 type: 'line',
-                data: calculateMA(30, data),
+                data: calculateZT(),
                 smooth: true,
                 lineStyle: {
                     opacity: 0.5
