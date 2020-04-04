@@ -15,7 +15,7 @@
             @Html.DisplayFor(modelItem => item.Date)
         </td>
         <td>
-            @Html.ActionLink("Details", "Details", new { id = item.Code }, new { target = "_blank" })
+            @Html.ActionLink("Details", "Details", new { id = item.Code, date = item.CoordDate }, new { target = "_blank" })
         </td>
     </tr>
 }

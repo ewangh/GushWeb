@@ -106,13 +106,14 @@ namespace GushWeb.Controllers
         }
 
         // GET: Settlement/Details/5
-        public ActionResult Details(string id)
+        public ActionResult Details(string id,string date)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             ViewData["stockCode"] = id;
+            ViewData["stockDate"] = date;
             return View();
         }
 

@@ -1,8 +1,9 @@
 ﻿function getKLine(action, mformId, chartId) {
     $.postJson(action, $("#"+mformId).serialize(), function (result) {
-        var categoryData = [];
         var values = [];
         var stockName;
+        var coordDate;
+        var zeroDate;
         $.each(result, function (i, item) {
             var fruits = [item.Date, item.Opening, item.Price, item.Lower, item.Highest, item.Closed, item.bPrice, item.cPrice, item.Volume];
             //categoryData.push(fruits.splice(0, 1)[0]);
@@ -11,12 +12,12 @@
             values.push(fruits);
             stockName = item.Name
         });
-        //window.data0 = {
-        //    stockName: stockName,
-        //    categoryData: categoryData, //数组中的日期 x轴对应的日期
-        //    values: values              //数组中的数据 y轴对应的数据
-        //};
-        window.data0 = values;
+        window.data0 = {
+            stockName: stockName,
+            coordDate: coordDate,
+            zeroDate: zeroDate,
+            values: values              //数组中的数据 y轴对应的数据
+        };
         var myChart = echarts.init(document.getElementById(chartId));
         splitData(myChart);
     });
@@ -41,9 +42,9 @@ function calculateMA(dayCount, data) {
 
 function calculateBp() {
     var result = [];
-    result.push(data0[0][5]);//加多一行数据
-    for (var i = 0, len = data0.length; i < len; i++) {
-        result.push(data0[i][5]);
+    result.push(data0.values[0][5]);//加多一行数据
+    for (var i = 0, len = data0.values.length; i < len; i++) {
+        result.push(data0.values[i][5]);
         // alert(result);
     }
     return result;
@@ -51,9 +52,9 @@ function calculateBp() {
 
 function calculateCp() {
     var result = [];
-    result.push(data0[0][6]);//加多一行数据
-    for (var i = 0, len = data0.length; i < len; i++) {
-        result.push(data0[i][6]);
+    result.push(data0.values[0][6]);//加多一行数据
+    for (var i = 0, len = data0.values.length; i < len; i++) {
+        result.push(data0.values[i][6]);
         // alert(result);
     }
     return result;
@@ -61,8 +62,8 @@ function calculateCp() {
 
 function calculateZT() {
     var result = [];
-    for (var i = 0, len = data0.length; i < len; i++) {
-        result.push((data0[i][4] * 1.1).toFixed(2));
+    for (var i = 0, len = data0.values.length; i < len; i++) {
+        result.push((data0.values[i][4] * 1.1).toFixed(2));
         // alert(result);
     }
     return result;
@@ -70,8 +71,8 @@ function calculateZT() {
 
 function calculateChange() {
     var result = [];
-    for (var i = 0, len = data0.length; i < len; i++) {
-        result.push(((data0[i][1] - data0[i][4]) * 100 / data0[i][4]).toFixed(2));
+    for (var i = 0, len = data0.values.length; i < len; i++) {
+        result.push(((data0.values[i][1] - data0.values[i][4]) * 100 / data0.values[i][4]).toFixed(2));
         // alert(result);
     }
     return result;
@@ -98,7 +99,7 @@ function toKLine(rawData) {
 }
 
 function splitData(myChart) {
-    var data = toKLine(data0);
+    var data = toKLine(data0.values);
 
     myChart.setOption(option = {
         backgroundColor: '#fff',
