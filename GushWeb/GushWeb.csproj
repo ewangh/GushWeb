@@ -315,6 +315,8 @@
       <Generator>GlobalResourceProxyGenerator</Generator>
       <LastGenOutput>Resource1.designer.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\axios.js" />
+    <Content Include="Scripts\axios.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -392,6 +394,7 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Scripts\vue.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -454,6 +457,7 @@
     <Content Include="Views\Centre\pviewDownload.cshtml" />
     <Content Include="Views\Centre\pviewToken.cshtml" />
     <Content Include="Views\Centre\pviewTokenContent.cshtml" />
+    <Content Include="Views\Alarmnotes\IndexNew.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

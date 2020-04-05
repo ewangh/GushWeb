@@ -58,6 +58,12 @@ namespace GushWeb.Controllers
 
             var expression = getExpression(date);
             var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time);
+
+            if (User.Identity.IsAuthenticated)
+            {
+                return View("IndexNew",pageData);
+            }
+
             return View(pageData);
         }
 
@@ -75,6 +81,21 @@ namespace GushWeb.Controllers
             var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
 
             return PartialView("pviewIndex", pageData);
+        }
+
+        
+        //public async Task<JsonResult> Get(string codes)
+        //{
+        //    string[] codeArray = codes?.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
+        //    var expression = getExpression(Today, codeArray);
+        //    var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
+        //    return Json(pageData, JsonRequestBehavior.AllowGet);
+        //}
+        public JsonResult GetAlarmnotes(string codes)
+        {
+            var list = new List<t_alarmnotes>();
+            list.Add(new t_alarmnotes(){Code = "123",Name = "abc"});
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
 
         // GET: Alarmnotes/Details/5

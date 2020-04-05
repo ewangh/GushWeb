@@ -1,0 +1,130 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Gush</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/vue.min.js"></script>
+    <script src="~/Scripts/axios.min.js"></script>
+    <style type="text/css">
+        table {
+            margin: 10px auto auto 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <table v-show="alarmnotesList.length" class="table-condensed" border="1">
+            <thead class="navbar-header">
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Price%</th>
+                    <th>Time</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody v-for="(item,index) in alarmnotesList">
+                <tr>
+                    <td>{{item.Code}}</td>
+                    <td>{{item.Name}}</td>
+                    <td>{{item.Change}}</td>
+                    <td>{{item.Time}}</td>
+                    <td>
+                        <a href="#" v-on:click="getDetails(alarmnote.Code)">Details</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript">
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                alarmnotesList: []
+            },
+            mounted() {
+                this.timer = setInterval(this.getAllalarmnotes, 10000);
+            },
+            methods: {
+                getAllalarmnotes: function() {
+                    var _codes = [];
+                    this.alarmnotesList.forEach(item => {
+                        _codes.push(item.Code);
+                    });
+                    axios.post('@Url.Action("GetAlarmnotes")',
+                        { codes: _codes.join() }
+                    ).then(
+                        (response) => {
+                            //this.alarmnotesList = [];
+                            for (var i = 0; i < response.data.length; i++) {
+                                this.alarmnotesList.push(response.data[i]);
+                            }
+                        },
+                        (response) => {
+                            alert(response.status);
+                        }
+                    ).catch(function(response) {
+                        alert(response);
+                    });
+                },
+                getDetails: function(code) {
+
+                },
+                addalarmnote: function(name, phoneno, emailaddress) {
+                    axios.post('@Url.Action("Add", "alarmnote")',
+                        { alarmnote: { Name: name, PhoneNo: phoneno, EmailAddress: emailaddress } }).then(
+                        (response) => {
+                            this.alarmnotesList = [];
+                            for (var i = 0; i < response.data.length; i++) {
+                                this.alarmnotesList.push(response.data[i]);
+                            }
+                            this.alarmnotesList.push({ Id: "", Name: "", PhoneNo: "", EmailAddress: "" });
+                        },
+                        (response) => {
+                            alert(response.status);
+                        }
+                    ).catch(function(response) {
+                        alert(response);
+                    });
+                },
+                updatealarmnote: function(id, name, phoneno, emailaddress) {
+                    axios.post('@Url.Action("Update", "alarmnote")',
+                        { alarmnote: { Id: id, Name: name, PhoneNo: phoneno, EmailAddress: emailaddress } }).then(
+                        (response) => {
+                            this.alarmnotesList = [];
+                            for (var i = 0; i < response.data.length; i++) {
+                                this.alarmnotesList.push(response.data[i]);
+                            }
+                            this.alarmnotesList.push({ Id: "", Name: "", PhoneNo: "", EmailAddress: "" });
+                        },
+                        (response) => {
+                            alert(response.status);
+                        }
+                    ).catch(function(response) {
+                        alert(response);
+                    });
+                },
+                deletealarmnoteById: function(id) {
+                    axios.post('@Url.Action("Delete", "alarmnote")', { id: id }).then(
+                        (response) => {
+                            this.alarmnotesList = [];
+                            for (var i = 0; i < response.data.length; i++) {
+                                this.alarmnotesList.push(response.data[i]);
+                            }
+                            this.alarmnotesList.push({ Id: "", Name: "", PhoneNo: "", EmailAddress: "" });
+                        },
+                        (response) => {
+                            alert(response.status);
+                        }
+                    ).catch(function (response) {
+                        alert(response);
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -20,12 +20,11 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        @Html.ActionLink(User.Identity.Name, "Index", "Settlement")
+                        @Html.ActionLink("Test", "Index", "Alarmnotes")
                     </li>
                 </ul>
             </li>
-            <li><a href="javascript:if (confirm('Logout?'))document.getElementById('logoutLink').click()">@Resources.Resource1.logout</a></li>
-            <li>@Html.ActionLink(@Resources.Resource1.logout, "Logout", "Member", new{ },new { id = "logoutLink", style = "display:none" })</li>
+            <li>@Html.ActionLink(@Resources.Resource1.logout, "Logout", "Member", new{ },new { id = "logoutLink",  onclick = "return confirm('Logout?')" })</li>
         </ul>
     }
 }
