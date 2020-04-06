@@ -106,10 +106,14 @@ function splitData(myChart) {
     myChart.setOption(option = {
         backgroundColor: '#fff',
         animation: false,
+        title: {    //标题
+            text: data0.stockName,
+            left: 0
+        },
         legend: {
             bottom: 10,
             left: 'center',
-            data: ['Dow-Jones index', 'bPrice', 'cPrice', 'ZT']
+            data: ['日K', 'bPrice', 'cPrice', 'ZT']
         },
         tooltip: {
             trigger: 'axis',
@@ -243,7 +247,7 @@ function splitData(myChart) {
         ],
         series: [
             {
-                name: 'Dow-Jones index',
+                name: '日K',
                 type: 'candlestick',
                 data: data.values,
                 itemStyle: {
@@ -271,7 +275,7 @@ function splitData(myChart) {
                 data: calculateMA(5, data),
                 smooth: true,
                 lineStyle: {
-                    opacity: 0.5
+                    opacity: 0
                 }
             },
             {
