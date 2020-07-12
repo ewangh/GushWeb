@@ -11,12 +11,10 @@
                 <span class="input-group-btn">
                     <input type="submit" value="@Resources.Resource1.login" class="btn btn-primary" />
                 </span>
+                @Html.ActionLink(@Resources.Resource1.register, "Register",null,new {@style="margin-left:20px"})
             </div>
                 @Html.ValidationMessageFor(model => model.Token, "", new { @class = "text-danger" })
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         </div>
     </div>
-    <p>
-        @Html.ActionLink(@Resources.Resource1.register, "Register")
-    </p>
 }

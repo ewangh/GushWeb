@@ -79,6 +79,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 取消 的本地化字符串。
+        /// </summary>
+        internal static string cancel {
+            get {
+                return ResourceManager.GetString("cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 日K 的本地化字符串。
         /// </summary>
         internal static string dayK {
@@ -93,6 +102,15 @@ namespace Resources {
         internal static string email {
             get {
                 return ResourceManager.GetString("email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 F10 的本地化字符串。
+        /// </summary>
+        internal static string f10 {
+            get {
+                return ResourceManager.GetString("f10", resourceCulture);
             }
         }
         

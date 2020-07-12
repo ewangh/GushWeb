@@ -159,4 +159,10 @@
   <data name="more" xml:space="preserve">
     <value>更多</value>
   </data>
+  <data name="f10" xml:space="preserve">
+    <value>F10</value>
+  </data>
+  <data name="cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
 </root>

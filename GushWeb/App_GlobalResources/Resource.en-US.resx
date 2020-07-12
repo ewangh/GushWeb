@@ -123,11 +123,17 @@
   <data name="backto" xml:space="preserve">
     <value>Backto</value>
   </data>
+  <data name="cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="dayK" xml:space="preserve">
     <value>Day-Kline</value>
   </data>
   <data name="email" xml:space="preserve">
     <value>Email</value>
+  </data>
+  <data name="f10" xml:space="preserve">
+    <value>F10</value>
   </data>
   <data name="history" xml:space="preserve">
     <value>History</value>

@@ -1,0 +1,75 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IEnumerable<t_finace>
+@{
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "app",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+}
+<div id="app">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Num)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cash)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Change)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tb">
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Num)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cash)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Change)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Code }, new { target = "_blank" })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("FinaceAsyn", new { index = page,cash= ViewData["cash"],date1= ViewData["date1"], date2 = ViewData["date2"], ptype = ViewData["ptype"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+    </div>
+</div>

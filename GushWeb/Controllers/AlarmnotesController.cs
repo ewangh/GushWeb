@@ -61,7 +61,9 @@ namespace GushWeb.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return View("IndexNew",pageData);
+                return View("Index",pageData);
+                //TODO:vue request
+                //return View("IndexNew", pageData);
             }
 
             return View(pageData);
@@ -83,7 +85,7 @@ namespace GushWeb.Controllers
             return PartialView("pviewIndex", pageData);
         }
 
-        
+
         //public async Task<JsonResult> Get(string codes)
         //{
         //    string[] codeArray = codes?.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
@@ -91,6 +93,8 @@ namespace GushWeb.Controllers
         //    var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
         //    return Json(pageData, JsonRequestBehavior.AllowGet);
         //}
+
+        //TODO:vue request
         public JsonResult GetAlarmnotes(string codes)
         {
             var list = new List<t_alarmnotes>();

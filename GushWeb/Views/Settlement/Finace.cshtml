@@ -1,0 +1,122 @@
+﻿@using GushWeb.Helpers;
+@model IEnumerable<t_finace>
+
+@{
+    ViewBag.Title = "Finance";
+    var plateTypes = new List<SelectListItem>()
+    {
+        new SelectListItem(){Text = "",Value = ""}
+    };
+    var section = "PlateType";
+
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "app",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+    var ptypes = INIhelp.GetValue(section, "plateType").Split(',');
+    foreach (var pt in ptypes)
+    {
+        plateTypes.Add(new SelectListItem()
+        {
+            Text = pt,
+            Value = pt
+        });
+    }
+}
+@using (Ajax.BeginForm("FinaceAsyn", ajaxOption))
+{
+    <a id="modal" href="#modal-container" role="button" class="btn pull-right" data-toggle="modal">@Resources.Resource1.search</a>
+    <div class="modal fade" id="modal-container" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>@Html.TextBox("cash", 0, new { @class = "form-control", @type = "number" })</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.TextBox("date1", null, new { @class = "form-control", @placeholder = "Begin Date", @readonly = "readonly" })</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.TextBox("date2", null, new { @class = "form-control", @placeholder = "End Date", @readonly = "readonly" })</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DropDownList("ptype", plateTypes, new { @class = "combobox" })
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@Resources.Resource1.cancel</button> <button type="submit" name="search" class="btn btn-primary">@Resources.Resource1.search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("pview_finace", Model)
+    <p>
+        @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
+    </p>
+
+}
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        function onBegin() {
+            //显示
+            loading.show();
+        }
+
+        function onSuccess() {
+            //影藏
+            loading.hide();
+            $("#modal-container").modal("hide");
+        }
+
+        function onFailure() {
+            alert('请求错误');
+            //影藏
+            loading.hide();
+        }
+
+        function onComplete() {
+
+        }
+
+        (function () {
+            var today = new Date();
+            $("#date1").datetimepicker({
+                format: 'yyyy-mm-dd',
+                daysOfWeekDisabled: '0,6',
+                autoclose: true,
+                minView: 2,
+                endDate: today,
+            });
+            $("#date2").datetimepicker({
+                format: 'yyyy-mm-dd',
+                daysOfWeekDisabled: '0,6',
+                autoclose: true,
+                minView: 2,
+                endDate: today,
+            });
+        })()
+    </script>
+}

@@ -8,8 +8,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
 using GushLibrary.Models;
+using GushWeb.Helpers;
 using GushWeb.Models;
 using GushWeb.Utility;
+using PagedList;
 
 namespace GushWeb.Controllers
 {
@@ -18,8 +20,9 @@ namespace GushWeb.Controllers
     {
         private GushDBContext db = new GushDBContext();
         private GushProcContext proc = new GushProcContext();
-        readonly string SZprefix = "sz";
-        readonly string SHprefix = "sh";
+        const string SZprefix = "sz";
+        const string SHprefix = "sh";
+        private const int pageSize = 30;
 
         // GET: Settlement
         public ActionResult Index(string codes)
@@ -64,6 +67,13 @@ namespace GushWeb.Controllers
             return View(t_opennotes);
         }
 
+        public ActionResult Finace()
+        {
+            IEnumerable<t_finace> t_finaces = new List<t_finace>();
+            var pd = t_finaces.ToPagedList(1, pageSize);
+            return View(pd);
+        }
+
         [HttpPost]
         public ActionResult IndexAsyn(string codes)
         {
@@ -96,14 +106,55 @@ namespace GushWeb.Controllers
         [HttpPost]
         public ActionResult Index2Asyn(string date)
         {
-            List<t_opennotes> t_opennotes = new List<t_opennotes>();
+            IEnumerable<t_opennotes> t_opennotes = new List<t_opennotes>();
 
             if (date.IsDateTime())
             {
-                t_opennotes = proc.ProcServer.ExecOpenPro(date).ToList();
+                t_opennotes = proc.ProcServer.ExecOpenPro(date);
             }
 
             return PartialView("pviewIndexBydate", t_opennotes);
+        }
+
+        [HttpPost]
+        public ActionResult FinaceAsyn(float cash, string date1, string date2, string ptype, int index = 1)
+        {
+            ViewData["cash"] = cash;
+            ViewData["date1"] = date1;
+            ViewData["date2"] = date2;
+            ViewData["ptype"] = ptype;
+
+            IEnumerable<t_finace> t_finaces = new List<t_finace>();
+
+            if (date1 != null && date1.IsDateTime())
+            {
+                if (!String.IsNullOrEmpty(ptype))
+                {
+                    t_finaces = GetFinacesWithPlateType(date1, date2, ptype, index);
+                }
+                else
+                {
+                    t_finaces = GetFinaces(cash, date1, date2, index);
+                }
+            }
+            return PartialView("pview_finace", t_finaces);
+        }
+
+        private IEnumerable<t_finace> GetFinaces(float cash, string date1, string date2, int index)
+        {
+            var t_finaces = proc.ProcServer.ExecFinanceProc(cash, date1, date2.IsDateTime() ? date2 : date1);
+            var pd = t_finaces.ToList().ToPagedList(index, pageSize);
+            return pd;
+        }
+
+        private IEnumerable<t_finace> GetFinacesWithPlateType(string date1, string date2, string ptype, int index)
+        {
+            string key = "Codes";
+            float cash = -100;
+            var codeArray = INIhelp.GetValue(key, ptype).Split(',');
+            var t_finaces = proc.ProcServer.ExecFinanceProc(cash, date1, date2.IsDateTime() ? date2 : date1);
+            var pd = t_finaces.Where(d => codeArray.Contains(d.Code)).ToList().ToPagedList(index, pageSize);
+            return pd;
         }
 
         // GET: Settlement/Details/5
@@ -149,11 +200,14 @@ namespace GushWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             t_settlement t_settlement = db.SettlementList.Find(id);
+
             if (t_settlement == null)
             {
                 return HttpNotFound();
             }
+
             return View(t_settlement);
         }
 

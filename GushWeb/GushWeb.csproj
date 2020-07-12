@@ -249,6 +249,7 @@
     <Compile Include="Controllers\TokenApiController.cs" />
     <Compile Include="Helpers\CacheHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Helpers\IniHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AlarmQueue.cs" />
     <Compile Include="Models\TempTokenModel.cs" />
@@ -271,6 +272,10 @@
     <Compile Include="Utility\XmlDocument.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\gushComDB.mdf" />
+    <Content Include="App_Data\gushComDB_log.ldf">
+      <DependentUpon>gushComDB.mdf</DependentUpon>
+    </Content>
     <Content Include="App_Data\MemberRegisterEMailTemplate.htm" />
     <Content Include="App_Data\TempTokenRes.xml" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -335,6 +340,7 @@
     <Content Include="App_Code\ControlHelper.cshtml">
       <Generator>ResXFileCodeGenerator</Generator>
     </Content>
+    <Content Include="App_Data\GushWeb.ini" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile10.pubxml" />
@@ -458,6 +464,8 @@
     <Content Include="Views\Centre\pviewToken.cshtml" />
     <Content Include="Views\Centre\pviewTokenContent.cshtml" />
     <Content Include="Views\Alarmnotes\IndexNew.cshtml" />
+    <Content Include="Views\Settlement\Finace.cshtml" />
+    <Content Include="Views\Settlement\pview_finace.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />
