@@ -272,10 +272,6 @@
     <Compile Include="Utility\XmlDocument.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\gushComDB.mdf" />
-    <Content Include="App_Data\gushComDB_log.ldf">
-      <DependentUpon>gushComDB.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\MemberRegisterEMailTemplate.htm" />
     <Content Include="App_Data\TempTokenRes.xml" />
     <Content Include="Areas\HelpPage\HelpPage.css" />
