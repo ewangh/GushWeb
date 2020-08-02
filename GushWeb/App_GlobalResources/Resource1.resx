@@ -165,4 +165,10 @@
   <data name="cancel" xml:space="preserve">
     <value>取消</value>
   </data>
+  <data name="catapult" xml:space="preserve">
+    <value>启动榜</value>
+  </data>
+  <data name="changes" xml:space="preserve">
+    <value>涨幅榜</value>
+  </data>
 </root>

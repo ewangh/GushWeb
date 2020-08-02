@@ -88,6 +88,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 启动榜 的本地化字符串。
+        /// </summary>
+        internal static string catapult {
+            get {
+                return ResourceManager.GetString("catapult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 涨幅榜 的本地化字符串。
+        /// </summary>
+        internal static string changes {
+            get {
+                return ResourceManager.GetString("changes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 日K 的本地化字符串。
         /// </summary>
         internal static string dayK {

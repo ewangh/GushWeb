@@ -18,7 +18,8 @@
 }
 @using (Ajax.BeginForm("Index2Asyn", ajaxOption))
 {
-<div class="input-group" style="margin:15px 0px">
+    <br/>
+<div class="input-group">
     @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date", @readonly="readonly" })
     <span class="input-group-btn">
         <button class="btn btn-default" type="submit">

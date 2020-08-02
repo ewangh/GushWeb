@@ -126,6 +126,12 @@
   <data name="cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="catapult" xml:space="preserve">
+    <value>CatapultList</value>
+  </data>
+  <data name="changes" xml:space="preserve">
+    <value>ChangeList</value>
+  </data>
   <data name="dayK" xml:space="preserve">
     <value>Day-Kline</value>
   </data>

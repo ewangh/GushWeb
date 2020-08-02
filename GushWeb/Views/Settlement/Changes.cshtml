@@ -1,0 +1,92 @@
+﻿@using GushWeb.Helpers;
+@model IEnumerable<t_change>
+@{
+    ViewBag.Title = "Changes";
+
+    var section = "PlateType";
+    var plateTypes = new List<SelectListItem>()
+{
+new SelectListItem(){Text = "---PLATE---",Value = ""},
+};
+
+    var ptypes = INIhelp.GetValue(section, "plateType").Split(',');
+    foreach (var pt in ptypes)
+    {
+        plateTypes.Add(new SelectListItem()
+        {
+            Text = pt,
+            Value = pt
+        });
+    }
+
+    int _size = 10;
+    for (int i = 0; i < 600; i++)
+    {
+        plateTypes.Add(new SelectListItem()
+        {
+            Text = i * _size + "--" + (i + 1) * _size,
+            Value = i.ToString()
+        });
+    }
+}
+<form class="form-horizontal" role="form" method="post" id="mainForm" Autocomplete="on">
+    <br />
+    <div class="input-group">
+        @Html.DropDownList("ptype", plateTypes, new { data_live_search = "true", @class = "queryDevice selectpicker form-control" })
+        <span class="input-group-btn">
+            <button id="btn_search" class="btn btn-default" type="button">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </span>
+    </div>
+    <br />
+    <div id="main" style="height: 1200px"></div>
+</form>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/bootstrap-select.min.js"></script>
+    <script src="~/Scripts/stockChange.js"></script>
+    @Scripts.Render("~/bundles/echarts")
+    <script>
+        $.postJson = function (url, data, callback) {
+            $.post(url, data, callback, "json");
+        };
+        /*基于准备好的dom，初始化echarts实例*/
+        var chartId = 'main';
+        var mformId = "mainForm";
+        var action = '@Url.Action("GetChanges")';
+
+        function onBegin() {
+            //显示
+            loading.show();
+        }
+        function onSuccess() {
+            //影藏
+            loading.hide();
+        }
+        function onFailure() {
+            alert('请求错误');
+            //影藏
+            loading.hide();
+        }
+
+            $(function () {
+                //loading.show();
+                getChanges(action, mformId, chartId, onBegin, onSuccess, onFailure);
+                //loading.hide();
+                alert("finish");
+            })
+
+        $("#btn_search").click(function (e) {
+            e.preventDefault();//阻止事件传递
+            //loading.show();
+            getChanges(action, mformId, chartId, onBegin, onSuccess, onFailure);
+            //loading.hide();
+            alert("finish");
+        });
+
+    </script>
+}
+

@@ -117,9 +117,10 @@ namespace GushWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult FinaceAsyn(float cash, string date1, string date2, string ptype, int index = 1)
+        public ActionResult FinaceAsyn(float rate, int porder, string date1, string date2, string ptype, int index = 1)
         {
-            ViewData["cash"] = cash;
+            ViewData["rate"] = rate;
+            ViewData["porder"] = porder;
             ViewData["date1"] = date1;
             ViewData["date2"] = date2;
             ViewData["ptype"] = ptype;
@@ -130,29 +131,29 @@ namespace GushWeb.Controllers
             {
                 if (!String.IsNullOrEmpty(ptype))
                 {
-                    t_finaces = GetFinacesWithPlateType(date1, date2, ptype, index);
+                    t_finaces = GetFinacesWithPlateType(porder, date1, date2, ptype, index);
                 }
                 else
                 {
-                    t_finaces = GetFinaces(cash, date1, date2, index);
+                    t_finaces = GetFinaces(rate, porder, date1, date2, index);
                 }
             }
             return PartialView("pview_finace", t_finaces);
         }
 
-        private IEnumerable<t_finace> GetFinaces(float cash, string date1, string date2, int index)
+        private IEnumerable<t_finace> GetFinaces(float rate, int order, string date1, string date2, int index)
         {
-            var t_finaces = proc.ProcServer.ExecFinanceProc(cash, date1, date2.IsDateTime() ? date2 : date1);
+            var t_finaces = proc.ProcServer.ExecFinanceProc(rate, order, date1, date2.IsDateTime() ? date2 : date1);
             var pd = t_finaces.ToList().ToPagedList(index, pageSize);
             return pd;
         }
 
-        private IEnumerable<t_finace> GetFinacesWithPlateType(string date1, string date2, string ptype, int index)
+        private IEnumerable<t_finace> GetFinacesWithPlateType(int order, string date1, string date2, string ptype, int index)
         {
             string key = "Codes";
-            float cash = -100;
+            float rate = -100;
             var codeArray = INIhelp.GetValue(key, ptype).Split(',');
-            var t_finaces = proc.ProcServer.ExecFinanceProc(cash, date1, date2.IsDateTime() ? date2 : date1);
+            var t_finaces = proc.ProcServer.ExecFinanceProc(rate, order, date1, date2.IsDateTime() ? date2 : date1);
             var pd = t_finaces.Where(d => codeArray.Contains(d.Code)).ToList().ToPagedList(index, pageSize);
             return pd;
         }
@@ -167,6 +168,37 @@ namespace GushWeb.Controllers
             ViewData["stockCode"] = id;
             ViewData["stockDate"] = date;
             return View();
+        }
+
+        public ActionResult Changes()
+        {
+            var changesList = new List<t_change>();
+            return View(changesList);
+        }
+
+        public ActionResult Catapult()
+        {
+            string date = DateTime.Now.ToYYYYMMDD();
+            ViewData["date"] = date;
+            var catapultList = proc.ProcServer.ExecCatapultProc(date);
+            var pd = catapultList.ToPagedList(1, 100);
+
+            return View(pd);
+        }
+
+        [HttpPost]
+        public ActionResult CatapultAsyn(string date, int index = 1)
+        {
+            ViewData["date"] = date;
+            IEnumerable<t_catapult> t_catapults = new List<t_catapult>();
+
+            if (date.IsDateTime())
+            {
+                t_catapults = proc.ProcServer.ExecCatapultProc(date);
+            }
+
+            var pd = t_catapults.ToPagedList(index, 100);
+            return PartialView("pview_catapult", pd);
         }
 
         // GET: Settlement/Create
@@ -334,6 +366,51 @@ namespace GushWeb.Controllers
                 CoordDate = CoordDate,
                 ZeroDate = ZeroDate,
             }));
+        }
+
+        [HttpPost]
+        public JsonResult GetChanges(string ptype)
+        {
+            IEnumerable<t_change> changesList = new List<t_change>();
+
+            if (String.IsNullOrEmpty(ptype))
+            {
+                return Json(changesList);
+            }
+
+            var List = proc.ProcServer.ExecChangeProc();
+
+            if (int.TryParse(ptype, out int _page))
+            {
+                int _size = 10;
+                int _skip = _page * _size;
+                changesList = List.Take(_skip + _size).Skip(_skip);
+            }
+            else
+            {
+                string key = "Codes";
+                var codeArray = INIhelp.GetValue(key, ptype).Split(',');
+
+                changesList = List.Where(d => codeArray.Contains(d.Code));
+            }
+
+
+            var pd = changesList.Select(d => new
+            {
+                name = d.Name,
+                type = "line",
+                axis = new string[]
+                {
+                    d.Date_1, d.Date_2, d.Date_3, d.Date_4, d.Date_5, d.Date_6, d.Date_7, d.Date_8, d.Date_9, d.Date_x
+                },
+                data = new decimal?[]
+                {
+                    d.Change_1, d.Change_2, d.Change_3, d.Change_4, d.Change_5, d.Change_6, d.Change_7, d.Change_8,
+                    d.Change_9, d.Change_x
+                }
+            });
+
+            return Json(pd);
         }
     }
 }

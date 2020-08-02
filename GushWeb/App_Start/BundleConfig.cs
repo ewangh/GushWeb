@@ -27,6 +27,7 @@ namespace GushWeb
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap-datetimepicker.min.css",
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-select.min.css",
                       "~/Content/PagedList.css",
                       "~/Content/site.css",
                       "~/Content/ownStyle.css"));

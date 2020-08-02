@@ -35,6 +35,9 @@
                     @Html.DisplayNameFor(model => model.Rate)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Expen)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Change)
                 </th>
                 <th></th>
@@ -60,6 +63,9 @@
                     @Html.DisplayFor(modelItem => item.Rate)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Expen)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Change)
                 </td>
                 <td>
@@ -70,6 +76,6 @@
         </tbody>
     </table>
     <div style="text-align: center;">
-        @Html.PagedListPager(Model as IPagedList, page => Url.Action("FinaceAsyn", new { index = page,cash= ViewData["cash"],date1= ViewData["date1"], date2 = ViewData["date2"], ptype = ViewData["ptype"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("FinaceAsyn", new { index = page, rate = ViewData["rate"], porder = ViewData["porder"],date1= ViewData["date1"], date2 = ViewData["date2"], ptype = ViewData["ptype"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
     </div>
 </div>
