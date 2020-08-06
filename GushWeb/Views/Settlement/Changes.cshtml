@@ -29,17 +29,20 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
         });
     }
 }
+
 <form class="form-horizontal" role="form" method="post" id="mainForm" Autocomplete="on">
-    <br />
+    <br/>
+    <marquee><span style="font-weight: bolder;font-style:italic;font-size: 30px;">@ViewData["Rises"]</span></marquee>
+    <br/>
     <div class="input-group">
-        @Html.DropDownList("ptype", plateTypes, new { data_live_search = "true", @class = "queryDevice selectpicker form-control" })
+        @Html.DropDownList("ptype", plateTypes, new {data_live_search = "true", @class = "queryDevice selectpicker form-control"})
         <span class="input-group-btn">
             <button id="btn_search" class="btn btn-default" type="button">
                 <span class="glyphicon glyphicon-search"></span>
             </button>
         </span>
     </div>
-    <br />
+    <br/>
     <div id="main" style="height: 1200px"></div>
 </form>
 
@@ -73,18 +76,12 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
         }
 
             $(function () {
-                //loading.show();
                 getChanges(action, mformId, chartId, onBegin, onSuccess, onFailure);
-                //loading.hide();
-                alert("finish");
             })
 
         $("#btn_search").click(function (e) {
             e.preventDefault();//阻止事件传递
-            //loading.show();
             getChanges(action, mformId, chartId, onBegin, onSuccess, onFailure);
-            //loading.hide();
-            alert("finish");
         });
 
     </script>

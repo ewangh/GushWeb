@@ -173,6 +173,26 @@ namespace GushWeb.Controllers
         public ActionResult Changes()
         {
             var changesList = new List<t_change>();
+            List<string> rises = new List<string>();
+
+            var List = proc.ProcServer.ExecChangeProc();
+            string plateKey = "PlateType";
+            string plateValue = "plateType";
+            string CodeKey = "Codes";
+
+            var plateArray = INIhelp.GetValue(plateKey, plateValue).Split(',');
+            foreach (var pkey in plateArray)
+            {
+                var codeArray = INIhelp.GetValue(CodeKey, pkey).Split(',');
+                var sum = List.Where(d => codeArray.Contains(d.Code)).Sum(d=>d.Change_x-d.Change_9);
+
+                if (sum > 1)
+                {
+                    rises.Add(pkey);
+                }
+            }
+
+            ViewData["Rises"] = String.Join(",", rises);
             return View(changesList);
         }
 
