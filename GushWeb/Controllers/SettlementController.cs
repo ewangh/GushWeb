@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
@@ -173,26 +174,6 @@ namespace GushWeb.Controllers
         public ActionResult Changes()
         {
             var changesList = new List<t_change>();
-            List<string> rises = new List<string>();
-
-            var List = proc.ProcServer.ExecChangeProc();
-            string plateKey = "PlateType";
-            string plateValue = "plateType";
-            string CodeKey = "Codes";
-
-            var plateArray = INIhelp.GetValue(plateKey, plateValue).Split(',');
-            foreach (var pkey in plateArray)
-            {
-                var codeArray = INIhelp.GetValue(CodeKey, pkey).Split(',');
-                var sum = List.Where(d => codeArray.Contains(d.Code)).Sum(d=>d.Change_x-d.Change_9);
-
-                if (sum > 1)
-                {
-                    rises.Add(pkey);
-                }
-            }
-
-            ViewData["Rises"] = String.Join(",", rises);
             return View(changesList);
         }
 
@@ -388,6 +369,16 @@ namespace GushWeb.Controllers
             }));
         }
 
+        public IEnumerable<string> GetPlateTypes()
+        {
+            return INIhelp.GetValue("PlateType", "plateType").Split(',').AsEnumerable();
+        }
+
+        public IEnumerable<string> GetPlateCodes(string pkey)
+        {
+            return INIhelp.GetValue("Codes", pkey).Split(',').AsEnumerable();
+        }
+
         [HttpPost]
         public JsonResult GetChanges(string ptype)
         {
@@ -431,6 +422,40 @@ namespace GushWeb.Controllers
             });
 
             return Json(pd);
+        }
+
+        [HttpPost]
+        public JsonResult GetRises()
+        {
+            List<string> rises = new List<string>();
+
+            var List = proc.ProcServer.ExecChangeProc();
+
+            var plateArray = GetPlateTypes();
+            foreach (var pkey in plateArray)
+            {
+                var codeArray = GetPlateCodes(pkey);
+                {
+                    //var sum = List.Where(d => codeArray.Contains(d.Code)).Sum(d => d.Change_x - d.Change_9);
+
+                    //if (sum > 1)
+                    //{
+                    //    rises.Add(pkey);
+                    //}
+                }
+                {
+                    int top = 5;
+                    var down = List.Where(d => codeArray.Contains(d.Code)).OrderByDescending(d => d.Change_9).Take(top)
+                        .Where(d => d.Change_x - d.Change_9 < 0).Count();
+
+                    if (down < top / 2)
+                    {
+                        rises.Add(pkey);
+                    }
+                }
+            }
+
+            return Json(rises);
         }
     }
 }
