@@ -96,8 +96,8 @@ function getChangesByData(action, value, chartId, func_begin, func_success, func
 }
 
 function getRises(action, mformId, func_link) {
-    $("#" + mformId).empty();
     $.postJson(action, '', function (result) {
+        $("#" + mformId).empty();
         if (result.length > 0) {
             $.each(result, function (i, item) {
                 var _href = "javascript:" + func_link + "('" + item + "');"

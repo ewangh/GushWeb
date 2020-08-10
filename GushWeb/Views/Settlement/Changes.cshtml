@@ -80,11 +80,14 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
         }
 
         function postChanges(ptype) {
-            $("#ptype").find("option:contains('" + ptype + "')").attr("selected",true);
+            if (ptype != '') {
+                $("button[title]").find("div:last").text(ptype);
+                $("#ptype").find("option:contains('" + ptype + "')").attr("selected", true);
+            }
             getChangesByData(funChange, ptype, chartId, onBegin, onSuccess, onFailure);
         }
 
-        $(function () {
+        $(function() {
             getRises(funRises, risesId, postChanges.name);
         })
 

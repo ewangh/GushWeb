@@ -432,26 +432,27 @@ namespace GushWeb.Controllers
             var List = proc.ProcServer.ExecChangeProc();
 
             var plateArray = GetPlateTypes();
+            int top = 6;
+
             foreach (var pkey in plateArray)
             {
                 var codeArray = GetPlateCodes(pkey);
                 {
-                    //var sum = List.Where(d => codeArray.Contains(d.Code)).Sum(d => d.Change_x - d.Change_9);
+                    var sum = List.Where(d => codeArray.Contains(d.Code)).Take(top).Sum(d => d.Change_x - d.Change_9);
 
-                    //if (sum > 1)
-                    //{
-                    //    rises.Add(pkey);
-                    //}
-                }
-                {
-                    int top = 5;
-                    var down = List.Where(d => codeArray.Contains(d.Code)).OrderByDescending(d => d.Change_9).Take(top)
-                        .Where(d => d.Change_x - d.Change_9 < 0).Count();
-
-                    if (down < top / 2)
+                    if (sum.ToDecimal() > 0.1m)
                     {
                         rises.Add(pkey);
                     }
+                }
+                {
+                    //var down = List.Where(d => codeArray.Contains(d.Code)).OrderByDescending(d => d.Change_9).Take(top)
+                    //    .Where(d => d.Change_x - d.Change_9 < 0).Count();
+
+                    //if (down < top / 2)
+                    //{
+                    //    rises.Add(pkey);
+                    //}
                 }
             }
 
