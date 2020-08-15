@@ -91,13 +91,14 @@ function getChangesByData(action, value, chartId, func_begin, func_success, func
     });
 }
 
-function getRises(action, mformId, func_link) {
-    $.postJson(action, '', function (result) {
+function getRises(action, value, mformId, func_link) {
+    var data = { ptype: value };
+    $.postJson(action, data, function (result) {
         $("#" + mformId).empty();
         if (result.length > 0) {
             $.each(result,
                 function (i, item) {
-                    var _href = "javascript:" + func_link + "('" + item.Ptype + "');"
+                    var _href = "javascript:$(this).css({'border':'solid'});" + func_link + "('" + item.Ptype + "');"
                     var a_rise = $('<a>',
                         {
                             text: item.Ptype + "[" + item.Change + "]",
@@ -105,7 +106,7 @@ function getRises(action, mformId, func_link) {
                             onclick: _href
                             //target: "_blank",
                             //title: "goto baidu"
-                        });
+                        }).css({"border":item.IsCheck?"solid":""});
                     var span_tab = $('<span>',
                         {
                             text: " "

@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Security.Policy;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -396,17 +397,17 @@ namespace GushWeb.Controllers
                 int _skip = _page * _size;
 
                 changesList = await (from v in db.ChangesList
-                    where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
-                    select v).Take(_skip + _size).Skip(_skip).ToArrayAsync();
+                                     where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
+                                     select v).OrderByDescending(v => v.Change_x).Take(_skip + _size).Skip(_skip).ToArrayAsync();
             }
             else
             {
                 string key = "Codes";
                 var codeArray = INIhelp.GetValue(key, ptype).Split(',');
-                
+
                 changesList = await (from v in db.ChangesList
-                    where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
-                    select v).Where(v => codeArray.Contains(v.Code)).ToArrayAsync();
+                                     where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
+                                     select v).Where(v => codeArray.Contains(v.Code)).OrderByDescending(v => v.Change_x).ToArrayAsync();
             }
 
 
@@ -429,11 +430,16 @@ namespace GushWeb.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetRises()
+        public JsonResult GetRises(string ptype)
         {
             List<Rise> rises = new List<Rise>();
 
             var plateArray = GetPlateTypes();
+            //long changesCount = (from v in db.ChangesList
+            //                     where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
+            //                     select v).Count();
+            
+            //int _size = 10;
             int top = 6;
 
             foreach (var pkey in plateArray)
@@ -441,18 +447,30 @@ namespace GushWeb.Controllers
                 var codeArray = GetPlateCodes(pkey);
                 {
                     var sum = (from v in db.ChangesList
-                        where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
-                        where codeArray.Contains(v.Code)
-                        select v).Take(top).Sum(d => d.Change_x - d.Change_9);
+                               where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
+                               where codeArray.Contains(v.Code)
+                               select v).Take(top).Sum(d => d.Change_x - d.Change_9);
 
                     var riseObj = new Rise()
                     {
                         Ptype = pkey,
-                        Change = sum
+                        Change = sum,
+                        IsCheck = pkey == ptype
                     };
                     rises.Add(riseObj);
                 }
             }
+
+            //for (int i = 0; i < changesCount; i = i + _size)
+            //{
+            //    var riseObj = new Rise()
+            //    {
+            //        Ptype = i.ToString(),
+            //        Change = null,
+            //        IsCheck = i.ToString() == ptype
+            //    };
+            //    rises.Add(riseObj);
+            //}
 
             return Json(rises.OrderByDescending(d => d.Change));
         }

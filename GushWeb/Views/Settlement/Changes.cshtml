@@ -2,7 +2,7 @@
 @model IEnumerable<t_change>
 @{
     ViewBag.Title = "Changes";
-
+    var db = new GushDBContext();
     var section = "PlateType";
     var plateTypes = new List<SelectListItem>()
 {
@@ -20,7 +20,11 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
     }
 
     int _size = 10;
-    for (int i = 0; i < 600; i++)
+    long changesPages = (from v in db.ChangesList
+                         where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
+                         select v).Count() / _size;
+
+    for (int i = 0; i < changesPages; i++)
     {
         plateTypes.Add(new SelectListItem()
         {
@@ -59,6 +63,7 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
         var chartId = 'main';
         var mformId = "mainForm";
         var risesId = 'div_rises';
+        var pType;
         var funChange = '@Url.Action("GetChanges")';
         var funRises = '@Url.Action("GetRises")';
 
@@ -70,7 +75,7 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
         function onSuccess() {
             //影藏
             loading.hide();
-            getRises(funRises, risesId, postChanges.name);
+            getRises(funRises, pType, risesId, postChanges.name);
         }
 
         function onFailure() {
@@ -81,20 +86,24 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
 
         function postChanges(ptype) {
             if (ptype != '') {
-                $("button[title]").find("div:last").text(ptype);
-                $("#ptype").find("option:contains('" + ptype + "')").attr("selected", true);
+                pType = ptype;
+                $("#ptype").find("option:contains('" + ptype + "')").each(function (item, index) {
+                    $("button[title]").find("div:last").text($(this).text());
+                    $(this).attr("selected", true);
+                    return false;
+                });
             }
             getChangesByData(funChange, ptype, chartId, onBegin, onSuccess, onFailure);
         }
 
         $(function() {
-            getRises(funRises, risesId, postChanges.name);
+            getRises(funRises, pType, risesId, postChanges.name);
         })
 
         $("#btn_search").click(function(e) {
             e.preventDefault(); //阻止事件传递
-            var ptype = $("#ptype").val();
-            postChanges(ptype);
+            pType = $("#ptype").val();
+            postChanges(pType);
         });
 
     </script>

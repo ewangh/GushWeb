@@ -9,5 +9,6 @@ namespace GushWeb.Models
     {
         public string Ptype { get; set; }
         public decimal? Change { get; set; }
+        public bool? IsCheck { get; set; }
     }
 }
