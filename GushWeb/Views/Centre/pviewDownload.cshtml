@@ -1,32 +1,45 @@
-﻿@model IEnumerable<string>
+﻿@using ServiceStack.Common.Extensions
+@using GushWeb.Utility
+@model IEnumerable<string>
 @{
     GushDBContext db = new GushDBContext();
     const int pageSize = 10;
-    var list = db.SettlementList.GroupBy(d => d.Date).Select(g => (new { date = g.Key, count = g.Count() })).OrderByDescending(t => t.date).Take(10);
+    var list = from objs in db.SettlementList.GroupBy(d => d.Date).Select(g => (new { date = g.Key, count = g.Count() }))
+               join xobjs in db.ChangesList.GroupBy(d => d.Date_9).Select(g => (new { date = g.Key, count = g.Count() })) on objs.date equals xobjs.date into temp
+               from tt in temp.DefaultIfEmpty()
+               select new
+               {
+                   date = objs.date,
+                   count = objs.count,
+                   xcount = (int?)tt.count??0
+               };
+    list = list.OrderByDescending(t => t.date).Take(10);
 }
 @using (Html.BeginForm())
 {
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>
-                Date
-            </th>
-            <th>
-                Count
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in list)
-                {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.date)
-            </td>
-            <td>@Html.DisplayFor(modelItem => item.count)</td>
-        </tr>
-                }
-    </tbody>
-</table>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Count
+                </th>
+                <th>XCount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in list)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.date)
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.count)</td>
+                    <td>@Html.DisplayFor(modelItem => item.xcount)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
