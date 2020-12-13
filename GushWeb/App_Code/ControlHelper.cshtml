@@ -1,8 +1,9 @@
-﻿@helper DateControl(string prev, string current, string next)
+﻿@using System.Text.RegularExpressions
+@helper DateControl(string prev, string current, string next)
 {
     if (@prev != null)
     {
-    <input class="btn btn-default" style="border-radius:20px" type="button" value=" < " onclick="jump('@prev');" />
+        <input class="btn btn-default" style="border-radius:20px" type="button" value=" < " onclick="jump('@prev');" />
     }
     if (@current != null)
     {
@@ -12,4 +13,11 @@
     {
         <input class="btn btn-default" style="border-radius:20px" type="button" value=" > " onclick="jump('@next');" />
     }
+}
+
+@helper UrlControl(string url, string code)
+{
+    string pattern = @"\d+";
+    url = url + Regex.Match(code, pattern).Value;
+    <a href=@url target="_blank">@code</a>
 }

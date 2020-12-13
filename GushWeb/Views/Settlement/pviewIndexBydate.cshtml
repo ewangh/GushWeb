@@ -9,13 +9,10 @@
             @Html.DisplayFor(modelItem => item.Code)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @Html.ActionLink(item.Name, "Details", new { id = item.Code, date = item.CoordDate }, new { target = "_blank" })
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id = item.Code, date = item.CoordDate }, new { target = "_blank" })
         </td>
     </tr>
 }

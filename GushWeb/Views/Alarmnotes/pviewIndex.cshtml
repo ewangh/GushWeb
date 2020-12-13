@@ -1,5 +1,13 @@
 ﻿@using GushWeb.Utility
+@using System.Configuration
 @model IEnumerable<t_alarmnotes>
+@{
+    var url = ConfigurationManager.AppSettings["iwc"];
+
+    GushDBContext db = new GushDBContext();
+    var max_date = db.ChangesList.Max(d => d.Date_9);
+    Dictionary<string, int?> samples = db.ChangesList.Where(pair => pair.Date_9.CompareTo(max_date) == 0).ToDictionary(pair => pair.Code, pair => pair.Num);
+}
 @foreach (var item in Model)
 {
     <tr>
@@ -7,11 +15,10 @@
             @Html.Hidden("codes", item.Code)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Code)
-
+            @ControlHelper.UrlControl(url,item.Code)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @Html.ActionLink(item.Name, "Details", new { id = item.Code }, new { target = "_blank" })
         </td>
         <td>
             <span name="@item.Code" tagp="@item.Price" tagc="@item.Closed">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
@@ -19,10 +26,13 @@
             <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Time)
+            @if (samples.ContainsKey(item.Code))
+            {
+            @samples[item.Code];
+            }
         </td>
         <td>
-            @Html.ActionLink("Details", "Details", new { id = item.Code }, new { target = "_blank" })
+            @Html.DisplayFor(modelItem => item.Time)
         </td>
     </tr>
 }

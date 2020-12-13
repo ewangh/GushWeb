@@ -16,8 +16,6 @@
         OnComplete = "onComplete()",
         InsertionMode = InsertionMode.InsertAfter
     };
-
-
 }
 <div class="input-group" style="margin:15px 0px 10px 0px">
     @ControlHelper.DateControl(@ViewBag.Prev, @ViewBag.Current, @ViewBag.Next)
@@ -38,10 +36,10 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Price)%
                 </th>
+                <th>Num</th>
                 <th>
                     @Html.DisplayNameFor(model => model.Time)
                 </th>
-                <th></th>
             </tr>
         </thead>
         <tbody id="tb">
