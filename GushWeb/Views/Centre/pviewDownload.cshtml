@@ -5,13 +5,16 @@
     GushDBContext db = new GushDBContext();
     const int pageSize = 10;
     var list = from objs in db.SettlementList.GroupBy(d => d.Date).Select(g => (new { date = g.Key, count = g.Count() }))
-               join xobjs in db.ChangesList.GroupBy(d => d.Date_9).Select(g => (new { date = g.Key, count = g.Count() })) on objs.date equals xobjs.date into temp
-               from tt in temp.DefaultIfEmpty()
+               join ffobjs in db.FoamList.GroupBy(d => d.Date).Select(g => (new { date = g.Key, count = g.Count() })) on objs.date equals ffobjs.date into ftemp
+               from ff in ftemp.DefaultIfEmpty()
+               join xobjs in db.ChangesList.GroupBy(d => d.Date_9).Select(g => (new { date = g.Key, count = g.Count() })) on objs.date equals xobjs.date into xtemp
+               from xx in xtemp.DefaultIfEmpty()
                select new
                {
                    date = objs.date,
                    count = objs.count,
-                   xcount = (int?)tt.count??0
+                   fcount = (int?)ff.count ?? 0,
+                   xcount = (int?)xx.count ?? 0
                };
     list = list.OrderByDescending(t => t.date).Take(10);
 }
@@ -26,19 +29,21 @@
                 <th>
                     Count
                 </th>
+                <th>FfCount</th>
                 <th>XCount</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in list)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.date)
-                    </td>
-                    <td>@Html.DisplayFor(modelItem => item.count)</td>
-                    <td>@Html.DisplayFor(modelItem => item.xcount)</td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.date)
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.count)</td>
+                <td>@Html.DisplayFor(modelItem => item.fcount)</td>
+                <td>@Html.DisplayFor(modelItem => item.xcount)</td>
+            </tr>
             }
         </tbody>
     </table>

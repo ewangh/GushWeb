@@ -169,6 +169,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 净买榜 的本地化字符串。
+        /// </summary>
+        internal static string netbuy {
+            get {
+                return ResourceManager.GetString("netbuy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 密码 的本地化字符串。
         /// </summary>
         internal static string password {

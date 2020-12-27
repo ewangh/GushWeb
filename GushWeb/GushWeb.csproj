@@ -252,6 +252,7 @@
     <Compile Include="Helpers\IniHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AlarmQueue.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Rise.cs" />
     <Compile Include="Models\TempTokenModel.cs" />
     <Compile Include="Utility\ConfigEntity.cs" />
@@ -594,6 +595,8 @@
     <Content Include="Views\Settlement\Changes.cshtml" />
     <Content Include="Views\Settlement\Catapult.cshtml" />
     <Content Include="Views\Settlement\pview_catapult.cshtml" />
+    <Content Include="Views\Settlement\Netbuy.cshtml" />
+    <Content Include="Views\Settlement\pview_netbuy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

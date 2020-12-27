@@ -153,6 +153,9 @@
   <data name="more" xml:space="preserve">
     <value>More</value>
   </data>
+  <data name="netbuy" xml:space="preserve">
+    <value>Netbuy</value>
+  </data>
   <data name="password" xml:space="preserve">
     <value>Password</value>
   </data>

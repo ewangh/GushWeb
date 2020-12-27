@@ -171,4 +171,7 @@
   <data name="changes" xml:space="preserve">
     <value>涨幅榜</value>
   </data>
+  <data name="netbuy" xml:space="preserve">
+    <value>净买榜</value>
+  </data>
 </root>

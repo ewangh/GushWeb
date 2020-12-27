@@ -1,0 +1,85 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@using System.Configuration
+@model IEnumerable<t_foam>
+@{
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "app",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+}
+<div id="app">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(1)">@Html.DisplayNameFor(model => model.Netbuy)</a>
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(2)">@Html.DisplayNameFor(model => model.Change)</a>
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Total)</a>
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Time)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+            </tr>
+        </thead>
+        <tbody id="tb">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
+                    </td>
+                    <td>
+                        <a href="javascript:;" onclick="getCodeQueue('@item.Code')">@item.Name</a>
+                    </td>
+                    <td>
+                        @ConvertHelper.ColorConvert(item.Netbuy)
+                    </td>
+                    <td>
+                        @ConvertHelper.ColorConvert(item.Change)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Total)
+                    </td>
+                    <td>
+                        @ConvertHelper.ColorConvert(item.Foam, 0.5m)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Time)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyAsyn", new { index = page, date = ViewData["date"], mode = ViewData["mode"], col = ViewData["col"], odcol = ViewData["odcol"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+    </div>
+</div>
+

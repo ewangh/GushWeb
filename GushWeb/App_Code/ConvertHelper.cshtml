@@ -10,3 +10,15 @@
         @String.Empty
     }
 }
+
+@helper ColorConvert(decimal? val, decimal offset = 0)
+{
+    if (val >= offset)
+    {
+        <font color="red">@val</font>
+    }
+    else if (val < offset)
+    {
+        <font color="green">@val</font>
+    }
+}

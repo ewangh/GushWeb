@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Security.Policy;
 using System.Threading;
@@ -202,6 +203,132 @@ namespace GushWeb.Controllers
 
             var pd = t_catapults.ToPagedList(index, 100);
             return PartialView("pview_catapult", pd);
+        }
+
+        public ActionResult Netbuy()
+        {
+            string date = DateTime.Now.ToYYYYMMDD();
+            ViewData["date"] = date;
+            var netbuyList = db.FoamList.Where(d => d.Date == date);
+            var pd = netbuyList.ToList().ToPagedList(1, 500);
+
+            return View(pd);
+        }
+
+        [HttpPost]
+        public ActionResult NetbuyAsyn(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
+        {
+            ViewData["date"] = date;
+            ViewData["mode"] = mode;
+            ViewData["col"] = col;
+
+            IEnumerable<t_foam> t_foams = new List<t_foam>();
+            Expression<Func<t_foam, bool>> expression = d => true;
+
+            if (date.IsDateTime())
+            {
+                return NetbuyAsynByDate(date, col, odcol, mode, index);
+            }
+            return NetbuyAsynByCodeOrName(date, mode, index);
+        }
+
+        public ActionResult NetbuyAsynByDate(string date, int col, int odcol, NetbuyMode mode, int index)
+        {
+            IEnumerable<t_foam> t_foams = new List<t_foam>();
+            Expression<Func<t_foam, bool>> expression = d => d.Date.CompareTo(date) == 0;
+
+            switch (mode)
+            {
+                case NetbuyMode.Up:
+                    expression = expression.And(d => d.Change >= 0m);
+                    break;
+                case NetbuyMode.Down:
+                    expression = expression.And(d => d.Change < 0m);
+                    break;
+                case NetbuyMode.Buy:
+                    expression = expression.And(d => d.Netbuy >= 0m);
+                    break;
+                case NetbuyMode.Sell:
+                    expression = expression.And(d => d.Netbuy < 0m);
+                    break;
+                default:
+                    break;
+            }
+
+            Expression<Func<t_foam, decimal?>> odby = d => d.Foam;
+            switch (col)
+            {
+                case 1:
+                    odby = d => d.Netbuy;
+                    break;
+                case 2:
+                    odby = d => d.Change;
+                    break;
+                case 3:
+                    odby = d => d.Total;
+                    break;
+                case 4:
+                default:
+                    break;
+            }
+
+            t_foams = db.FoamList.Where(expression).ToList();
+
+            if (index > 1)
+            {
+                ViewData["odcol"] = odcol;
+
+                if (col == odcol)
+                {
+                    t_foams = t_foams.AsQueryable().OrderBy(odby);
+                }
+                else
+                {
+                    t_foams = t_foams.AsQueryable().OrderByDescending(odby);
+                }
+            }
+            else
+            {
+                if (col == odcol)
+                {
+                    ViewData["odcol"] = 0;
+                    t_foams = t_foams.AsQueryable().OrderByDescending(odby);
+                }
+                else
+                {
+                    ViewData["odcol"] = col;
+                    t_foams = t_foams.AsQueryable().OrderBy(odby);
+                }
+            }
+            
+            var pd = t_foams.ToPagedList(index, 500);
+            return PartialView("pview_netbuy", pd);
+        }
+
+        public ActionResult NetbuyAsynByCodeOrName(string codename, NetbuyMode mode, int index)
+        {
+            Expression<Func<t_foam, bool>> expression = d => codename.Contains(d.Code) || codename.Contains(d.Name);
+
+            switch (mode)
+            {
+                case NetbuyMode.Up:
+                    expression = expression.And(d => d.Change >= 0m);
+                    break;
+                case NetbuyMode.Down:
+                    expression = expression.And(d => d.Change < 0m);
+                    break;
+                case NetbuyMode.Buy:
+                    expression = expression.And(d => d.Netbuy >= 0m);
+                    break;
+                case NetbuyMode.Sell:
+                    expression = expression.And(d => d.Netbuy < 0m);
+                    break;
+                default:
+                    break;
+            }
+
+            var pd = db.FoamList.Where(expression).OrderBy(d => d.Code).ThenByDescending(d => d.Date).ToPagedList(index, 500);
+            return PartialView("pview_netbuy", pd);
         }
 
         // GET: Settlement/Create
@@ -438,7 +565,7 @@ namespace GushWeb.Controllers
             //long changesCount = (from v in db.ChangesList
             //                     where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
             //                     select v).Count();
-            
+
             //int _size = 10;
             int top = 6;
 

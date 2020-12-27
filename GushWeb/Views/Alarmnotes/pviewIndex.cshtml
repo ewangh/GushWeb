@@ -28,7 +28,7 @@
         <td>
             @if (samples.ContainsKey(item.Code))
             {
-            @samples[item.Code];
+            <a name="num" href="javascript:;" onclick="morethan(@samples[item.Code])" value="@samples[item.Code]">@samples[item.Code]</a> 
             }
         </td>
         <td>

@@ -1,0 +1,119 @@
+﻿@using GushWeb.Models
+@model IEnumerable<t_foam>
+
+@{
+    ViewBag.Title = "Netbuy";
+
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "app",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+}
+@using (Ajax.BeginForm("NetbuyAsyn", ajaxOption))
+{
+    <br />
+    <div class="input-group">
+        <a name="amode" href="javascript:;" onclick="getModeQueue(1)" value="1">只看上涨</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a name="amode" href="javascript:;" onclick="getModeQueue(2)" value="2">只看下跌</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a name="amode" href="javascript:;" onclick="getModeQueue(3)" value="3">只看净买</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a name="amode" href="javascript:;" onclick="getModeQueue(4)" value="4">只看净卖</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a name="amode" href="javascript:;" onclick="getModeQueue(0)" value="5">全部</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        @Html.Hidden("mode", "")
+        @Html.Hidden("col", "")
+        @Html.Hidden("odcol", "")
+        @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date"})
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </span>
+    </div>
+    <br />
+    @Html.Partial("pview_netbuy", Model)
+    <p>
+        @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
+    </p>
+
+}
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        function onBegin() {
+            //显示
+            loading.show();
+        }
+
+        function onSuccess() {
+            //影藏
+            loading.hide();
+            $("#modal-container").modal("hide");
+        }
+
+        function onFailure() {
+            alert('请求错误');
+            //影藏
+            loading.hide();
+        }
+
+        function onComplete() {
+
+        }
+
+        function getCodeQueue(code) {
+            $("#date").val(code);
+            getModeQueue(0);
+        }
+
+        function getModeQueue(mode) {
+            $("[type=hidden][name='mode']").val(mode);
+            $("a[name='amode']").each(function() {
+                var i = parseInt($(this).attr("value"));
+                if (i == mode) {
+                    $(this).css({ "border": "solid" })
+                } else {
+                    $(this).css({ "border": "" })
+                }
+            });
+
+            $("form").submit();
+        }
+
+        function getColQueue(col) {
+            $("[type=hidden][name='col']").val(col);
+            if ($("[type=hidden][name='col']").val() == $("[type=hidden][name='odcol']").val()) {
+                $("[type=hidden][name='odcol']").val(0);
+            } else {
+                $("[type=hidden][name='odcol']").val(col);
+            }
+            $("form").submit();
+        }
+
+        (function() {
+            var today = new Date();
+            $("#date").datetimepicker({
+                format: 'yyyy-mm-dd',
+                daysOfWeekDisabled: '0,6',
+                autoclose: true,
+                minView: 2,
+                endDate: today,
+            });
+            $("#date").dblclick(function () {
+                $(this).val(today.Format("yyyy-MM-dd"));
+            });
+        })()
+    </script>
+}
+
+
