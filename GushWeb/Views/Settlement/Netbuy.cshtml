@@ -8,7 +8,7 @@
     {
         UpdateTargetId = "app",
         LoadingElementId = "loading",
-        HttpMethod = "POST",
+        HttpMethod = "GET",
         //Confirm = "确认提交？",
         OnBegin = "onBegin()",
         OnSuccess = "onSuccess()",
@@ -29,7 +29,7 @@
         @Html.Hidden("mode", "")
         @Html.Hidden("col", "")
         @Html.Hidden("odcol", "")
-        @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date"})
+        @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date" })
         <span class="input-group-btn">
             <button class="btn btn-default" type="submit">
                 <span class="glyphicon glyphicon-search"></span>
@@ -49,6 +49,7 @@
 {
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/stockData.js"></script>
     <script>
         function onBegin() {
             //显示
@@ -68,8 +69,11 @@
         }
 
         function onComplete() {
-
+            
         }
+
+        var today = new Date();
+        var timer = self.setInterval("elapsed()", 6000);
 
         function getCodeQueue(code) {
             $("#date").val(code);
@@ -78,7 +82,7 @@
 
         function getModeQueue(mode) {
             $("[type=hidden][name='mode']").val(mode);
-            $("a[name='amode']").each(function() {
+            $("a[name='amode']").each(function () {
                 var i = parseInt($(this).attr("value"));
                 if (i == mode) {
                     $(this).css({ "border": "solid" })
@@ -86,8 +90,7 @@
                     $(this).css({ "border": "" })
                 }
             });
-
-            $("form").submit();
+            $("[type=submit]").click();
         }
 
         function getColQueue(col) {
@@ -97,11 +100,10 @@
             } else {
                 $("[type=hidden][name='odcol']").val(col);
             }
-            $("form").submit();
+            $("[type=submit]").click();
         }
 
-        (function() {
-            var today = new Date();
+        (function () {
             $("#date").datetimepicker({
                 format: 'yyyy-mm-dd',
                 daysOfWeekDisabled: '0,6',
@@ -113,6 +115,39 @@
                 $(this).val(today.Format("yyyy-MM-dd"));
             });
         })()
+
+        function elapsed() {
+            if (isToday()) {
+                asyncGetStockData(getCodes).then(function (dataArray) {
+                    dataArray.forEach(function (item, index) {
+                        updateChange(item[6], item[3]);
+                    });
+                });
+            }
+        }
+
+        function updateChange(code, change) {
+            $("span").each(function () {
+                if ($(this).attr("name") == code) {
+                    var color = change < 0 ? "green" : "red";
+                    $(this).html(change);
+                    $(this).css("color", color);
+                }
+            });
+        }
+
+        function isToday() {
+            var currentDate = $("#date").val();
+            return currentDate == today.Format("yyyy-MM-dd");
+        }
+
+        function getCodes() {
+            var arry = new Array();
+            $("[type=hidden][name='codes']").each(function () {
+                arry.push($(this).val());
+            });
+            return arry;
+        }
     </script>
 }
 

@@ -7,7 +7,7 @@
     {
         UpdateTargetId = "app",
         LoadingElementId = "loading",
-        HttpMethod = "POST",
+        HttpMethod = "GET",
         //Confirm = "确认提交？",
         OnBegin = "onBegin()",
         OnSuccess = "onSuccess()",
@@ -19,37 +19,43 @@
 <div id="app">
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Code)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    <a href="javascript:;" onclick="getColQueue(1)">@Html.DisplayNameFor(model => model.Netbuy)</a>
-                </th>
-                <th>
-                    <a href="javascript:;" onclick="getColQueue(2)">@Html.DisplayNameFor(model => model.Change)</a>
-                </th>
-                <th>
-                    <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Total)</a>
-                </th>
-                <th>
-                    <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Time)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
-            </tr>
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                <a href="javascript:;" onclick="getColQueue(1)">@Html.DisplayNameFor(model => model.Netbuy)</a>
+            </th>
+            <th>
+                <a href="javascript:;" onclick="getColQueue(2)">@Html.DisplayNameFor(model => model.Change)</a>
+            </th>
+            <th>
+                <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Total)</a>
+            </th>
+            <th>
+                <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+        </tr>
         </thead>
         <tbody id="tb">
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>
+                        @Html.Hidden("codes", item.Code)
+                    </td>
                     <td>
                         @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
                     </td>
@@ -60,7 +66,7 @@
                         @ConvertHelper.ColorConvert(item.Netbuy)
                     </td>
                     <td>
-                        @ConvertHelper.ColorConvert(item.Change)
+                        <span name="@item.Code">@ConvertHelper.ColorConvert(item.Change)</span>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Total)
@@ -79,7 +85,7 @@
         </tbody>
     </table>
     <div style="text-align: center;">
-        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyAsyn", new { index = page, date = ViewData["date"], mode = ViewData["mode"], col = ViewData["col"], odcol = ViewData["odcol"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+        @Html.PagedListPager(list:Model as IPagedList, generatePageUrl:page => Url.Action("NetbuyAsyn", new { index = page, date = ViewData["date"], mode = ViewData["mode"], col = ViewData["col"], odcol = ViewData["odcol"] }),options:PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
     </div>
 </div>
 

@@ -210,15 +210,14 @@ namespace GushWeb.Controllers
             string date = DateTime.Now.ToYYYYMMDD();
             ViewData["date"] = date;
             var netbuyList = db.FoamList.Where(d => d.Date == date);
-            var pd = netbuyList.ToList().ToPagedList(1, 500);
+            var pd = netbuyList.ToList().ToPagedList(1, pageSize);
 
             return View(pd);
         }
 
-        [HttpPost]
         public ActionResult NetbuyAsyn(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
-            ViewData["date"] = date;
+            ViewData["date"] = String.IsNullOrEmpty(date)? DateTime.Now.ToYYYYMMDD():date;
             ViewData["mode"] = mode;
             ViewData["col"] = col;
 
@@ -301,7 +300,7 @@ namespace GushWeb.Controllers
                 }
             }
             
-            var pd = t_foams.ToPagedList(index, 500);
+            var pd = t_foams.ToPagedList(index, pageSize);
             return PartialView("pview_netbuy", pd);
         }
 
@@ -327,7 +326,7 @@ namespace GushWeb.Controllers
                     break;
             }
 
-            var pd = db.FoamList.Where(expression).OrderBy(d => d.Code).ThenByDescending(d => d.Date).ToPagedList(index, 500);
+            var pd = db.FoamList.Where(expression).OrderBy(d => d.Code).ThenByDescending(d => d.Date).ToPagedList(index, pageSize);
             return PartialView("pview_netbuy", pd);
         }
 

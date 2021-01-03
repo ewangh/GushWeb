@@ -38,3 +38,11 @@ function morethan(num) {
         }
     });
 }
+
+//var today = now.getFullYear() +
+//    "-" +
+//    ((now.getMonth() + 1) < 10 ? "0" : "") +
+//    (now.getMonth() + 1) +
+//    "-" +
+//    (now.getDate() < 10 ? "0" : "") +
+//    now.getDate();

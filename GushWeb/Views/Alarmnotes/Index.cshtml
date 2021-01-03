@@ -71,19 +71,13 @@
                 });
             });
         }
+
+        var today = new Date();
+
         function jump(date) {
             window.location.href = '@Url.Action("Index")?date=' + date;
         }
-
-        var now = new Date();
-        var today = now.getFullYear() +
-            "-" +
-            ((now.getMonth() + 1) < 10 ? "0" : "") +
-            (now.getMonth() + 1) +
-            "-" +
-            (now.getDate() < 10 ? "0" : "") +
-            now.getDate();
-
+        
         (function() {
             if (isToday()) {
                 var timer = setInterval(function () { $("form").submit(); }, 30000);
@@ -120,7 +114,7 @@
 
         function isToday() {
             var currentDate = '@ViewBag.Current';
-            return currentDate == today;
+            return currentDate == today.Format("yyyy-MM-dd");
         }
 
         function getCodes() {
