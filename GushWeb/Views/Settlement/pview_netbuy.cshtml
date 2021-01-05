@@ -15,46 +15,48 @@
         OnComplete = "onComplete()",
         InsertionMode = InsertionMode.Replace
     };
+
+    var maxDate = Model.Max(d => d.Date);
 }
 <div id="app">
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>
+            <tr>
+                <th>
 
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                <a href="javascript:;" onclick="getColQueue(1)">@Html.DisplayNameFor(model => model.Netbuy)</a>
-            </th>
-            <th>
-                <a href="javascript:;" onclick="getColQueue(2)">@Html.DisplayNameFor(model => model.Change)</a>
-            </th>
-            <th>
-                <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Total)</a>
-            </th>
-            <th>
-                <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Time)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-        </tr>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(1)">@Html.DisplayNameFor(model => model.Netbuy)</a>
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(2)">@Html.DisplayNameFor(model => model.Change)</a>
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Total)</a>
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Time)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+            </tr>
         </thead>
         <tbody id="tb">
             @foreach (var item in Model)
             {
                 <tr>
                     <td>
-                        @Html.Hidden("codes", item.Code)
+                        @Html.Hidden("codes", item.Date == maxDate ? item.Code : "")
                     </td>
                     <td>
                         @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
@@ -66,7 +68,7 @@
                         @ConvertHelper.ColorConvert(item.Netbuy)
                     </td>
                     <td>
-                        <span name="@item.Code">@ConvertHelper.ColorConvert(item.Change)</span>
+                        <span name="@(item.Code+item.Date)">@ConvertHelper.ColorConvert(item.Change)</span>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Total)
@@ -85,7 +87,7 @@
         </tbody>
     </table>
     <div style="text-align: center;">
-        @Html.PagedListPager(list:Model as IPagedList, generatePageUrl:page => Url.Action("NetbuyAsyn", new { index = page, date = ViewData["date"], mode = ViewData["mode"], col = ViewData["col"], odcol = ViewData["odcol"] }),options:PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+        @Html.PagedListPager(list: Model as IPagedList, generatePageUrl: page => Url.Action("NetbuyAsyn", new { index = page, date = ViewData["date"], mode = ViewData["mode"], col = ViewData["col"], odcol = ViewData["odcol"] }), options: PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
     </div>
 </div>
 

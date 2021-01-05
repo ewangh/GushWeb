@@ -1,6 +1,8 @@
 ﻿async function asyncGetStockData(getCodes) {
     var codes = getCodes();
     var dataArray = new Array();
+    if (codes.length == 0)
+        return dataArray;
     await $.ajax({
         dataType: 'script',
         async: false,
