@@ -10,6 +10,7 @@ namespace GushWeb.Models
         Up=1,
         Down,
         Buy,
-        Sell
+        Sell,
+        Lockup
     }
 }

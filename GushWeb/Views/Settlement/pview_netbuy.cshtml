@@ -44,6 +44,9 @@
                     <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.State)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Time)
                 </th>
                 <th>
@@ -54,35 +57,38 @@
         <tbody id="tb">
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.Hidden("codes", item.Date == maxDate ? item.Code : "")
-                    </td>
-                    <td>
-                        @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
-                    </td>
-                    <td>
-                        <a href="javascript:;" onclick="getCodeQueue('@item.Code')">@item.Name</a>
-                    </td>
-                    <td>
-                        @ConvertHelper.ColorConvert(item.Netbuy)
-                    </td>
-                    <td>
-                        <span name="@(item.Code+item.Date)">@ConvertHelper.ColorConvert(item.Change)</span>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Total)
-                    </td>
-                    <td>
-                        @ConvertHelper.ColorConvert(item.Foam, 0.5m)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Time)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.Hidden("codes", item.Date == maxDate ? item.Code : "")
+                </td>
+                <td>
+                    @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
+                </td>
+                <td>
+                    <a href="javascript:;" onclick="getCodeQueue('@item.Code')">@item.Name</a>
+                </td>
+                <td>
+                    @ConvertHelper.ColorConvert(item.Netbuy)
+                </td>
+                <td>
+                    <span name="@(item.Code+item.Date)">@ConvertHelper.ColorConvert(item.Change)</span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @ConvertHelper.ColorConvert(item.Foam, 0.5m)
+                </td>
+                <td>
+                    @ConvertHelper.ForceConvert(item.State)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+            </tr>
             }
         </tbody>
     </table>

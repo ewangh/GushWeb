@@ -1,4 +1,5 @@
-﻿@helper AmplitudeConvert(decimal? closed, decimal? price)
+﻿@using GushLibrary.Models
+@helper AmplitudeConvert(decimal? closed, decimal? price)
 {
     if (closed.HasValue && closed != 0 && price.HasValue && price != 0)
     {
@@ -20,5 +21,22 @@
     else if (val < offset)
     {
         <font color="green">@val</font>
+    }
+}
+
+@helper ForceConvert(ForceState? state)
+{
+    switch (state)
+    {
+        case ForceState.Lockup:
+            <font color="red">主力锁仓</font>
+            break;
+        case ForceState.WaitSee:
+            <font color="green">主力观望</font>
+            break;
+        case ForceState.Unknow:
+        default:
+            @String.Empty
+            break;
     }
 }

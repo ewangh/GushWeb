@@ -250,6 +250,9 @@ namespace GushWeb.Controllers
                 case NetbuyMode.Sell:
                     expression = expression.And(d => d.Netbuy < 0m);
                     break;
+                case NetbuyMode.Lockup:
+                    expression = expression.And(d => d.State == ForceState.Lockup);
+                    break;
                 default:
                     break;
             }
