@@ -93,7 +93,7 @@
         </tbody>
     </table>
     <div style="text-align: center;">
-        @Html.PagedListPager(list: Model as IPagedList, generatePageUrl: page => Url.Action("NetbuyAsyn", new { index = page, date = ViewData["date"], mode = ViewData["mode"], col = ViewData["col"], odcol = ViewData["odcol"] }), options: PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyPage", new { index = page, date = ViewData["date"], mode = ViewData["mode"], col = ViewData["col"], odcol = ViewData["odcol"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
     </div>
 </div>
 

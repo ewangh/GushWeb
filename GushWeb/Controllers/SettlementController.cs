@@ -217,7 +217,7 @@ namespace GushWeb.Controllers
 
         public ActionResult NetbuyAsyn(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
-            ViewData["date"] = String.IsNullOrEmpty(date)? DateTime.Now.ToYYYYMMDD():date;
+            ViewData["date"] = String.IsNullOrEmpty(date) ? DateTime.Now.ToYYYYMMDD() : date;
             ViewData["mode"] = mode;
             ViewData["col"] = col;
 
@@ -226,12 +226,28 @@ namespace GushWeb.Controllers
 
             if (date.IsDateTime())
             {
-                return NetbuyAsynByDate(date, col, odcol, mode, index);
+                return NetbuyAsynByDate(date, col, odcol, mode, index, false);
             }
             return NetbuyAsynByCodeOrName(date, mode, index);
         }
 
-        public ActionResult NetbuyAsynByDate(string date, int col, int odcol, NetbuyMode mode, int index)
+        public ActionResult NetbuyPage(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
+        {
+            ViewData["date"] = String.IsNullOrEmpty(date) ? DateTime.Now.ToYYYYMMDD() : date;
+            ViewData["mode"] = mode;
+            ViewData["col"] = col;
+
+            IEnumerable<t_foam> t_foams = new List<t_foam>();
+            Expression<Func<t_foam, bool>> expression = d => true;
+
+            if (date.IsDateTime())
+            {
+                return NetbuyAsynByDate(date, col, odcol, mode, index, true);
+            }
+            return NetbuyAsynByCodeOrName(date, mode, index);
+        }
+
+        public ActionResult NetbuyAsynByDate(string date, int col, int odcol, NetbuyMode mode, int index, bool isPage)
         {
             IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => d.Date.CompareTo(date) == 0;
@@ -276,7 +292,7 @@ namespace GushWeb.Controllers
 
             t_foams = db.FoamList.Where(expression).ToList();
 
-            if (index > 1)
+            if (isPage || index > 1)
             {
                 ViewData["odcol"] = odcol;
 
@@ -302,7 +318,7 @@ namespace GushWeb.Controllers
                     t_foams = t_foams.AsQueryable().OrderBy(odby);
                 }
             }
-            
+
             var pd = t_foams.ToPagedList(index, pageSize);
             return PartialView("pview_netbuy", pd);
         }
