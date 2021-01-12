@@ -269,6 +269,15 @@ namespace GushWeb.Controllers
                 case NetbuyMode.Lockup:
                     expression = expression.And(d => d.State == ForceState.Lockup);
                     break;
+                case NetbuyMode.WaitSee:
+                    expression = expression.And(d => d.State == ForceState.WaitSee);
+                    break;
+                case NetbuyMode.UnLockup:
+                    expression = expression.And(d => d.State == ForceState.UnLockup);
+                    break;
+                case NetbuyMode.UnWaitSee:
+                    expression = expression.And(d => d.State == ForceState.UnWaitSee);
+                    break;
                 default:
                     break;
             }

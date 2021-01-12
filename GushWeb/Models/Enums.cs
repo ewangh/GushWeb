@@ -11,6 +11,9 @@ namespace GushWeb.Models
         Down,
         Buy,
         Sell,
-        Lockup
+        Lockup,
+        WaitSee,
+        UnLockup,
+        UnWaitSee
     }
 }
