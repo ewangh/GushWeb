@@ -28,11 +28,29 @@
 {
     switch (state)
     {
-        case ForceState.Lockup:
-            <font color="red">主力锁仓</font>
+        case ForceState.主力放量买入:
+        <font color="red">@ForceState.主力放量买入.ToString()</font>
             break;
-        case ForceState.WaitSee:
-            <font color="green">主力观望</font>
+        case ForceState.主力放量卖出:
+        <font color="green">@ForceState.主力放量卖出.ToString()</font>
+            break;
+        case ForceState.主力缩量买入:
+            <font color="red">@ForceState.主力缩量买入.ToString()</font>
+            break;
+        case ForceState.主力缩量卖出:
+            <font color="green">@ForceState.主力缩量卖出.ToString()</font>
+            break;
+        case ForceState.散户放量买入:
+            <font color="red">@ForceState.散户放量买入.ToString()</font>
+            break;
+        case ForceState.散户放量卖出:
+            <font color="green">@ForceState.散户放量卖出.ToString()</font>
+            break;
+        case ForceState.散户缩量买入:
+            <font color="red">@ForceState.散户缩量买入.ToString()</font>
+            break;
+        case ForceState.散户缩量卖出:
+            <font color="green">@ForceState.散户缩量卖出.ToString()</font>
             break;
         case ForceState.Unknow:
         default:

@@ -251,7 +251,7 @@ namespace GushWeb.Controllers
         {
             IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => d.Date.CompareTo(date) == 0;
-
+            
             switch (mode)
             {
                 case NetbuyMode.Up:
@@ -266,17 +266,29 @@ namespace GushWeb.Controllers
                 case NetbuyMode.Sell:
                     expression = expression.And(d => d.Netbuy < 0m);
                     break;
-                case NetbuyMode.Lockup:
-                    expression = expression.And(d => d.State == ForceState.Lockup);
+                case NetbuyMode.主力放量买入:
+                    expression = expression.And(d => d.State == ForceState.主力放量买入);
                     break;
-                case NetbuyMode.WaitSee:
-                    expression = expression.And(d => d.State == ForceState.WaitSee);
+                case NetbuyMode.主力放量卖出:
+                    expression = expression.And(d => d.State == ForceState.主力放量卖出);
                     break;
-                case NetbuyMode.UnLockup:
-                    expression = expression.And(d => d.State == ForceState.UnLockup);
+                case NetbuyMode.主力缩量买入:
+                    expression = expression.And(d => d.State == ForceState.主力缩量买入);
                     break;
-                case NetbuyMode.UnWaitSee:
-                    expression = expression.And(d => d.State == ForceState.UnWaitSee);
+                case NetbuyMode.主力缩量卖出:
+                    expression = expression.And(d => d.State == ForceState.主力缩量卖出);
+                    break;
+                case NetbuyMode.散户放量买入:
+                    expression = expression.And(d => d.State == ForceState.散户放量买入);
+                    break;
+                case NetbuyMode.散户放量卖出:
+                    expression = expression.And(d => d.State == ForceState.散户放量卖出);
+                    break;
+                case NetbuyMode.散户缩量买入:
+                    expression = expression.And(d => d.State == ForceState.散户缩量买入);
+                    break;
+                case NetbuyMode.散户缩量卖出:
+                    expression = expression.And(d => d.State == ForceState.散户缩量卖出);
                     break;
                 default:
                     break;
@@ -326,6 +338,48 @@ namespace GushWeb.Controllers
                     ViewData["odcol"] = col;
                     t_foams = t_foams.AsQueryable().OrderBy(odby);
                 }
+            }
+
+            switch (mode)
+            {
+                case NetbuyMode.Up:
+                    ViewData["Up"] = t_foams.Count();
+                    break;
+                case NetbuyMode.Down:
+                    ViewData["Down"] = t_foams.Count();
+                    break;
+                case NetbuyMode.Buy:
+                    ViewData["Buy"] = t_foams.Count();
+                    break;
+                case NetbuyMode.Sell:
+                    ViewData["Sell"] = t_foams.Count();
+                    break;
+                case NetbuyMode.主力放量买入:
+                    ViewData["主力放量买入"] = t_foams.Count();
+                    break;
+                case NetbuyMode.主力放量卖出:
+                    ViewData["主力放量卖出"] = t_foams.Count(); ;
+                    break;
+                case NetbuyMode.主力缩量买入:
+                    ViewData["主力缩量买入"] = t_foams.Count();
+                    break;
+                case NetbuyMode.主力缩量卖出:
+                    ViewData["主力缩量卖出"] = t_foams.Count();
+                    break;
+                case NetbuyMode.散户放量买入:
+                    ViewData["散户放量买入"] = t_foams.Count();
+                    break;
+                case NetbuyMode.散户放量卖出:
+                    ViewData["散户放量卖出"] = t_foams.Count();
+                    break;
+                case NetbuyMode.散户缩量买入:
+                    ViewData["散户缩量买入"] = t_foams.Count();
+                    break;
+                case NetbuyMode.散户缩量卖出:
+                    ViewData["散户缩量卖出"] = t_foams.Count();
+                    break;
+                default:
+                    break;
             }
 
             var pd = t_foams.ToPagedList(index, pageSize);

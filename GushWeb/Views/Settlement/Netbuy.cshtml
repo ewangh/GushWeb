@@ -21,18 +21,6 @@
 {
     <br />
     <div class="input-group">
-        <a name="amode" href="javascript:;" onclick="getModeQueue(1)" value="1">只看上涨</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(2)" value="2">只看下跌</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(3)" value="3">只看净买</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(4)" value="4">只看净卖</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(5)" value="5">只看锁仓</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        @if (User.Identity.IsAuthenticated)
-        {
-            <a name="amode" href="javascript:;" onclick="getModeQueue(6)" value="6">散户锁仓</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-            <a name="amode" href="javascript:;" onclick="getModeQueue(7)" value="7">主力观望</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-            <a name="amode" href="javascript:;" onclick="getModeQueue(8)" value="8">散户观望</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        }
-        <a name="amode" href="javascript:;" onclick="getModeQueue(0)" value="0">全部</a>&nbsp;&nbsp;&nbsp;&nbsp;
         @Html.Hidden("mode", "")
         @Html.Hidden("col", "")
         @Html.Hidden("odcol", "")
@@ -48,7 +36,6 @@
     <p>
         @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
     </p>
-
 }
 
 
