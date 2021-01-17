@@ -205,22 +205,8 @@ namespace GushWeb.Controllers
             return PartialView("pview_catapult", pd);
         }
 
-        public ActionResult Netbuy()
+        public ActionResult Netbuy(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
-            string date = DateTime.Now.ToYYYYMMDD();
-            ViewData["date"] = date;
-            var netbuyList = db.FoamList.Where(d => d.Date == date);
-            var pd = netbuyList.ToList().ToPagedList(1, pageSize);
-
-            return View(pd);
-        }
-
-        public ActionResult NetbuyAsyn(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
-        {
-            ViewData["date"] = String.IsNullOrEmpty(date) ? DateTime.Now.ToYYYYMMDD() : date;
-            ViewData["mode"] = mode;
-            ViewData["col"] = col;
-
             IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => true;
 
@@ -233,10 +219,6 @@ namespace GushWeb.Controllers
 
         public ActionResult NetbuyPage(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
-            ViewData["date"] = String.IsNullOrEmpty(date) ? DateTime.Now.ToYYYYMMDD() : date;
-            ViewData["mode"] = mode;
-            ViewData["col"] = col;
-
             IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => true;
 
@@ -251,19 +233,19 @@ namespace GushWeb.Controllers
         {
             IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => d.Date.CompareTo(date) == 0;
-            
+
             switch (mode)
             {
-                case NetbuyMode.Up:
+                case NetbuyMode.只看上涨:
                     expression = expression.And(d => d.Change >= 0m);
                     break;
-                case NetbuyMode.Down:
+                case NetbuyMode.只看下跌:
                     expression = expression.And(d => d.Change < 0m);
                     break;
-                case NetbuyMode.Buy:
+                case NetbuyMode.只看净买:
                     expression = expression.And(d => d.Netbuy >= 0m);
                     break;
-                case NetbuyMode.Sell:
+                case NetbuyMode.只看净卖:
                     expression = expression.And(d => d.Netbuy < 0m);
                     break;
                 case NetbuyMode.主力放量买入:
@@ -340,50 +322,8 @@ namespace GushWeb.Controllers
                 }
             }
 
-            switch (mode)
-            {
-                case NetbuyMode.Up:
-                    ViewData["Up"] = t_foams.Count();
-                    break;
-                case NetbuyMode.Down:
-                    ViewData["Down"] = t_foams.Count();
-                    break;
-                case NetbuyMode.Buy:
-                    ViewData["Buy"] = t_foams.Count();
-                    break;
-                case NetbuyMode.Sell:
-                    ViewData["Sell"] = t_foams.Count();
-                    break;
-                case NetbuyMode.主力放量买入:
-                    ViewData["主力放量买入"] = t_foams.Count();
-                    break;
-                case NetbuyMode.主力放量卖出:
-                    ViewData["主力放量卖出"] = t_foams.Count(); ;
-                    break;
-                case NetbuyMode.主力缩量买入:
-                    ViewData["主力缩量买入"] = t_foams.Count();
-                    break;
-                case NetbuyMode.主力缩量卖出:
-                    ViewData["主力缩量卖出"] = t_foams.Count();
-                    break;
-                case NetbuyMode.散户放量买入:
-                    ViewData["散户放量买入"] = t_foams.Count();
-                    break;
-                case NetbuyMode.散户放量卖出:
-                    ViewData["散户放量卖出"] = t_foams.Count();
-                    break;
-                case NetbuyMode.散户缩量买入:
-                    ViewData["散户缩量买入"] = t_foams.Count();
-                    break;
-                case NetbuyMode.散户缩量卖出:
-                    ViewData["散户缩量卖出"] = t_foams.Count();
-                    break;
-                default:
-                    break;
-            }
-
             var pd = t_foams.ToPagedList(index, pageSize);
-            return PartialView("pview_netbuy", pd);
+            return View("Netbuy", pd);
         }
 
         public ActionResult NetbuyAsynByCodeOrName(string codename, NetbuyMode mode, int index)
@@ -392,16 +332,16 @@ namespace GushWeb.Controllers
 
             switch (mode)
             {
-                case NetbuyMode.Up:
+                case NetbuyMode.只看上涨:
                     expression = expression.And(d => d.Change >= 0m);
                     break;
-                case NetbuyMode.Down:
+                case NetbuyMode.只看下跌:
                     expression = expression.And(d => d.Change < 0m);
                     break;
-                case NetbuyMode.Buy:
+                case NetbuyMode.只看净买:
                     expression = expression.And(d => d.Netbuy >= 0m);
                     break;
-                case NetbuyMode.Sell:
+                case NetbuyMode.只看净卖:
                     expression = expression.And(d => d.Netbuy < 0m);
                     break;
                 default:
@@ -409,7 +349,7 @@ namespace GushWeb.Controllers
             }
 
             var pd = db.FoamList.Where(expression).OrderBy(d => d.Code).ThenByDescending(d => d.Date).ToPagedList(index, pageSize);
-            return PartialView("pview_netbuy", pd);
+            return View("Netbuy", pd);
         }
 
         // GET: Settlement/Create
@@ -661,6 +601,7 @@ namespace GushWeb.Controllers
 
                     var riseObj = new Rise()
                     {
+                        Text = pkey,
                         Ptype = pkey,
                         Change = sum,
                         IsCheck = pkey == ptype
@@ -681,6 +622,95 @@ namespace GushWeb.Controllers
             //}
 
             return Json(rises.OrderByDescending(d => d.Change));
+        }
+
+        [HttpPost]
+        public JsonResult GetModes(NetbuyMode? ptype, string date)
+        {
+            List<Rise> rises = new List<Rise>();
+
+            NetbuyMode[] modeArray =
+            {
+                NetbuyMode.只看上涨,
+                NetbuyMode.只看下跌,
+                NetbuyMode.只看净买,
+                NetbuyMode.只看净卖,
+                NetbuyMode.主力放量买入,
+                NetbuyMode.主力放量卖出,
+                NetbuyMode.主力缩量买入,
+                NetbuyMode.主力缩量卖出,
+                NetbuyMode.散户放量买入,
+                NetbuyMode.散户放量卖出,
+                NetbuyMode.散户缩量买入,
+                NetbuyMode.散户缩量卖出,
+                NetbuyMode.全部
+            };
+
+            foreach (var mode in modeArray)
+            {
+                Expression<Func<t_foam, bool>> expression = d => true;
+
+                if (date.IsDateTime())
+                {
+                    expression = expression.And(d => d.Date.CompareTo(date) == 0);
+                }
+                else
+                {
+                    expression = expression.And(d => date.Contains(d.Code) || date.Contains(d.Name));
+                }
+
+                switch (mode)
+                {
+                    case NetbuyMode.只看上涨:
+                        expression = expression.And(d => d.Change >= 0m);
+                        break;
+                    case NetbuyMode.只看下跌:
+                        expression = expression.And(d => d.Change < 0m);
+                        break;
+                    case NetbuyMode.只看净买:
+                        expression = expression.And(d => d.Netbuy >= 0m);
+                        break;
+                    case NetbuyMode.只看净卖:
+                        expression = expression.And(d => d.Netbuy < 0m);
+                        break;
+                    case NetbuyMode.主力放量买入:
+                        expression = expression.And(d => d.State == ForceState.主力放量买入);
+                        break;
+                    case NetbuyMode.主力放量卖出:
+                        expression = expression.And(d => d.State == ForceState.主力放量卖出);
+                        break;
+                    case NetbuyMode.主力缩量买入:
+                        expression = expression.And(d => d.State == ForceState.主力缩量买入);
+                        break;
+                    case NetbuyMode.主力缩量卖出:
+                        expression = expression.And(d => d.State == ForceState.主力缩量卖出);
+                        break;
+                    case NetbuyMode.散户放量买入:
+                        expression = expression.And(d => d.State == ForceState.散户放量买入);
+                        break;
+                    case NetbuyMode.散户放量卖出:
+                        expression = expression.And(d => d.State == ForceState.散户放量卖出);
+                        break;
+                    case NetbuyMode.散户缩量买入:
+                        expression = expression.And(d => d.State == ForceState.散户缩量买入);
+                        break;
+                    case NetbuyMode.散户缩量卖出:
+                        expression = expression.And(d => d.State == ForceState.散户缩量卖出);
+                        break;
+                    default:
+                        break;
+                }
+                var riseObj = new Rise()
+                {
+                    Text = mode.ToString(),
+                    Ptype = Convert.ToInt32(mode).ToString(),
+                    Change = db.FoamList.Where(expression).Count(),
+                    IsCheck = mode == ptype
+                };
+                rises.Add(riseObj);
+            }
+
+            return Json(rises);
         }
     }
 }

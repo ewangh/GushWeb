@@ -17,7 +17,7 @@
         InsertionMode = InsertionMode.Replace
     };
 }
-@using (Ajax.BeginForm("NetbuyAsyn", ajaxOption))
+@using (Ajax.BeginForm("Netbuy", ajaxOption))
 {
     <br />
     <div class="input-group">
@@ -26,9 +26,9 @@
         @Html.Hidden("odcol", "")
         @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date" })
         <span class="input-group-btn">
-            <button class="btn btn-default" type="submit">
+            <a class="btn input-group-btn btn-info" href="javascript:;" onclick="jumpRoute('@ViewContext.RouteData.Values["action"]',{date:$('#date').val()})">
                 <span class="glyphicon glyphicon-search"></span>
-            </button>
+            </a>
         </span>
     </div>
     <br />
@@ -43,8 +43,12 @@
 {
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/stockBase.js"></script>
     <script src="~/Scripts/stockData.js"></script>
     <script>
+        var risesId = 'div_rises';
+        var funRises = '@Url.Action("GetModes")';
+
         function onBegin() {
             //显示
             loading.show();
@@ -76,15 +80,8 @@
 
         function getModeQueue(mode) {
             $("[type=hidden][name='mode']").val(mode);
-            $("a[name='amode']").each(function () {
-                var i = parseInt($(this).attr("value"));
-                if (i == mode) {
-                    $(this).css({ "border": "solid" })
-                } else {
-                    $(this).css({ "border": "" })
-                }
-            });
-            $("[type=submit]").click();
+            jumpRoute('@ViewContext.RouteData.Values["action"]',
+                { date: $('#date').val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
         }
 
         function getColQueue(col) {
@@ -94,10 +91,11 @@
             } else {
                 $("[type=hidden][name='odcol']").val(col);
             }
-            $("[type=submit]").click();
+            jumpRoute('@ViewContext.RouteData.Values["action"]',
+                { date: $('#date').val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
         }
 
-        (function () {
+        (function() {
             $("#date").datetimepicker({
                 format: 'yyyy-mm-dd',
                 daysOfWeekDisabled: '0,6',
@@ -105,15 +103,18 @@
                 minView: 2,
                 endDate: today,
             });
-            $("#date").dblclick(function () {
+            $("#date").dblclick(function() {
                 $(this).val(today.Format("yyyy-MM-dd"));
             });
+            $("#date").val('@Request["date"]');
+            var data = { ptype:'@Request["mode"]', date:'@Request["date"]' };
+            getRises(funRises, data, risesId, getModeQueue.name);
         })()
 
         function elapsed() {
             //if (isToday()) {
-            asyncGetStockData(getCodes).then(function (dataArray) {
-                dataArray.forEach(function (item, index) {
+            asyncGetStockData(getCodes).then(function(dataArray) {
+                dataArray.forEach(function(item, index) {
                     updateChange(item[6], item[3]);
                 });
             });
@@ -121,7 +122,7 @@
         }
 
         function updateChange(code, change) {
-            $("span").each(function () {
+            $("span").each(function() {
                 if ($(this).attr("name") == code + today.Format("yyyy-MM-dd")) {
                     var color = change < 0 ? "green" : "red";
                     $(this).html(change);
@@ -137,7 +138,7 @@
 
         function getCodes() {
             var arry = new Array();
-            $("[type=hidden][name='codes']").each(function () {
+            $("[type=hidden][name='codes']").each(function() {
                 var code = $(this).val() || '';
                 if (code != '') {
                     arry.push(code);

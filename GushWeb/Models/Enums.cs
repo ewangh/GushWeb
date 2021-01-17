@@ -7,10 +7,10 @@ namespace GushWeb.Models
 {
     public enum NetbuyMode
     {
-        Up=1,
-        Down,
-        Buy,
-        Sell,
+        只看上涨=1,
+        只看下跌,
+        只看净买,
+        只看净卖,
         主力缩量卖出,
         主力缩量买入,
         散户缩量卖出,
@@ -18,6 +18,7 @@ namespace GushWeb.Models
         主力放量卖出,
         主力放量买入,
         散户放量卖出,
-        散户放量买入
+        散户放量买入,
+        全部
     }
 }

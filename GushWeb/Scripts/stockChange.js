@@ -44,9 +44,8 @@
     });
 }
 
-function getChangesByData(action, value, chartId, func_begin, func_success, func_failure) {
+function getChangesByData(action, data, chartId, func_begin, func_success, func_failure) {
     func_begin();
-    var data = { ptype: value };
     $.postJson(action, data, function (result) {
         var axis = [];
         if (result.length > 0) {
@@ -91,8 +90,11 @@ function getChangesByData(action, value, chartId, func_begin, func_success, func
     });
 }
 
-function getRises(action, value, mformId, func_link) {
-    var data = { ptype: value };
+$.postJson = function (url, data, callback) {
+    $.post(url, data, callback, "json");
+};
+
+function getRises(action, data, mformId, func_link) {
     $.postJson(action, data, function (result) {
         $("#" + mformId).empty();
         if (result.length > 0) {
@@ -101,7 +103,7 @@ function getRises(action, value, mformId, func_link) {
                     var _href = "javascript:$(this).css({'border':'solid'});" + func_link + "('" + item.Ptype + "');"
                     var a_rise = $('<a>',
                         {
-                            text: item.Ptype + "[" + item.Change + "]",
+                            text: item.Text + "[" + item.Change + "]",
                             href: "javascript:;",
                             onclick: _href
                             //target: "_blank",

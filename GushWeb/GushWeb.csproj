@@ -519,6 +519,7 @@
     <Content Include="Scripts\runoob\bootstrap.min.js" />
     <Content Include="Scripts\runoob\jquery-3.3.1.min.js" />
     <Content Include="Content\runoob\layoutit.css" />
+    <Content Include="Scripts\stockBase.js" />
     <Content Include="Scripts\stockChange.js" />
     <Content Include="Scripts\stockData.js" />
     <Content Include="Scripts\stockHistory.js" />

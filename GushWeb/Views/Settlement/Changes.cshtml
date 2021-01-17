@@ -54,16 +54,14 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/bootstrap-select.min.js"></script>
     <script src="~/Scripts/stockChange.js"></script>
+    <script src="~/Scripts/stockBase.js"></script>
     @Scripts.Render("~/bundles/echarts")
     <script>
-        $.postJson = function(url, data, callback) {
-            $.post(url, data, callback, "json");
-        };
         /*基于准备好的dom，初始化echarts实例*/
         var chartId = 'main';
         var mformId = "mainForm";
         var risesId = 'div_rises';
-        var pType;
+        var data = {};
         var funChange = '@Url.Action("GetChanges")';
         var funRises = '@Url.Action("GetRises")';
 
@@ -75,7 +73,7 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
         function onSuccess() {
             //影藏
             loading.hide();
-            getRises(funRises, pType, risesId, postChanges.name);
+            getRises(funRises, data, risesId, postChanges.name);
         }
 
         function onFailure() {
@@ -84,26 +82,25 @@ new SelectListItem(){Text = "---PLATE---",Value = ""},
             loading.hide();
         }
 
-        function postChanges(ptype) {
-            if (ptype != '') {
-                pType = ptype;
-                $("#ptype").find("option:contains('" + ptype + "')").each(function (item, index) {
+        function postChanges(value) {
+            if (value != '') {
+                data = { ptype: value };
+                $("#ptype").find("option:contains('" + value + "')").each(function(item, index) {
                     $("button[title]").find("div:last").text($(this).text());
                     $(this).attr("selected", true);
                     return false;
                 });
             }
-            getChangesByData(funChange, ptype, chartId, onBegin, onSuccess, onFailure);
+            getChangesByData(funChange, data, chartId, onBegin, onSuccess, onFailure);
         }
 
         $(function() {
-            getRises(funRises, pType, risesId, postChanges.name);
+            getRises(funRises, data, risesId, postChanges.name);
         })
 
         $("#btn_search").click(function(e) {
             e.preventDefault(); //阻止事件传递
-            pType = $("#ptype").val();
-            postChanges(pType);
+            postChanges($("#ptype").val());
         });
 
     </script>

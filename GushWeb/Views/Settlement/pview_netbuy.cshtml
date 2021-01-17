@@ -20,19 +20,6 @@
 }
 <div id="app">
     <div id="div_rises" class="alert alert-info alert-dismissable">
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.Up))" value="@Convert.ToInt32(NetbuyMode.Up)">只看上涨 @ViewData["Up"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.Down))" value="@Convert.ToInt32(NetbuyMode.Down)">只看下跌 @ViewData["Down"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.Buy))" value="@Convert.ToInt32(NetbuyMode.Buy)">只看净买 @ViewData["Buy"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.Sell))" value="@Convert.ToInt32(NetbuyMode.Sell)">只看净卖 @ViewData["Sell"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力放量买入))" value="@Convert.ToInt32(NetbuyMode.主力放量买入)">主力放量买入 @ViewData["主力放量买入"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力放量卖出))" value="@Convert.ToInt32(NetbuyMode.主力放量卖出)">主力放量卖出 @ViewData["主力放量卖出"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力缩量买入))" value="@Convert.ToInt32(NetbuyMode.主力缩量买入)">主力缩量买入 @ViewData["主力缩量买入"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力缩量卖出))" value="@Convert.ToInt32(NetbuyMode.主力缩量卖出)">主力缩量卖出 @ViewData["主力缩量卖出"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户放量买入))" value="@Convert.ToInt32(NetbuyMode.散户放量买入)">散户放量买入 @ViewData["散户放量买入"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户放量卖出))" value="@Convert.ToInt32(NetbuyMode.散户放量卖出)">散户放量卖出 @ViewData["散户放量卖出"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户缩量买入))" value="@Convert.ToInt32(NetbuyMode.散户缩量买入)">散户缩量买入 @ViewData["散户缩量买入"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户缩量卖出))" value="@Convert.ToInt32(NetbuyMode.散户缩量卖出)">散户缩量卖出 @ViewData["散户缩量卖出"]</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(0)" value="0">全部</a><span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
     </div>
     <table class="table table-striped">
         <thead>
@@ -55,9 +42,9 @@
                 <th>
                     <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Total)</a>
                 </th>
-                @*<th>
-                        <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
-                    </th>*@
+                <th>
+                    <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
+                </th>
                 <th>
                     @Html.DisplayNameFor(model => model.State)
                 </th>
@@ -91,9 +78,9 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Total)
                     </td>
-                    @*<td>
-                            @ConvertHelper.ColorConvert(item.Foam, 0.5m)
-                        </td>*@
+                    <td>
+                        @ConvertHelper.ColorConvert(item.Foam, 1m)
+                    </td>
                     <td>
                         @ConvertHelper.ForceConvert(item.State)
                     </td>
@@ -108,7 +95,7 @@
         </tbody>
     </table>
     <div style="text-align: center;">
-        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyPage", new { index = page, date = ViewData["date"], mode = ViewData["mode"], col = ViewData["col"], odcol = ViewData["odcol"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyPage", new { index = page, date = Request["date"], mode = Request["mode"], col = Request["col"], odcol = ViewData["odcol"] }))
     </div>
 </div>
 
