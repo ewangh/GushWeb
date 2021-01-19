@@ -4,9 +4,9 @@
 @{
     var url = ConfigurationManager.AppSettings["iwc"];
 
-    GushDBContext db = new GushDBContext();
-    var max_date = db.ChangesList.Max(d => d.Date_9);
-    Dictionary<string, int?> samples = db.ChangesList.Where(pair => pair.Date_9.CompareTo(max_date) == 0).ToDictionary(pair => pair.Code, pair => pair.Num);
+    //GushDBContext db = new GushDBContext();
+    //var max_date = db.ChangesList.Max(d => d.Date_9);
+    //Dictionary<string, int?> samples = db.ChangesList.Where(pair => pair.Date_9.CompareTo(max_date) == 0).ToDictionary(pair => pair.Code, pair => pair.Num);
 }
 @foreach (var item in Model)
 {
@@ -26,10 +26,10 @@
             <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
         </td>
         <td>
-            @if (samples.ContainsKey(item.Code))
+            @*@if (samples.ContainsKey(item.Code))
             {
             <a name="num" href="javascript:;" onclick="morethan(@samples[item.Code])" value="@samples[item.Code]">@samples[item.Code]</a> 
-            }
+            }*@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Time)
