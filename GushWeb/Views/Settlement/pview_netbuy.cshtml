@@ -20,6 +20,27 @@
 }
 <div id="app">
     <div id="div_rises" class="alert alert-info alert-dismissable">
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.只看上涨))" value="@Convert.ToInt32(NetbuyMode.只看上涨)">@NetbuyMode.只看上涨.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.只看下跌))" value="@Convert.ToInt32(NetbuyMode.只看下跌)">@NetbuyMode.只看下跌.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.只看净买))" value="@Convert.ToInt32(NetbuyMode.只看净买)">@NetbuyMode.只看净买.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.只看净卖))" value="@Convert.ToInt32(NetbuyMode.只看净卖)">@NetbuyMode.只看净卖.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力放量买入))" value="@Convert.ToInt32(NetbuyMode.主力放量买入)">@NetbuyMode.主力放量买入.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力放量卖出))" value="@Convert.ToInt32(NetbuyMode.主力放量卖出)">@NetbuyMode.主力放量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力缩量买入))" value="@Convert.ToInt32(NetbuyMode.主力缩量买入)">@NetbuyMode.主力缩量买入.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力缩量卖出))" value="@Convert.ToInt32(NetbuyMode.主力缩量卖出)">@NetbuyMode.主力缩量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户放量买入))" value="@Convert.ToInt32(NetbuyMode.散户放量买入)">@NetbuyMode.散户放量买入.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户放量卖出))" value="@Convert.ToInt32(NetbuyMode.散户放量卖出)">@NetbuyMode.散户放量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户缩量买入))" value="@Convert.ToInt32(NetbuyMode.散户缩量买入)">@NetbuyMode.散户缩量买入.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户缩量卖出))" value="@Convert.ToInt32(NetbuyMode.散户缩量卖出)">@NetbuyMode.散户缩量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天主力放量买入))" value="@Convert.ToInt32(NetbuyMode.昨天主力放量买入)">@NetbuyMode.昨天主力放量买入.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天主力放量卖出))" value="@Convert.ToInt32(NetbuyMode.昨天主力放量卖出)">@NetbuyMode.昨天主力放量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天主力缩量买入))" value="@Convert.ToInt32(NetbuyMode.昨天主力缩量买入)">@NetbuyMode.昨天主力缩量买入.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天主力缩量卖出))" value="@Convert.ToInt32(NetbuyMode.昨天主力缩量卖出)">@NetbuyMode.昨天主力缩量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天散户放量买入))" value="@Convert.ToInt32(NetbuyMode.昨天散户放量买入)">@NetbuyMode.昨天散户放量买入.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天散户放量卖出))" value="@Convert.ToInt32(NetbuyMode.昨天散户放量卖出)">@NetbuyMode.昨天散户放量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天散户缩量买入))" value="@Convert.ToInt32(NetbuyMode.昨天散户缩量买入)">@NetbuyMode.昨天散户缩量买入.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天散户缩量卖出))" value="@Convert.ToInt32(NetbuyMode.昨天散户缩量卖出)">@NetbuyMode.昨天散户缩量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.全部))" value="@Convert.ToInt32(NetbuyMode.全部)">@NetbuyMode.全部.ToString()</a>[]
     </div>
     <table class="table table-striped">
         <thead>

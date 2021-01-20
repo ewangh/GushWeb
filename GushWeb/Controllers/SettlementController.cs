@@ -718,6 +718,7 @@ namespace GushWeb.Controllers
             {
                 Expression<Func<t_foam, bool>> expression = d => true;
                 var yestoday = string.Empty;
+                int count = 0;
 
                 if (date.IsDateTime())
                 {
@@ -779,49 +780,51 @@ namespace GushWeb.Controllers
                         break;
                 }
 
+                count = db.FoamList.Where(expression).Count();
+
                 if (yestoday.IsDateTime())
                 {
                     switch (mode)
                     {
                         case NetbuyMode.昨天主力放量买入:
-                            var codes_18 = db.FoamList.Where(d =>
-                                d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.主力放量买入).Select(d => d.Code);
-                            expression = expression.And(d => codes_18.Contains(d.Code));
+                            count = db.FoamList.Where(d =>
+                                    d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.主力放量买入).Select(d => d.Code)
+                                .Count();
                             break;
                         case NetbuyMode.昨天主力放量卖出:
-                            var codes_17 = db.FoamList.Where(d =>
-                                d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.主力放量卖出).Select(d => d.Code);
-                            expression = expression.And(d => codes_17.Contains(d.Code));
+                            count = db.FoamList.Where(d =>
+                                    d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.主力放量卖出).Select(d => d.Code)
+                                .Count();
                             break;
                         case NetbuyMode.昨天主力缩量买入:
-                            var codes_14 = db.FoamList.Where(d =>
-                                d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.主力缩量买入).Select(d => d.Code);
-                            expression = expression.And(d => codes_14.Contains(d.Code));
+                            count = db.FoamList.Where(d =>
+                                    d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.主力缩量买入).Select(d => d.Code)
+                                .Count();
                             break;
                         case NetbuyMode.昨天主力缩量卖出:
-                            var codes_13 = db.FoamList.Where(d =>
-                                d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.主力缩量卖出).Select(d => d.Code);
-                            expression = expression.And(d => codes_13.Contains(d.Code));
+                            count = db.FoamList.Where(d =>
+                                    d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.主力缩量卖出).Select(d => d.Code)
+                                .Count();
                             break;
                         case NetbuyMode.昨天散户放量买入:
-                            var codes_20 = db.FoamList.Where(d =>
-                                d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.散户放量买入).Select(d => d.Code);
-                            expression = expression.And(d => codes_20.Contains(d.Code));
+                            count = db.FoamList.Where(d =>
+                                    d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.散户放量买入).Select(d => d.Code)
+                                .Count();
                             break;
                         case NetbuyMode.昨天散户放量卖出:
-                            var codes_19 = db.FoamList.Where(d =>
-                                d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.散户放量卖出).Select(d => d.Code);
-                            expression = expression.And(d => codes_19.Contains(d.Code));
+                            count = db.FoamList.Where(d =>
+                                    d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.散户放量卖出).Select(d => d.Code)
+                                .Count();
                             break;
                         case NetbuyMode.昨天散户缩量买入:
-                            var codes_16 = db.FoamList.Where(d =>
-                                d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.散户缩量买入).Select(d => d.Code);
-                            expression = expression.And(d => codes_16.Contains(d.Code));
+                            count = db.FoamList.Where(d =>
+                                    d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.散户缩量买入).Select(d => d.Code)
+                                .Count();
                             break;
                         case NetbuyMode.昨天散户缩量卖出:
-                            var codes_15 = db.FoamList.Where(d =>
-                                d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.散户缩量卖出).Select(d => d.Code);
-                            expression = expression.And(d => codes_15.Contains(d.Code));
+                            count = db.FoamList.Where(d =>
+                                    d.Date.CompareTo(yestoday) == 0 && d.State == ForceState.散户缩量卖出).Select(d => d.Code)
+                                .Count();
                             break;
                         default:
                             break;
@@ -832,7 +835,7 @@ namespace GushWeb.Controllers
                 {
                     Text = mode.ToString(),
                     Ptype = Convert.ToInt32(mode).ToString(),
-                    Change = db.FoamList.Where(expression).Count(),
+                    Change = count,
                     IsCheck = mode == ptype
                 };
                 rises.Add(riseObj);
