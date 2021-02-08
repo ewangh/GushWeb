@@ -240,6 +240,7 @@
     <Compile Include="Controllers\BaseApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CentreController.cs" />
+    <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MemberController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
@@ -596,8 +597,10 @@
     <Content Include="Views\Settlement\Changes.cshtml" />
     <Content Include="Views\Settlement\Catapult.cshtml" />
     <Content Include="Views\Settlement\pview_catapult.cshtml" />
-    <Content Include="Views\Settlement\Netbuy.cshtml" />
-    <Content Include="Views\Settlement\pview_netbuy.cshtml" />
+    <Content Include="Views\Transaction\Netbuy.cshtml" />
+    <Content Include="Views\Transaction\pview_netbuy.cshtml" />
+    <Content Include="Views\Transaction\NetbuyHistory.cshtml" />
+    <Content Include="Views\Transaction\pview_netbuyHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

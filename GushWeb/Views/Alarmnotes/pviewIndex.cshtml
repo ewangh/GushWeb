@@ -21,15 +21,18 @@
             @Html.ActionLink(item.Name, "Details", new { id = item.Code }, new { target = "_blank" })
         </td>
         <td>
-            <span name="@item.Code" tagp="@item.Price" tagc="@item.Closed">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
+            <span name="@item.Code" mode="change" tagp="@item.Price" tagc="@item.Closed">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
             <span>|</span>
             <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
         </td>
         <td>
             @*@if (samples.ContainsKey(item.Code))
-            {
-            <a name="num" href="javascript:;" onclick="morethan(@samples[item.Code])" value="@samples[item.Code]">@samples[item.Code]</a> 
-            }*@
+        {
+        <a name="num" href="javascript:;" onclick="morethan(@samples[item.Code])" value="@samples[item.Code]">@samples[item.Code]</a>
+        }*@
+            <span name="@item.Code" mode="cprice" tagc="@item.cPrice">@Html.DisplayFor(modelItem => item.Price)</span>
+            <span>|</span>
+            <span>@Html.DisplayFor(modelItem => item.cPrice)</span>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Time)

@@ -1,0 +1,135 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IEnumerable<t_netbuyHistory>
+@{
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "app",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_e)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_d)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_c)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_b)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_a)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_9)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_8)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_7)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_6)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_5)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_4)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_3)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_2)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_1)
+            </th>
+            <th>
+                @(Model.FirstOrDefault()?.Date_0)
+            </th>
+        </tr>
+    </thead>
+    <tbody id="tb">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Code, "Netbuy", new { date = item.Code }, new { target = "_blank" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td bgcolor=@(item.State_e == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_e)
+                </td>
+                <td bgcolor=@(item.State_d == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_d)
+                </td>
+                <td bgcolor=@(item.State_c == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_c)
+                </td>
+                <td bgcolor=@(item.State_b == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_b)
+                </td>
+                <td bgcolor=@(item.State_a == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_a)
+                </td>
+                <td bgcolor=@(item.State_9 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_9)
+                </td>
+                <td bgcolor=@(item.State_8 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_8)
+                </td>
+                <td bgcolor=@(item.State_7 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_7)
+                </td>
+                <td bgcolor=@(item.State_6 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_6)
+                </td>
+                <td bgcolor=@(item.State_5 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_5)
+                </td>
+                <td bgcolor=@(item.State_4 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_4)
+                </td>
+                <td bgcolor=@(item.State_3 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_3)
+                </td>
+                <td bgcolor=@(item.State_2 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_2)
+                </td>
+                <td bgcolor=@(item.State_1 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_1)
+                </td>
+                <td bgcolor=@(item.State_0 == 1 ? "pink" : "")>
+                    @Html.DisplayFor(modelItem => item.Change_0)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div style="text-align: center;">
+    @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyHistoryAsyn", new { index = page,modes=ViewData["modes"]}), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+</div>

@@ -1,0 +1,78 @@
+﻿@using GushWeb.Models
+@model IEnumerable<t_netbuyHistory>
+
+@{
+    ViewBag.Title = "Netbuy";
+
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "app",
+        LoadingElementId = "loading",
+        HttpMethod = "GET",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+
+    string[] modes =
+    {
+        "主力", "散户", "放量", "缩量", "买入", "卖出"
+    };
+}
+@using (Ajax.BeginForm("NetbuyHistoryAsyn", ajaxOption))
+{
+    <div id="div_rises" class="alert alert-info alert-dismissable">
+        @foreach (var mode in modes)
+        {
+            <input type="checkbox" name="modes" value="@mode">@mode
+        }
+        <button class="btn btn-default" type="submit">
+            <span class="glyphicon glyphicon-search"></span>
+        </button>
+    </div>
+    <div id="app">
+        @Html.Partial("pview_netbuyHistory", Model)
+    </div>
+}
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/stockBase.js"></script>
+    <script src="~/Scripts/stockData.js"></script>
+    <script>
+        function onBegin() {
+            //显示
+            loading.show();
+        }
+
+        function onSuccess() {
+            //影藏
+            loading.hide();
+            $("#modal-container").modal("hide");
+        }
+
+        function onFailure() {
+            alert('请求错误');
+            //影藏
+            loading.hide();
+        }
+
+        function onComplete() {
+
+        }
+
+        (function () {
+
+        })()
+        
+    </script>
+}
+
+
+

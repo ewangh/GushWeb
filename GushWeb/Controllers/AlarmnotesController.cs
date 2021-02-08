@@ -57,8 +57,8 @@ namespace GushWeb.Controllers
             }
 
             var expression = getExpression(date);
-            var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time);
-
+            var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
+            pageData.ForEach(d => d.cPrice = GetCprice(d.Code, d.Date));
             if (User.Identity.IsAuthenticated)
             {
                 return View("Index",pageData);
@@ -81,10 +81,14 @@ namespace GushWeb.Controllers
             string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
             var expression = getExpression(Today, codeArray);
             var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
-
+            pageData.ForEach(d=>d.cPrice=GetCprice(d.Code,d.Date));
             return PartialView("pviewIndex", pageData);
         }
 
+        private decimal? GetCprice(string code, string date)
+        {
+            return db.SettlementList.Where(d=>d.Code==code && d.Date.CompareTo(date)<0).OrderByDescending(d=>d.Date).FirstOrDefault()?.cPrice;
+        }
 
         //public async Task<JsonResult> Get(string codes)
         //{

@@ -156,6 +156,9 @@
   <data name="netbuy" xml:space="preserve">
     <value>Netbuy</value>
   </data>
+  <data name="netbuyhistory" xml:space="preserve">
+    <value>NetbuyHistory</value>
+  </data>
   <data name="password" xml:space="preserve">
     <value>Password</value>
   </data>

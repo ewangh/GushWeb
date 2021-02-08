@@ -174,4 +174,7 @@
   <data name="netbuy" xml:space="preserve">
     <value>净买榜</value>
   </data>
+  <data name="netbuyhistory" xml:space="preserve">
+    <value>净买历史</value>
+  </data>
 </root>

@@ -178,6 +178,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 净买历史 的本地化字符串。
+        /// </summary>
+        internal static string netbuyhistory {
+            get {
+                return ResourceManager.GetString("netbuyhistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 密码 的本地化字符串。
         /// </summary>
         internal static string password {

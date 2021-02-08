@@ -39,7 +39,8 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Price)%
                 </th>
-                <th>Num(@max_num)</th>
+                @*<th>Num(@max_num)</th>*@
+                <th>cPrice</th>
                 <th>
                     @Html.DisplayNameFor(model => model.Time)
                 </th>
@@ -65,9 +66,9 @@
         }
 
         function onComplete() {
-            asyncGetStockData(getCodes).then(function (dataArray) {
-                dataArray.forEach(function (item, index) {
-                    updateChange(item[6], item[1]);
+            asyncGetStockData(getCodes).then(function(dataArray) {
+                dataArray.forEach(function(item, index) {
+                    updateAlarm(item[6], item[1]);
                 });
             });
         }
@@ -77,39 +78,64 @@
         function jump(date) {
             window.location.href = '@Url.Action("Index")?date=' + date;
         }
-        
+
         (function() {
             if (isToday()) {
-                var timer = setInterval(function () { $("form").submit(); }, 30000);
+                var timer = setInterval(function() { $("form").submit(); }, 30000);
             }
-            asyncGetStockData(getCodes).then(function (dataArray) {
+            asyncGetStockData(getCodes).then(function(dataArray) {
                 dataArray.forEach(function(item, index) {
-                    updateChange(item[6], item[1]);
+                    updateAlarm(item[6], item[1]);
                 });
             });
         })()
 
-        function updateChange(code, price) {
+        function updateAlarm(code, price) {
             $("span").each(function() {
                 if ($(this).attr("name") == code) {
-                    var tagPrice = parseFloat($(this).attr("tagp"));
-                    var tagClosed = parseFloat($(this).attr("tagc"));
-                    if (isToday()) {
-                        if (!tagClosed.isNaN || tagClosed != 0) {
-                            var color = tagPrice > price ? "green" : "red";
-                            $(this).html(((price / tagClosed-1)*100).toFixed(2));
-                            $(this).css("color", color);
-                        }
-                    } else {
-                        if (!tagPrice.isNaN || tagPrice != 0) {
-                            var color = tagPrice > price ? "green" : "red";
-                            $(this).html(((price / tagPrice - 1) * 100).toFixed(2));
-                            $(this).css("color", color);
-                        }
+                    var mode = $(this).attr("mode");
+                    switch (mode) {
+                        case 'change':
+                            updateChange($(this),price);
+                            break;
+                        case 'cprice':
+                            updateCprice($(this),price);
+                            break;
+                        default:
+                            break;
                     }
 
                 }
             });
+        }
+
+        function updateChange(span,price) {
+            var tagPrice = parseFloat(span.attr("tagp"));
+            var tagClosed = parseFloat(span.attr("tagc"));
+            if (isToday()) {
+                if (!tagClosed.isNaN || tagClosed != 0) {
+                    var color = tagPrice > price ? "green" : "red";
+                    span.html(((price / tagClosed - 1) * 100).toFixed(2));
+                    span.css("color", color);
+                }
+            } else {
+                if (!tagPrice.isNaN || tagPrice != 0) {
+                    var color = tagPrice > price ? "green" : "red";
+                    span.html(((price / tagPrice - 1) * 100).toFixed(2));
+                    span.css("color", color);
+                }
+            }
+        }
+
+        function updateCprice(span,price) {
+            var tagCprice = parseFloat(span.attr("tagc"));
+            if (isToday()) {
+                if (!tagCprice.isNaN) {
+                    var color = tagCprice > price ? "green" : "red";
+                    span.html(price);
+                    span.css("color", color);
+                }
+            }
         }
 
         function isToday() {
