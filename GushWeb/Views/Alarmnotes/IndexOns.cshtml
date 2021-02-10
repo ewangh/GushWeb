@@ -2,7 +2,7 @@
 @model IEnumerable<t_alarmnotes>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "IndexOns";
 
     var ajaxOption = new AjaxOptions
     {
@@ -24,7 +24,7 @@
     @ControlHelper.DateControl(@ViewBag.Prev, @ViewBag.Current, @ViewBag.Next)
 </div>
 
-@using (Ajax.BeginForm("IndexAsyn", ajaxOption))
+@using (Ajax.BeginForm("IndexOnsAsyn", ajaxOption))
 {
     <table class="table table-striped" name="list">
         <thead>
