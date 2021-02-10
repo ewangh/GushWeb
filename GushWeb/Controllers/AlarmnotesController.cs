@@ -25,13 +25,14 @@ namespace GushWeb.Controllers
         private GushDBContext db = new GushDBContext();
         const int pageSize = 30;
         // GET: Alarmnotes
-        private Expression<Func<t_alarmnotes, bool>> getExpression(string date, string[] array = null)
+        private Expression<Func<t_alarmnotes, bool>> getExpression(string date, Notestate state, string[] array = null)
         {
             Expression<Func<t_alarmnotes, bool>> expression = t => true;
             //expression = expression.And(d => d.Date.CompareTo(date) == 0 && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0);
             expression = expression.And(d => d.Date.CompareTo(date) == 0);
             expression = expression.And(d => !d.Name.ToLower().Contains(t_pre.pre_st) || !d.Name.ToLower().Contains(t_pre.pre_xst));
             expression = expression.And(d => d.Price < d.Closed * 1.097m);
+            expression = expression.And(d => d.State == state);
             //expression = expression.And(d => d.Time.CompareTo("09:32:03") < 0);
             if (!array.IsNullOrEmpty())
             {
@@ -56,12 +57,12 @@ namespace GushWeb.Controllers
                 ViewBag.Current = Today;
             }
 
-            var expression = getExpression(date);
+            var expression = getExpression(date,Notestate.Opn);
             var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
             pageData.ForEach(d => d.cPrice = GetCprice(d.Code, d.Date));
             if (User.Identity.IsAuthenticated)
             {
-                return View("Index",pageData);
+                return View("Index", pageData);
                 //TODO:vue request
                 //return View("IndexNew", pageData);
             }
@@ -72,22 +73,71 @@ namespace GushWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> IndexAsyn(FormCollection collection)
         {
-            string codes = collection["codes"]??string.Empty;
+            string codes = collection["codes"] ?? string.Empty;
             //var pageData = db.AlarmNotesList.Where(d => d.Date == dt && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0).OrderBy(d => d.Time).AsEnumerable();
             if (!Request.IsAjaxRequest())
             {
                 return PartialView("pviewIndex", new List<t_alarmnotes>());
             }
             string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-            var expression = getExpression(Today, codeArray);
+            var expression = getExpression(Today,Notestate.Opn, codeArray);
             var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
-            pageData.ForEach(d=>d.cPrice=GetCprice(d.Code,d.Date));
+            pageData.ForEach(d => d.cPrice = GetCprice(d.Code, d.Date));
             return PartialView("pviewIndex", pageData);
+        }
+
+        public ActionResult IndexOns(string date)
+        {
+            if (!String.IsNullOrEmpty(date))
+            {
+                var datePage = AlarmnotesSingleton.GetObj().GetDatePage(ref date);
+                ViewBag.Prev = datePage.PrevDate;
+                ViewBag.Current = datePage.CurrentDate;
+                ViewBag.Next = datePage.NextDate;
+            }
+            else
+            {
+                date = Today;
+                ViewBag.Current = Today;
+            }
+
+            var expression = getExpression(date, Notestate.Ons);
+            var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
+            pageData.ForEach(d => d.ForceState = GetForceState(d.Code, d.Date));
+            if (User.Identity.IsAuthenticated)
+            {
+                return View("IndexOns", pageData);
+                //TODO:vue request
+                //return View("IndexNew", pageData);
+            }
+
+            return View(pageData);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> IndexOnsAsyn(FormCollection collection)
+        {
+            string codes = collection["codes"] ?? string.Empty;
+            if (!Request.IsAjaxRequest())
+            {
+                return PartialView("pviewIndexOns", new List<t_alarmnotes>());
+            }
+            string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
+            var expression = getExpression(Today, Notestate.Ons, codeArray);
+            var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
+            pageData.ForEach(d => d.ForceState = GetForceState(d.Code, d.Date));
+            return PartialView("pviewIndexOns", pageData);
+        }
+
+        private ForceState? GetForceState(string code, string date)
+        {
+            return db.FoamList.Where(d => d.Code == code && d.Date.CompareTo(date) < 0).OrderByDescending(d => d.Date)
+                .FirstOrDefault()?.State;
         }
 
         private decimal? GetCprice(string code, string date)
         {
-            return db.SettlementList.Where(d=>d.Code==code && d.Date.CompareTo(date)<0).OrderByDescending(d=>d.Date).FirstOrDefault()?.cPrice;
+            return db.SettlementList.Where(d => d.Code == code && d.Date.CompareTo(date) < 0).OrderByDescending(d => d.Date).FirstOrDefault()?.cPrice;
         }
 
         //public async Task<JsonResult> Get(string codes)
@@ -102,7 +152,7 @@ namespace GushWeb.Controllers
         public JsonResult GetAlarmnotes(string codes)
         {
             var list = new List<t_alarmnotes>();
-            list.Add(new t_alarmnotes(){Code = "123",Name = "abc"});
+            list.Add(new t_alarmnotes() { Code = "123", Name = "abc" });
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 

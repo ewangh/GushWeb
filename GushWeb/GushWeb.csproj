@@ -601,6 +601,8 @@
     <Content Include="Views\Transaction\pview_netbuy.cshtml" />
     <Content Include="Views\Transaction\NetbuyHistory.cshtml" />
     <Content Include="Views\Transaction\pview_netbuyHistory.cshtml" />
+    <Content Include="Views\Alarmnotes\IndexOns.cshtml" />
+    <Content Include="Views\Alarmnotes\pviewIndexOns.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

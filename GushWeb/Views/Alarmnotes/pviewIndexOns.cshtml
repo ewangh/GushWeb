@@ -1,0 +1,35 @@
+﻿@using GushWeb.Utility
+@using System.Configuration
+@model IEnumerable<t_alarmnotes>
+@{
+    var url = ConfigurationManager.AppSettings["iwc"];
+
+    //GushDBContext db = new GushDBContext();
+    //var max_date = db.ChangesList.Max(d => d.Date_9);
+    //Dictionary<string, int?> samples = db.ChangesList.Where(pair => pair.Date_9.CompareTo(max_date) == 0).ToDictionary(pair => pair.Code, pair => pair.Num);
+}
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            @Html.Hidden("codes", item.Code)
+        </td>
+        <td>
+            @ControlHelper.UrlControl(url,item.Code)
+        </td>
+        <td>
+            @Html.ActionLink(item.Name, "Details", new { id = item.Code }, new { target = "_blank" })
+        </td>
+        <td>
+            <span name="@item.Code" mode="change" tagp="@item.Price" tagc="@item.Closed">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
+            <span>|</span>
+            <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
+        </td>
+        <td>
+            @ConvertHelper.ForceConvert(item.ForceState)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Time)
+        </td>
+    </tr>
+}
