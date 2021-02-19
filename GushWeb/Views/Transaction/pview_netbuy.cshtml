@@ -64,7 +64,7 @@
                     <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Total)</a>
                 </th>
                 <th>
-                    <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Foam)</a>
+                    <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Num)</a>
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.State)
@@ -100,7 +100,7 @@
                         @Html.DisplayFor(modelItem => item.Total)
                     </td>
                     <td>
-                        @ConvertHelper.ColorConvert(item.Foam, 1m)
+                        @Html.DisplayFor(modelItem => item.Num)
                     </td>
                     <td>
                         @ConvertHelper.ForceConvert(item.State)

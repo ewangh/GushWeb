@@ -3,22 +3,29 @@
     var dataArray = new Array();
     if (codes.length == 0)
         return dataArray;
-    await $.ajax({
-        dataType: 'script',
-        async: false,
-        url: 'http://hq.sinajs.cn/list=' + getStockStr(codes),
-        cache: true,
-        success: function (msg) {
-            codes.forEach(function (item, index) {
-                var elements = eval("hq_str_s_" + item);
-                if (typeof (elements) != "undefined") {
-                    var eleArray = elements.split(",");
-                    eleArray.push(item);
-                    dataArray.push(eleArray);
-                }
-            });
-        }
-    });
+    var mlength = 300;
+    for (var i = 0; i <= codes.length;) {
+        var end = i + mlength;
+        var codeArray = codes.slice(i, end);
+        await $.ajax({
+            dataType: 'script',
+            async: false,
+            url: 'http://hq.sinajs.cn/list=' + getStockStr(codeArray),
+            cache: true,
+            success: function (msg) {
+                codeArray.forEach(function (item, index) {
+                    var elements = eval("hq_str_s_" + item);
+                    if (typeof (elements) != "undefined") {
+                        var eleArray = elements.split(",");
+                        eleArray.push(item);
+                        dataArray.push(eleArray);
+                    }
+                });
+            }
+        });
+        i = end;
+    }
+
     return dataArray;
 }
 
@@ -72,7 +79,7 @@ class Url {
 function jumpRoute(url, param) {
     let URL = new Url();
     let newUrl = URL.getUrl(url, param);
-    location.href = newUrl; 
+    location.href = newUrl;
 }
 
 //var today = now.getFullYear() +

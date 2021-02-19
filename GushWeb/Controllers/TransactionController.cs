@@ -15,7 +15,9 @@ using GushLibrary.Models;
 using GushWeb.Helpers;
 using GushWeb.Models;
 using GushWeb.Utility;
+using Microsoft.Ajax.Utilities;
 using PagedList;
+using ServiceStack.Common.Extensions;
 
 namespace GushWeb.Controllers
 {
@@ -26,6 +28,7 @@ namespace GushWeb.Controllers
         const string SZprefix = "sz";
         const string SHprefix = "sh";
         private const int pageSize = 300;
+        private Dictionary<string, int?> samples;
 
         public ActionResult Netbuy(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
@@ -119,11 +122,15 @@ namespace GushWeb.Controllers
                     odby = d => d.Total;
                     break;
                 case 4:
+                    odby = d => d.Num;
+                    break;
                 default:
                     break;
             }
 
-            IEnumerable<t_foam> t_foams = db.FoamList.Where(expression).ToList();
+            SetSamples(date);
+
+            IEnumerable<t_foam> t_foams = db.FoamList.Where(expression).ConvertAll(d => samples.ContainsKey(d.Code) ? d.SetNum(samples[d.Code]) : d);
 
             if (isPage || index > 1)
             {
@@ -189,11 +196,13 @@ namespace GushWeb.Controllers
                     break;
             }
 
+            SetSamples(date);
+
             IEnumerable<t_foam> t_foams =
                 from f1 in db.FoamList.GroupBy(d => d.Date).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault().queue
                 join f2 in db.FoamList.Where(d => d.Date.CompareTo(date) == 0) on f1.Code equals f2.Code into ftemp
                 from f3 in ftemp
-                select f3;
+                select f3.SetNum(samples.ContainsKey(f3.Code) ? samples[f3.Code] : null);
 
             Expression<Func<t_foam, decimal?>> odby = d => d.Foam;
             switch (col)
@@ -241,6 +250,66 @@ namespace GushWeb.Controllers
 
             var pd = t_foams.ToPagedList(index, pageSize);
             return View("Netbuy", pd);
+        }
+
+        private void SetSamples(string date)
+        {
+            samples = db.ChangesList.GroupBy(d => d.Date_9).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+            if (samples != null)
+            {
+                return; 
+            }
+            samples = db.ChangesList.GroupBy(d => d.Date_8).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+
+            if (samples != null)
+            {
+                return;
+            }
+            samples = db.ChangesList.GroupBy(d => d.Date_7).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+            if (samples != null)
+            {
+                return;
+            }
+            samples = db.ChangesList.GroupBy(d => d.Date_6).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+            if (samples != null)
+            {
+                return;
+            }
+            samples = db.ChangesList.GroupBy(d => d.Date_5).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+            if (samples != null)
+            {
+                return;
+            }
+            samples = db.ChangesList.GroupBy(d => d.Date_4).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+            if (samples != null)
+            {
+                return;
+            }
+            samples = db.ChangesList.GroupBy(d => d.Date_3).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+            if (samples != null)
+            {
+                return;
+            }
+            samples = db.ChangesList.GroupBy(d => d.Date_2).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+            if (samples != null)
+            {
+                return;
+            }
+            samples = db.ChangesList.GroupBy(d => d.Date_1).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num);
+
+            if (samples != null)
+            {
+                return;
+            }
+            samples = new Dictionary<string, int?>();
         }
 
         public ActionResult NetbuyAsynByCodeOrName(string codename, NetbuyMode mode, int index)
@@ -300,7 +369,7 @@ namespace GushWeb.Controllers
                 dicModes.Add("缩量", new ForceState[] { ForceState.主力缩量买入, ForceState.主力缩量卖出, ForceState.散户缩量买入, ForceState.散户缩量卖出 });
                 dicModes.Add("买入", new ForceState[] { ForceState.主力放量买入, ForceState.主力缩量买入, ForceState.散户放量买入, ForceState.散户缩量买入 });
                 dicModes.Add("卖出", new ForceState[] { ForceState.主力放量卖出, ForceState.主力缩量卖出, ForceState.散户放量卖出, ForceState.散户缩量卖出 });
-                
+
                 foreach (var mode in modes)
                 {
                     if (dicModes.ContainsKey(mode))

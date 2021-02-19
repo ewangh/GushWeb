@@ -59,7 +59,7 @@ namespace GushWeb.Controllers
 
             var expression = getExpression(date,Notestate.Opn);
             var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
-            pageData.ForEach(d => d.cPrice = GetCprice(d.Code, d.Date));
+
             if (User.Identity.IsAuthenticated)
             {
                 return View("Index", pageData);
@@ -82,7 +82,7 @@ namespace GushWeb.Controllers
             string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
             var expression = getExpression(Today,Notestate.Opn, codeArray);
             var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
-            pageData.ForEach(d => d.cPrice = GetCprice(d.Code, d.Date));
+
             return PartialView("pviewIndex", pageData);
         }
 
@@ -101,7 +101,7 @@ namespace GushWeb.Controllers
                 ViewBag.Current = Today;
             }
 
-            var expression = getExpression(date, Notestate.Ons);
+            var expression = getExpression(date, Notestate.Ons).And(d => d.Time.CompareTo("09:32:03") < 0); 
             var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
             pageData.ForEach(d => d.ForceState = GetForceState(d.Code, d.Date));
             if (User.Identity.IsAuthenticated)
@@ -123,7 +123,7 @@ namespace GushWeb.Controllers
                 return PartialView("pviewIndexOns", new List<t_alarmnotes>());
             }
             string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-            var expression = getExpression(Today, Notestate.Ons, codeArray);
+            var expression = getExpression(Today, Notestate.Ons, codeArray).And(d => d.Time.CompareTo("09:32:03") < 0);
             var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
             pageData.ForEach(d => d.ForceState = GetForceState(d.Code, d.Date));
             return PartialView("pviewIndexOns", pageData);
