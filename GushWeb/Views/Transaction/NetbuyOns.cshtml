@@ -1,0 +1,141 @@
+﻿
+@using GushWeb.Models
+@model IEnumerable<t_foam>
+
+@{
+    ViewBag.Title = "NetbuyOns";
+
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "app",
+        LoadingElementId = "loading",
+        HttpMethod = "GET",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+}
+@using (Ajax.BeginForm("NetbuyOns", ajaxOption))
+{
+    <br />
+    <div class="input-group">
+        @Html.Hidden("mode", "")
+        @Html.Hidden("col", "")
+        @Html.Hidden("odcol", "")
+        @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search code or name" })
+        <span class="input-group-btn">
+            <a class="btn input-group-btn btn-info" href="javascript:;" onclick="jumpRoute('@ViewContext.RouteData.Values["action"]',{date:$('#date').val()})">
+                <span class="glyphicon glyphicon-search"></span>
+            </a>
+        </span>
+    </div>
+    <br />
+    @Html.Partial("pview_netbuy", Model)
+    <p>
+        @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
+    </p>
+}
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/stockBase.js"></script>
+    <script src="~/Scripts/stockData.js"></script>
+    <script>
+        var risesId = 'div_rises';
+        var funRises = '@Url.Action("GetModes")';
+
+        function onBegin() {
+            //显示
+            loading.show();
+        }
+
+        function onSuccess() {
+            //影藏
+            loading.hide();
+            $("#modal-container").modal("hide");
+        }
+
+        function onFailure() {
+            alert('请求错误');
+            //影藏
+            loading.hide();
+        }
+
+        function onComplete() {
+
+        }
+
+        var today = new Date();
+        var timer = self.setInterval("elapsed()", 6000);
+
+        function getCodeQueue(code) {
+            $("#date").val(code);
+            getModeQueue(0);
+        }
+
+        function getModeQueue(mode) {
+            $("[type=hidden][name='mode']").val(mode);
+            jumpRoute('@ViewContext.RouteData.Values["action"]',
+                { date: $('#date').val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
+        }
+
+        function getColQueue(col) {
+            $("[type=hidden][name='col']").val(col);
+            if ($("[type=hidden][name='col']").val() == $("[type=hidden][name='odcol']").val()) {
+                $("[type=hidden][name='odcol']").val(0);
+            } else {
+                $("[type=hidden][name='odcol']").val(col);
+            }
+            jumpRoute('@ViewContext.RouteData.Values["action"]',
+                { date: $('#date').val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
+        }
+
+        (function () {
+            var data = { ptype:'@Request["mode"]', date:'@Request["date"]' };
+            getRises(funRises, data, risesId, getModeQueue.name);
+        })()
+
+        function elapsed() {
+            //if (isToday()) {
+            asyncGetStockData(getCodes).then(function(dataArray) {
+                dataArray.forEach(function(item, index) {
+                    updateChange(item[6], item[3]);
+                });
+            });
+            //}
+        }
+
+        function updateChange(code, change) {
+            $("span").each(function() {
+                if ($(this).attr("name") == code + today.Format("yyyy-MM-dd")) {
+                    var color = change < 0 ? "green" : "red";
+                    $(this).html(change);
+                    $(this).css("color", color);
+                }
+            });
+        }
+
+        function isToday() {
+            var currentDate = $("#date").val();
+            return currentDate == today.Format("yyyy-MM-dd");
+        }
+
+        function getCodes() {
+            var arry = new Array();
+            $("[type=hidden][name='codes']").each(function() {
+                var code = $(this).val() || '';
+                if (code != '') {
+                    arry.push(code);
+                }
+            });
+            return arry;
+        }
+    </script>
+}
+
+

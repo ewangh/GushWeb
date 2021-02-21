@@ -86,49 +86,6 @@ namespace GushWeb.Controllers
             return PartialView("pviewIndex", pageData);
         }
 
-        public ActionResult IndexOns(string date)
-        {
-            if (!String.IsNullOrEmpty(date))
-            {
-                var datePage = AlarmnotesSingleton.GetObj().GetDatePage(ref date);
-                ViewBag.Prev = datePage.PrevDate;
-                ViewBag.Current = datePage.CurrentDate;
-                ViewBag.Next = datePage.NextDate;
-            }
-            else
-            {
-                date = Today;
-                ViewBag.Current = Today;
-            }
-
-            var expression = getExpression(date, Notestate.Ons).And(d => d.Time.CompareTo("09:32:03") < 0); 
-            var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
-            pageData.ForEach(d => d.ForceState = GetForceState(d.Code, d.Date));
-            if (User.Identity.IsAuthenticated)
-            {
-                return View("IndexOns", pageData);
-                //TODO:vue request
-                //return View("IndexNew", pageData);
-            }
-
-            return View(pageData);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> IndexOnsAsyn(FormCollection collection)
-        {
-            string codes = collection["codes"] ?? string.Empty;
-            if (!Request.IsAjaxRequest())
-            {
-                return PartialView("pviewIndexOns", new List<t_alarmnotes>());
-            }
-            string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-            var expression = getExpression(Today, Notestate.Ons, codeArray).And(d => d.Time.CompareTo("09:32:03") < 0);
-            var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
-            pageData.ForEach(d => d.ForceState = GetForceState(d.Code, d.Date));
-            return PartialView("pviewIndexOns", pageData);
-        }
-
         private ForceState? GetForceState(string code, string date)
         {
             return db.FoamList.Where(d => d.Code == code && d.Date.CompareTo(date) < 0).OrderByDescending(d => d.Date)
