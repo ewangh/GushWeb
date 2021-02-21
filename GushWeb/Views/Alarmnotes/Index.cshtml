@@ -16,9 +16,6 @@
         OnComplete = "onComplete()",
         InsertionMode = InsertionMode.InsertAfter
     };
-
-    GushDBContext db = new GushDBContext();
-    var max_num = db.ChangesList.OrderByDescending(d => d.Date_9).ThenByDescending(d => d.Num).FirstOrDefault()?.Num;
 }
 <div class="input-group" style="margin:15px 0px 10px 0px">
     @ControlHelper.DateControl(@ViewBag.Prev, @ViewBag.Current, @ViewBag.Next)
