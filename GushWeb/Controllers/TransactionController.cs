@@ -335,7 +335,7 @@ namespace GushWeb.Controllers
                     continue;
                 }
 
-                if (obj.Change_x.HasValue && obj.Change_x > prevChange)
+                if (obj.Change_x.HasValue && obj.Change_x < prevChange)
                 {
                     prevChange = obj.Change_x;
                     num++;
