@@ -4,7 +4,7 @@
     if (codes.length == 0)
         return dataArray;
     var mlength = 300;
-    for (var i = 0; i <= codes.length;) {
+    for (var i = 0; i < codes.length;) {
         var end = i + mlength;
         var codeArray = codes.slice(i, end);
         await $.ajax({

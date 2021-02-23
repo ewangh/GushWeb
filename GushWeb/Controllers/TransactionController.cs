@@ -324,9 +324,9 @@ namespace GushWeb.Controllers
         {
             Dictionary<string, int?> samples = new Dictionary<string, int?>();
 
-            var list = db.ChangesList.Where(d => d.Date_x.CompareTo(date) == 0).OrderByDescending(d => d.Change_x);
+            var list = db.ChangesList.Where(d => (d.Date_x??d.Date_9).CompareTo(date) == 0).OrderByDescending(d => d.Change_x);
             int? num = 0;
-            decimal? prevChange = -100;
+            decimal? prevChange = 100;
 
             foreach (var obj in list)
             {
