@@ -1,5 +1,6 @@
 ﻿@using PagedList
 @using PagedList.Mvc
+@using System.Configuration
 @model IEnumerable<t_catapult>
 @{
     var ajaxOption = new AjaxOptions
@@ -18,45 +19,50 @@
 <div id="app">
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Rank)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            
-            <th>
-                Change
-            </th>
-            <th>
-                NextChange
-            </th>
-        </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rank)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Ltotal)
+                </th>
+                <th>
+                    Change
+                </th>
+                <th>
+                    NextChange
+                </th>
+            </tr>
         </thead>
         <tbody id="tb">
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rank)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Code)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @ConvertHelper.AmplitudeConvert(item.Closed, item.Price)
-                </td>
-                <td>
-                    @ConvertHelper.AmplitudeConvert(item.Price, item.NextPrice)
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rank)
+                    </td>
+                    <td>
+                        @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ltotal)
+                    </td>
+                    <td>
+                        @ConvertHelper.AmplitudeConvert(item.Closed, item.Price)
+                    </td>
+                    <td>
+                        @ConvertHelper.AmplitudeConvert(item.Price, item.NextPrice)
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

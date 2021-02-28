@@ -3,15 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GushLibrary.Models;
 using GushWeb.Utility;
 
 namespace GushWeb.Controllers
 {
     public class BaseController : Controller
     {
-        protected string Today=> DateTime.Today.ToYYYYMMDD();
+        protected string LastDate => new settlementService().GetLastDate();
 
-        protected string Time=> DateTime.Now.ToLongTimeString();
+        protected string Today
+        {
+            get
+            {
+                if (DateTime.Now.Hour < 9)
+                {
+                    return LastDate ?? DateTime.Today.ToYYYYMMDD();
+                }
+
+                return DateTime.Today.ToYYYYMMDD();
+            }
+        }
+
+        protected string Time => DateTime.Now.ToLongTimeString();
 
 
         protected override void HandleUnknownAction(string actionName)

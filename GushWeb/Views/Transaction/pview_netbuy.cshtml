@@ -61,7 +61,7 @@
                     <a href="javascript:;" onclick="getColQueue(2)">@Html.DisplayNameFor(model => model.Change)</a>
                 </th>
                 <th>
-                    <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Total)</a>
+                    <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Ltotal)</a>
                 </th>
                 <th>
                     <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Num)</a>
@@ -97,7 +97,7 @@
                         <span name="@(item.Code + item.Date)">@ConvertHelper.ColorConvert(item.Change)</span>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Total)
+                        @Html.DisplayFor(modelItem => item.Ltotal)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Num)

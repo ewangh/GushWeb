@@ -41,7 +41,7 @@ namespace GushWeb.Controllers
                 {
                     Response.Cookies[ConfigEntity.NodeName].Value = tokenObj.Token.ToSalt(ConfigEntity.tknSalt);
                     //return RedirectToAction("Index", "Alarmnotes", new {date = Today});
-                    return RedirectToAction("NetbuyOns", "Transaction");
+                    return RedirectToAction("Index", "Alarmnotes");
                 }
 
                 ModelState.AddModelError("token", "Error Token");
