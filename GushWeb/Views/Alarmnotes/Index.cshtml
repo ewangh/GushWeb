@@ -110,13 +110,13 @@
             if (isToday()) {
                 if (!tagClosed.isNaN || tagClosed != 0) {
                     var color = tagPrice > price ? "green" : "red";
-                    span.html(((price / tagClosed - 1) * 100).toFixed(2));
+                    span.html(((price / tagClosed - 1) * 100).toFixed(2) + '%');
                     span.css("color", color);
                 }
             } else {
                 if (!tagPrice.isNaN || tagPrice != 0) {
                     var color = tagPrice > price ? "green" : "red";
-                    span.html(((price / tagPrice - 1) * 100).toFixed(2));
+                    span.html(((price / tagPrice - 1) * 100).toFixed(2) + '%');
                     span.css("color", color);
                 }
             }

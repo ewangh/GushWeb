@@ -94,7 +94,7 @@
                         @ConvertHelper.ColorConvert(item.Netbuy)
                     </td>
                     <td>
-                        <span name="@(item.Code + item.Date)">@ConvertHelper.ColorConvert(item.Change)</span>
+                        <span name="@(item.Code + item.Date)">@ConvertHelper.AmplitudeConvert(item.Change)</span>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Ltotal)

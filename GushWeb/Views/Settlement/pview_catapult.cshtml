@@ -67,6 +67,6 @@
         </tbody>
     </table>
     <div style="text-align: center;">
-        @Html.PagedListPager(Model as IPagedList, page => Url.Action("CatapultAsyn", new { index = page, date = ViewData["date"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("CatapultAsyn", new { index = page, date = ViewData["date"], daytype = ViewData["daytype"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
     </div>
 </div>

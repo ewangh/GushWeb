@@ -184,20 +184,21 @@ namespace GushWeb.Controllers
         {
             string date = DateTime.Now.ToYYYYMMDD();
             ViewData["date"] = date;
-            IEnumerable<t_catapult> catapultList = await proc.ProcServer.ExecCatapultProc(date);
+            ViewData["daytype"] = -1;
+            IEnumerable<t_catapult> catapultList = await proc.ProcServer.ExecCatapultProc(date, (int)ViewData["daytype"]);
             var pd = catapultList.ToPagedList(1, 100);
             return View(pd);
         }
 
         [HttpPost]
-        public async Task<ActionResult> CatapultAsyn(string date, int index = 1)
+        public async Task<ActionResult> CatapultAsyn(string date, int daytype, int index = 1)
         {
             ViewData["date"] = date;
             IEnumerable<t_catapult> t_catapults = new List<t_catapult>();
 
             if (date.IsDateTime())
             {
-                t_catapults = await proc.ProcServer.ExecCatapultProc(date);
+                t_catapults = await proc.ProcServer.ExecCatapultProc(date, daytype);
             }
 
             var pd = t_catapults.ToPagedList(index, 100);
@@ -476,6 +477,6 @@ namespace GushWeb.Controllers
             return Json(rises.OrderByDescending(d => d.Change));
         }
 
-        
+
     }
 }

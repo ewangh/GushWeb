@@ -123,7 +123,7 @@ namespace GushWeb.Controllers
                     odby = d => d.Change;
                     break;
                 case 3:
-                    odby = d => d.Total;
+                    odby = d => d.Ltotal;
                     break;
                 case 4:
                     odby = d => d.Num;
@@ -132,7 +132,7 @@ namespace GushWeb.Controllers
                     break;
             }
 
-            var samples = isOns ? OnsSamples(date) : SetSamples(date);
+            var samples = isOns ? OnsSamples(date) : SetSamplesByDate(date);
 
 
             IEnumerable<t_foam> t_foams = db.FoamList.Where(expression).ConvertAll(d => samples.ContainsKey(d.Code) ? d.SetNum(samples[d.Code]) : d);
@@ -202,7 +202,7 @@ namespace GushWeb.Controllers
                     break;
             }
 
-            var samples = SetSamples(date);
+            var samples = SetSamplesByDate(date);
 
             IEnumerable<t_foam> t_foams =
                 from f1 in db.FoamList.GroupBy(d => d.Date).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault().queue
@@ -220,7 +220,7 @@ namespace GushWeb.Controllers
                     odby = d => d.Change;
                     break;
                 case 3:
-                    odby = d => d.Total;
+                    odby = d => d.Ltotal;
                     break;
                 case 4:
                 default:
@@ -258,7 +258,7 @@ namespace GushWeb.Controllers
             return View(isOns ? "NetbuyOns" : "Netbuy", pd);
         }
 
-        private Dictionary<string, int?> SetSamples(string date)
+        private Dictionary<string, int?> SetSamplesByDate(string date)
         {
             Dictionary<string, int?> samples = db.ChangesList.GroupBy(d => d.Date_9).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_9);
 
@@ -320,11 +320,59 @@ namespace GushWeb.Controllers
             return samples;
         }
 
+        private Dictionary<string, int?> SetSamplesByDateByCodeOrName(string code)
+        {
+            Dictionary<string, int?> samples = new Dictionary<string, int?>();
+            var obj = db.ChangesList.Where(d => d.Code == code || d.Name == code).SingleOrDefault();
+
+            if (obj != null)
+            {
+                if (!String.IsNullOrEmpty(obj.Date_9) && !samples.ContainsKey(obj.Date_9))
+                {
+                    samples.Add(obj.Date_9,obj.Num_9);
+                }
+                if (!String.IsNullOrEmpty(obj.Date_8) && !samples.ContainsKey(obj.Date_8))
+                {
+                    samples.Add(obj.Date_8, obj.Num_8);
+                }
+                if (!String.IsNullOrEmpty(obj.Date_7) && !samples.ContainsKey(obj.Date_7))
+                {
+                    samples.Add(obj.Date_7, obj.Num_7);
+                }
+                if (!String.IsNullOrEmpty(obj.Date_6) && !samples.ContainsKey(obj.Date_6))
+                {
+                    samples.Add(obj.Date_6, obj.Num_6);
+                }
+                if (!String.IsNullOrEmpty(obj.Date_5) && !samples.ContainsKey(obj.Date_5))
+                {
+                    samples.Add(obj.Date_5, obj.Num_5);
+                }
+                if (!String.IsNullOrEmpty(obj.Date_4) && !samples.ContainsKey(obj.Date_4))
+                {
+                    samples.Add(obj.Date_4, obj.Num_4);
+                }
+                if (!String.IsNullOrEmpty(obj.Date_3) && !samples.ContainsKey(obj.Date_3))
+                {
+                    samples.Add(obj.Date_3, obj.Num_3);
+                }
+                if (!String.IsNullOrEmpty(obj.Date_2) && !samples.ContainsKey(obj.Date_2))
+                {
+                    samples.Add(obj.Date_2, obj.Num_2);
+                }
+                if (!String.IsNullOrEmpty(obj.Date_1) && !samples.ContainsKey(obj.Date_1))
+                {
+                    samples.Add(obj.Date_1, obj.Num_1);
+                }
+            }
+
+            return samples;
+        }
+
         private Dictionary<string, int?> OnsSamples(string date)
         {
             Dictionary<string, int?> samples = new Dictionary<string, int?>();
 
-            var list = db.ChangesList.Where(d => (d.Date_x??d.Date_9).CompareTo(date) == 0).OrderByDescending(d => d.Change_x);
+            var list = db.ChangesList.Where(d => (d.Date_x ?? d.Date_9).CompareTo(date) == 0).OrderByDescending(d => d.Change_x);
             int? num = 0;
             decimal? prevChange = decimal.MaxValue;
 
@@ -370,7 +418,8 @@ namespace GushWeb.Controllers
                     break;
             }
 
-            var pd = db.FoamList.Where(expression).OrderBy(d => d.Code).ThenByDescending(d => d.Date).ToPagedList(index, pageSize);
+            var samples = SetSamplesByDateByCodeOrName(date);
+            var pd = db.FoamList.Where(expression).ConvertAll(d => samples.ContainsKey(d.Date) ? d.SetNum(samples[d.Date]) : d).OrderBy(d => d.Code).ThenByDescending(d => d.Date).ToPagedList(index, pageSize);
             return View(isOns ? "NetbuyOns" : "Netbuy", pd);
         }
 

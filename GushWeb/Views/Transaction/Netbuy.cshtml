@@ -125,7 +125,7 @@
             $("span").each(function() {
                 if ($(this).attr("name") == code + today.Format("yyyy-MM-dd")) {
                     var color = change < 0 ? "green" : "red";
-                    $(this).html(change);
+                    $(this).html(change + '%');
                     $(this).css("color", color);
                 }
             });

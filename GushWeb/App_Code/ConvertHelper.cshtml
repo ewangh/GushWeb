@@ -3,12 +3,24 @@
 {
     if (closed.HasValue && closed != 0 && price.HasValue && price != 0)
     {
-        <font color=@(price<closed?"green":"red")>@Math.Round((float)(price / closed - 1) * 100, 2)</font>
+        <font color=@(price<closed?"green":"red")>@String.Format("{0:P}", price / closed - 1)</font>
         //@:%
     }
     else
     {
         @String.Empty
+    }
+}
+
+@helper AmplitudeConvert(decimal? val, decimal offset = 0)
+{
+    if (val >= offset)
+    {
+        <font color="red">@String.Format("{0:P}", val / 100)</font>
+    }
+    else if (val < offset)
+    {
+        <font color="green">@String.Format("{0:P}", val / 100)</font>
     }
 }
 

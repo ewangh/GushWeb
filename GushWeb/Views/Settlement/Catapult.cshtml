@@ -20,6 +20,15 @@
 {
     <br />
     <div class="input-group">
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="0" checked> 3 Days
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="1">7 Days
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="2">15 Days
+        </label>
         @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date", @readonly = "readonly" })
         <span class="input-group-btn">
             <button class="btn btn-default" type="submit">
