@@ -25,9 +25,18 @@
         @Html.Hidden("mode", "")
         @Html.Hidden("col", "")
         @Html.Hidden("odcol", "")
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="0" checked> 3 Days
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="1">5 Days
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="2">9 Days
+        </label>
         @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search code or name" })
         <span class="input-group-btn">
-            <a class="btn input-group-btn btn-info" href="javascript:;" onclick="jumpRoute('@ViewContext.RouteData.Values["action"]',{date:$('#date').val()})">
+            <a class="btn input-group-btn btn-info" href="javascript:;" onclick="getDateQueue()">
                 <span class="glyphicon glyphicon-search"></span>
             </a>
         </span>
@@ -73,6 +82,11 @@
         var today = new Date();
         var timer = self.setInterval("elapsed()", 6000);
 
+        function getDateQueue() {
+            jumpRoute('@ViewContext.RouteData.Values["action"]',
+                { date: $('#date').val(), daytype: $("input[name='daytype']:checked").val()});
+        }
+
         function getCodeQueue(code) {
             $("#date").val(code);
             getModeQueue(0);
@@ -81,7 +95,7 @@
         function getModeQueue(mode) {
             $("[type=hidden][name='mode']").val(mode);
             jumpRoute('@ViewContext.RouteData.Values["action"]',
-                { date: $('#date').val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
+                { date: $('#date').val(), daytype: $("input[name='daytype']:checked").val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
         }
 
         function getColQueue(col) {
@@ -92,7 +106,7 @@
                 $("[type=hidden][name='odcol']").val(col);
             }
             jumpRoute('@ViewContext.RouteData.Values["action"]',
-                { date: $('#date').val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
+                { date: $('#date').val(), daytype: $("input[name='daytype']:checked").val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
         }
 
         (function () {

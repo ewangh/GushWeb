@@ -39,7 +39,7 @@ namespace GushWeb.Controllers
 
             if (date.IsDateTime())
             {
-                return NetbuyAsynByDate(date, col, odcol, mode, index, false);
+                return NetbuyAsynByDate(date, col, odcol, mode, index, false, "");
             }
             return NetbuyAsynByCodeOrName(date, mode, index);
         }
@@ -52,13 +52,13 @@ namespace GushWeb.Controllers
 
             if (date.IsDateTime())
             {
-                return NetbuyAsynByDate(date, col, odcol, mode, index, true);
+                return NetbuyAsynByDate(date, col, odcol, mode, index, true, "");
             }
             return NetbuyAsynByCodeOrName(date, mode, index);
         }
 
         [AllowAnonymous]
-        public ActionResult NetbuyAsynByDate(string date, int col, int odcol, NetbuyMode mode, int index, bool isPage, bool isOns = false)
+        public ActionResult NetbuyAsynByDate(string date, int col, int odcol, NetbuyMode mode, int index, bool isPage, string daytype, bool isOns = false)
         {
             Expression<Func<t_foam, bool>> expression = d => d.Date.CompareTo(date) == 0;
 
@@ -132,7 +132,7 @@ namespace GushWeb.Controllers
                     break;
             }
 
-            var samples = isOns ? OnsSamples(date) : SetSamplesByDate(date);
+            var samples = isOns ? OnsSamples(date, daytype) : SetSamplesByDate(date);
 
 
             IEnumerable<t_foam> t_foams = db.FoamList.Where(expression).ConvertAll(d => samples.ContainsKey(d.Code) ? d.SetNum(samples[d.Code]) : d);
@@ -329,7 +329,7 @@ namespace GushWeb.Controllers
             {
                 if (!String.IsNullOrEmpty(obj.Date_9) && !samples.ContainsKey(obj.Date_9))
                 {
-                    samples.Add(obj.Date_9,obj.Num_9);
+                    samples.Add(obj.Date_9, obj.Num_9);
                 }
                 if (!String.IsNullOrEmpty(obj.Date_8) && !samples.ContainsKey(obj.Date_8))
                 {
@@ -368,7 +368,7 @@ namespace GushWeb.Controllers
             return samples;
         }
 
-        private Dictionary<string, int?> OnsSamples(string date)
+        private Dictionary<string, int?> OnsSamples(string date, string skip)
         {
             Dictionary<string, int?> samples = new Dictionary<string, int?>();
 
@@ -389,7 +389,19 @@ namespace GushWeb.Controllers
                     num++;
                 }
 
-                samples.Add(obj.Code, num);
+                switch (skip)
+                {
+                    case "1":
+                        samples.Add(obj.Code, obj.Num_5 - num);
+                        break;
+                    case "2":
+                        samples.Add(obj.Code, obj.Num_1 - num);
+                        break;
+                    case "0":
+                    default:
+                        samples.Add(obj.Code, obj.Num_7 - num);
+                        break;
+                }
             }
 
             return samples;
@@ -637,26 +649,26 @@ namespace GushWeb.Controllers
             return Json(rises);
         }
 
-        public ActionResult NetbuyOns(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
+        public ActionResult NetbuyOns(string date, string daytype, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
             IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => true;
 
             if (String.IsNullOrEmpty(date))
             {
-                return NetbuyAsynByDate(Today, col, odcol, mode, index, false, true);
+                return NetbuyAsynByDate(Today, col, odcol, mode, index, false, daytype, true);
             }
             return NetbuyAsynByCodeOrName(date, mode, index, true);
         }
 
-        public ActionResult NetbuyOnsPage(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
+        public ActionResult NetbuyOnsPage(string date, string daytype, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
             IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => true;
 
             if (String.IsNullOrEmpty(date))
             {
-                return NetbuyAsynByDate(Today, col, odcol, mode, index, true, true);
+                return NetbuyAsynByDate(Today, col, odcol, mode, index, true, daytype, true);
             }
             return NetbuyAsynByCodeOrName(date, mode, index, true);
         }

@@ -191,14 +191,28 @@ namespace GushWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CatapultAsyn(string date, int daytype, int index = 1)
+        public async Task<ActionResult> CatapultAsyn(string date, int daytype, int col, int index = 1)
         {
             ViewData["date"] = date;
+            ViewData["daytype"] = daytype;
+            ViewData["col"] = col;
             IEnumerable<t_catapult> t_catapults = new List<t_catapult>();
 
             if (date.IsDateTime())
             {
                 t_catapults = await proc.ProcServer.ExecCatapultProc(date, daytype);
+                
+                switch (col)
+                {
+                    case 1:
+                        t_catapults=t_catapults.OrderBy(d => d.Rank);
+                        break;
+                    case 2:
+                        t_catapults = t_catapults.OrderByDescending(d => d.Ltotal);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             var pd = t_catapults.ToPagedList(index, 100);

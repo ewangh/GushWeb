@@ -24,16 +24,19 @@
             <input type="radio" name="daytype" value="0" checked> 3 Days
         </label>
         <label class="radio-inline">
-            <input type="radio" name="daytype" value="1">7 Days
+            <input type="radio" name="daytype" value="1">5 Days
         </label>
         <label class="radio-inline">
             <input type="radio" name="daytype" value="2">15 Days
         </label>
+        @Html.Hidden("col")
         @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date", @readonly = "readonly" })
         <span class="input-group-btn">
-            <button class="btn btn-default" type="submit">
+            <button class="btn btn-default" type="submit" onclick="setCol(0)">
                 <span class="glyphicon glyphicon-search"></span>
             </button>
+            <button class="btn btn-default" type="submit" onclick="setCol(1)">Rank</button>
+            <button class="btn btn-default" type="submit" onclick="setCol(2)">Ltotal</button>
         </span>
     </div>
     <br />
@@ -71,7 +74,12 @@
 
         }
 
-        (function () {
+        function setCol(col) {
+            $("#col").val(col);
+            return true;
+        }
+
+        (function() {
             var today = new Date();
             $("#date").datetimepicker({
                 format: 'yyyy-mm-dd',
@@ -80,7 +88,7 @@
                 minView: 2,
                 endDate: today,
             });
-            $("#date").dblclick(function () {
+            $("#date").dblclick(function() {
                 $(this).val(new Date().Format("yyyy-MM-dd"));
             });
         })()

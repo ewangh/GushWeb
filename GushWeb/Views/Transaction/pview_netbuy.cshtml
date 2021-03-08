@@ -116,7 +116,7 @@
         </tbody>
     </table>
     <div style="text-align: center;">
-        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyPage", new { index = page, date = Request["date"], mode = Request["mode"], col = Request["col"], odcol = ViewData["odcol"] }))
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyPage", new { index = page, date = Request["date"], daytype = Request["daytype"], mode = Request["mode"], col = Request["col"], odcol = ViewData["odcol"] }))
     </div>
 </div>
 
