@@ -26,13 +26,13 @@
         @Html.Hidden("col", "")
         @Html.Hidden("odcol", "")
         <label class="radio-inline">
-            <input type="radio" name="daytype" value="0" checked> 3 Days
+            <input type="radio" name="daytype" value="0"> 3 Days
         </label>
         <label class="radio-inline">
             <input type="radio" name="daytype" value="1">5 Days
         </label>
         <label class="radio-inline">
-            <input type="radio" name="daytype" value="2">9 Days
+            <input type="radio" name="daytype" value="2">7 Days
         </label>
         @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search code or name" })
         <span class="input-group-btn">
@@ -84,7 +84,7 @@
 
         function getDateQueue() {
             jumpRoute('@ViewContext.RouteData.Values["action"]',
-                { date: $('#date').val(), daytype: $("input[name='daytype']:checked").val()});
+                { date: $('#date').val(), daytype: $("input[name='daytype']:checked").val() });
         }
 
         function getCodeQueue(code) {
@@ -95,7 +95,13 @@
         function getModeQueue(mode) {
             $("[type=hidden][name='mode']").val(mode);
             jumpRoute('@ViewContext.RouteData.Values["action"]',
-                { date: $('#date').val(), daytype: $("input[name='daytype']:checked").val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
+                {
+                    date: $('#date').val(),
+                    daytype: $("input[name='daytype']:checked").val(),
+                    mode: $('#mode').val(),
+                    col: $('#col').val(),
+                    odcol: $('#odcol').val()
+                });
         }
 
         function getColQueue(col) {
@@ -106,11 +112,29 @@
                 $("[type=hidden][name='odcol']").val(col);
             }
             jumpRoute('@ViewContext.RouteData.Values["action"]',
-                { date: $('#date').val(), daytype: $("input[name='daytype']:checked").val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
+                {
+                    date: $('#date').val(),
+                    daytype: $("input[name='daytype']:checked").val(),
+                    mode: $('#mode').val(),
+                    col: $('#col').val(),
+                    odcol: $('#odcol').val()
+                });
         }
 
-        (function () {
-            var data = { ptype:'@Request["mode"]', date:'@Request["date"]' };
+        (function() {
+            var daytype = getQueryVariable("daytype");
+
+            if (daytype == "undefined") {
+                $("[type=radio][name='daytype']:first").attr("checked", "checked");
+            } else {
+                $("[type=radio][name='daytype']").each(function () {
+                    if ($(this).val() == daytype) {
+                        $(this).attr("checked", "checked");
+                    }
+                });
+            }
+            
+            var data = { ptype: '@Request["mode"]', date: '@Request["date"]' };
             getRises(funRises, data, risesId, getModeQueue.name);
         })()
 

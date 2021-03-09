@@ -392,14 +392,14 @@ namespace GushWeb.Controllers
                 switch (skip)
                 {
                     case "1":
-                        samples.Add(obj.Code, obj.Num_5 - num);
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_4 - num : obj.Num_5 - num);
                         break;
                     case "2":
-                        samples.Add(obj.Code, obj.Num_1 - num);
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_2 - num : obj.Num_3 - num);
                         break;
                     case "0":
                     default:
-                        samples.Add(obj.Code, obj.Num_7 - num);
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num);
                         break;
                 }
             }
