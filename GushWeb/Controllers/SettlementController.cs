@@ -201,11 +201,11 @@ namespace GushWeb.Controllers
             if (date.IsDateTime())
             {
                 t_catapults = await proc.ProcServer.ExecCatapultProc(date, daytype);
-                
+
                 switch (col)
                 {
                     case 1:
-                        t_catapults=t_catapults.OrderBy(d => d.Rank);
+                        t_catapults = t_catapults.OrderBy(d => d.Rank);
                         break;
                     case 2:
                         t_catapults = t_catapults.OrderByDescending(d => d.Ltotal);
@@ -466,13 +466,7 @@ namespace GushWeb.Controllers
                                where codeArray.Contains(v.Code)
                                select v).Take(top).Sum(d => d.Change_x - d.Change_9);
 
-                    var riseObj = new Rise()
-                    {
-                        Text = pkey,
-                        Ptype = pkey,
-                        Change = sum,
-                        IsCheck = pkey == ptype
-                    };
+                    var riseObj = new Rise(pkey, pkey, sum) { IsCheck = pkey == ptype };
                     rises.Add(riseObj);
                 }
             }
