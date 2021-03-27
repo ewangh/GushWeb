@@ -21,16 +21,22 @@
     <br />
     <div class="input-group">
         <label class="radio-inline">
-            <input type="radio" name="daytype" value="0" checked> 3 Days
+            <input type="radio" name="daytype" value="2" checked="">3 
         </label>
         <label class="radio-inline">
-            <input type="radio" name="daytype" value="1">5 Days
+            <input type="radio" name="daytype" value="3">4 
         </label>
         <label class="radio-inline">
-            <input type="radio" name="daytype" value="2">7 Days
+            <input type="radio" name="daytype" value="4">5 
         </label>
         <label class="radio-inline">
-            <input type="radio" name="daytype" value="3">9 Days
+            <input type="radio" name="daytype" value="5">6 
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="6">7 
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="7">8 
         </label>
         @Html.Hidden("col")
         @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date", @readonly = "readonly" })
@@ -40,6 +46,8 @@
             </button>
             <button class="btn btn-default" type="submit" onclick="setCol(1)">Rank</button>
             <button class="btn btn-default" type="submit" onclick="setCol(2)">Ltotal</button>
+            <button class="btn btn-default" type="submit" onclick="setCol(3)">NextChange</button>
+            <button class="btn btn-default" type="submit" onclick="setCol(4)">NextOpen</button>
         </span>
     </div>
     <br />

@@ -35,7 +35,7 @@ namespace GushWeb.Utility
 
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> list)
         {
-            return list == null || list.Count() == 0;
+            return list == null || !list.Any();
         }
 
         public static string ToYYYYMMDD(this DateTime date)

@@ -33,36 +33,55 @@
                     @Html.DisplayNameFor(model => model.Ltotal)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.State)
+                </th>
+                <th>
                     Change
                 </th>
                 <th>
                     NextChange
+                </th>
+                @*<th>
+            NextOpen
+        </th>*@
+                <th>
+                    Date
                 </th>
             </tr>
         </thead>
         <tbody id="tb">
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Rank)
-                    </td>
-                    <td>
-                        @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
-                    </td>
-                    <td>
-                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Ltotal)
-                    </td>
-                    <td>
-                        @ConvertHelper.AmplitudeConvert(item.Closed, item.Price)
-                    </td>
-                    <td>
-                        @ConvertHelper.AmplitudeConvert(item.Price, item.NextPrice)
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.CheckBox("ckb")
+                    @Html.DisplayFor(modelItem => item.Rank)
+                </td>
+                <td>
+                    @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
+                </td>
+                <td>
+                    @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ltotal)
+                </td>
+                <td>
+                    @ConvertHelper.ForceConvert(item.State)
+                </td>
+                <td>
+                    @ConvertHelper.AmplitudeConvert(item.Closed, item.Price)
+                </td>
+                <td>
+                    @ConvertHelper.AmplitudeConvert(item.Price, item.NextPrice)
+                </td>
+                @*<td>
+            @ConvertHelper.AmplitudeConvert(item.Price, item.NextOpen)
+        </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+            </tr>
             }
         </tbody>
     </table>

@@ -82,6 +82,7 @@
             {
                 <tr>
                     <td>
+                        @Html.CheckBox("ckb")
                         @Html.Hidden("codes", item.Date == maxDate ? item.Code : "")
                     </td>
                     <td>

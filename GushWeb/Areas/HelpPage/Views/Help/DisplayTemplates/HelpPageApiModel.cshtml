@@ -33,7 +33,7 @@
         <p>None.</p>
     }
 
-    @if (Model.SampleRequests.Count > 0)
+    @if (Model.SampleRequests.Any())
     {
         <h3>Request Formats</h3>
         @Html.DisplayFor(m => m.SampleRequests, "Samples")
@@ -58,7 +58,7 @@
         <p>None.</p>
     }
 
-    @if (Model.SampleResponses.Count > 0)
+    @if (Model.SampleResponses.Any())
     {
         <h3>Response Formats</h3>
         @Html.DisplayFor(m => m.SampleResponses, "Samples")

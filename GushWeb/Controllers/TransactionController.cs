@@ -400,15 +400,24 @@ namespace GushWeb.Controllers
 
                 switch (skip)
                 {
-                    case "1":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_4 - num : obj.Num_5 - num);
+                    case "3":
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_5 - num : obj.Num_6 - num);//4
                         break;
-                    case "2":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_2 - num : obj.Num_3 - num);
+                    case "4":
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_4 - num : obj.Num_5 - num);//5
+                        break;
+                    case "5":
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_3 - num : obj.Num_4 - num);//6
+                        break;
+                    case "6":
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_2 - num : obj.Num_3 - num);//7
+                        break;
+                    case "7":
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_1 - num : obj.Num_2 - num);//8
                         break;
                     case "0":
                     default:
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num);
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num);//3
                         break;
                 }
             }
@@ -502,7 +511,7 @@ namespace GushWeb.Controllers
                 .Select(g => new { date = g.Key, queue = g });
             IEnumerable<t_foam> pd = new List<t_foam>();
 
-            if (groups.Count() == 0)
+            if (!groups.Any())
             {
 
             }
@@ -566,7 +575,7 @@ namespace GushWeb.Controllers
                 {
                     if (dicModes.ContainsKey(mode))
                     {
-                        if (pp.Count == 0)
+                        if (!pp.Any())
                         {
                             pp.AddRange(dicModes[mode]);
                         }
@@ -637,7 +646,7 @@ namespace GushWeb.Controllers
                 var group = db.FoamList.Where(d => date.Contains(d.Code) || date.Contains(d.Name)).GroupBy(d => d.Date)
                     .Select(g => new { date = g.Key, queue = g }).OrderByDescending(d => d.date);
 
-                if (group.Count() == 0)
+                if (!group.Any())
                 {
 
                 }

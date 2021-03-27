@@ -210,6 +210,12 @@ namespace GushWeb.Controllers
                     case 2:
                         t_catapults = t_catapults.OrderByDescending(d => d.Ltotal);
                         break;
+                    case 3:
+                        t_catapults = t_catapults.OrderByDescending(d => d.NextPrice / d.Price).ThenBy(d => d.Price / d.Closed);
+                        break;
+                    case 4:
+                        t_catapults = t_catapults.OrderByDescending(d => d.NextOpen / d.Price).ThenBy(d => d.Price / d.Closed);
+                        break;
                     default:
                         break;
                 }
