@@ -1,4 +1,6 @@
-﻿@using GushWeb.Models
+﻿@using PagedList
+@using PagedList.Mvc
+@using GushWeb.Models
 @model IEnumerable<t_foam>
 
 @{
@@ -33,6 +35,10 @@
     </div>
     <br />
     @Html.Partial("pview_netbuy", Model)
+    <div style="text-align: center;">
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyPage", new { index = page, date = Request["date"], daytype = Request["daytype"], mode = Request["mode"], col = Request["col"], odcol = ViewData["odcol"] }))
+    </div>
+
     <p>
         @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
     </p>

@@ -79,6 +79,33 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 连断板 的本地化字符串。
+        /// </summary>
+        internal static string board {
+            get {
+                return ResourceManager.GetString("board", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 断板 的本地化字符串。
+        /// </summary>
+        internal static string breakPlate {
+            get {
+                return ResourceManager.GetString("breakPlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 断板率 的本地化字符串。
+        /// </summary>
+        internal static string breakRate {
+            get {
+                return ResourceManager.GetString("breakRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 取消 的本地化字符串。
         /// </summary>
         internal static string cancel {
@@ -106,11 +133,47 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 连扳 的本地化字符串。
+        /// </summary>
+        internal static string continuousPlate {
+            get {
+                return ResourceManager.GetString("continuousPlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 连扳率 的本地化字符串。
+        /// </summary>
+        internal static string continuousRate {
+            get {
+                return ResourceManager.GetString("continuousRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 日K 的本地化字符串。
         /// </summary>
         internal static string dayK {
             get {
                 return ResourceManager.GetString("dayK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 下跌 的本地化字符串。
+        /// </summary>
+        internal static string downPlate {
+            get {
+                return ResourceManager.GetString("downPlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 下跌率 的本地化字符串。
+        /// </summary>
+        internal static string downRate {
+            get {
+                return ResourceManager.GetString("downRate", resourceCulture);
             }
         }
         
@@ -178,6 +241,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 资金板 的本地化字符串。
+        /// </summary>
+        internal static string netbuyFund {
+            get {
+                return ResourceManager.GetString("netbuyFund", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 净买历史 的本地化字符串。
         /// </summary>
         internal static string netbuyhistory {
@@ -237,6 +309,24 @@ namespace Resources {
         internal static string update {
             get {
                 return ResourceManager.GetString("update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 上涨 的本地化字符串。
+        /// </summary>
+        internal static string upPlate {
+            get {
+                return ResourceManager.GetString("upPlate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///  查找类似 上涨率 的本地化字符串。
+        /// </summary>
+        internal static string upRate {
+            get {
+                return ResourceManager.GetString("upRate", resourceCulture);
             }
         }
     }

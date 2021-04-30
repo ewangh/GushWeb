@@ -75,44 +75,44 @@ namespace GushWeb.Controllers
                 case NetbuyMode.只看净卖:
                     expression = expression.And(d => d.Netbuy < 0m);
                     break;
-                case NetbuyMode.主力放量买入:
-                    expression = expression.And(d => d.State == ForceState.主力放量买入);
+                case NetbuyMode.主力洗筹初期:
+                    expression = expression.And(d => d.State == ForceState.XI);
                     break;
-                case NetbuyMode.主力放量卖出:
-                    expression = expression.And(d => d.State == ForceState.主力放量卖出);
+                case NetbuyMode.主力大互盘:
+                    expression = expression.And(d => d.State == ForceState.HU);
                     break;
-                case NetbuyMode.主力缩量买入:
-                    expression = expression.And(d => d.State == ForceState.主力缩量买入);
+                case NetbuyMode.主力洗筹末期:
+                    expression = expression.And(d => d.State == ForceState.xi);
                     break;
-                case NetbuyMode.主力缩量卖出:
-                    expression = expression.And(d => d.State == ForceState.主力缩量卖出);
+                case NetbuyMode.主力小互盘:
+                    expression = expression.And(d => d.State == ForceState.hu);
                     break;
-                case NetbuyMode.散户放量买入:
-                    expression = expression.And(d => d.State == ForceState.散户放量买入);
+                case NetbuyMode.主力大砸盘:
+                    expression = expression.And(d => d.State == ForceState.ZA);
                     break;
-                case NetbuyMode.散户放量卖出:
-                    expression = expression.And(d => d.State == ForceState.散户放量卖出);
+                case NetbuyMode.主力拉伸末期:
+                    expression = expression.And(d => d.State == ForceState.LA);
                     break;
-                case NetbuyMode.散户缩量买入:
-                    expression = expression.And(d => d.State == ForceState.散户缩量买入);
+                case NetbuyMode.主力小砸盘:
+                    expression = expression.And(d => d.State == ForceState.za);
                     break;
-                case NetbuyMode.散户缩量卖出:
-                    expression = expression.And(d => d.State == ForceState.散户缩量卖出);
+                case NetbuyMode.主力拉伸初期:
+                    expression = expression.And(d => d.State == ForceState.la);
                     break;
-                case NetbuyMode.昨天主力放量买入:
-                case NetbuyMode.昨天主力放量卖出:
-                case NetbuyMode.昨天主力缩量买入:
-                case NetbuyMode.昨天主力缩量卖出:
-                case NetbuyMode.昨天散户放量买入:
-                case NetbuyMode.昨天散户放量卖出:
-                case NetbuyMode.昨天散户缩量买入:
-                case NetbuyMode.昨天散户缩量卖出:
+                case NetbuyMode.昨日主力洗筹初期:
+                case NetbuyMode.昨日主力大互盘:
+                case NetbuyMode.昨日主力洗筹末期:
+                case NetbuyMode.昨日主力小互盘:
+                case NetbuyMode.昨日主力大砸盘:
+                case NetbuyMode.昨日主力拉伸末期:
+                case NetbuyMode.昨日主力小砸盘:
+                case NetbuyMode.昨日主力拉伸初期:
                     return GetYestodayNetbuyList(date, col, odcol, mode, index, isPage, isOns);
                 default:
                     break;
             }
 
-            Expression<Func<t_foam, decimal?>> odby = d => d.State == ForceState.主力放量买入 ? 1 : 0;
+            Expression<Func<t_foam, decimal?>> odby = d => d.State == ForceState.XI ? 2 : (d.State == ForceState.la ? 1 : 0);
             switch (col)
             {
                 case 1:
@@ -125,6 +125,9 @@ namespace GushWeb.Controllers
                     odby = d => d.Ltotal;
                     break;
                 case 4:
+                    //odby = d => d.Foam;
+                    break;
+                case 5:
                     odby = d => d.Num;
                     break;
                 default:
@@ -183,29 +186,29 @@ namespace GushWeb.Controllers
 
                 switch (mode)
                 {
-                    case NetbuyMode.昨天主力放量买入:
-                        expression = expression.And(d => d.State == ForceState.主力放量买入);
+                    case NetbuyMode.昨日主力洗筹初期:
+                        expression = expression.And(d => d.State == ForceState.XI);
                         break;
-                    case NetbuyMode.昨天主力放量卖出:
-                        expression = expression.And(d => d.State == ForceState.主力放量卖出);
+                    case NetbuyMode.昨日主力大互盘:
+                        expression = expression.And(d => d.State == ForceState.HU);
                         break;
-                    case NetbuyMode.昨天主力缩量买入:
-                        expression = expression.And(d => d.State == ForceState.主力缩量买入);
+                    case NetbuyMode.昨日主力洗筹末期:
+                        expression = expression.And(d => d.State == ForceState.xi);
                         break;
-                    case NetbuyMode.昨天主力缩量卖出:
-                        expression = expression.And(d => d.State == ForceState.主力缩量卖出);
+                    case NetbuyMode.昨日主力小互盘:
+                        expression = expression.And(d => d.State == ForceState.hu);
                         break;
-                    case NetbuyMode.昨天散户放量买入:
-                        expression = expression.And(d => d.State == ForceState.散户放量买入);
+                    case NetbuyMode.昨日主力大砸盘:
+                        expression = expression.And(d => d.State == ForceState.ZA);
                         break;
-                    case NetbuyMode.昨天散户放量卖出:
-                        expression = expression.And(d => d.State == ForceState.散户放量卖出);
+                    case NetbuyMode.昨日主力拉伸末期:
+                        expression = expression.And(d => d.State == ForceState.LA);
                         break;
-                    case NetbuyMode.昨天散户缩量买入:
-                        expression = expression.And(d => d.State == ForceState.散户缩量买入);
+                    case NetbuyMode.昨日主力小砸盘:
+                        expression = expression.And(d => d.State == ForceState.za);
                         break;
-                    case NetbuyMode.昨天散户缩量卖出:
-                        expression = expression.And(d => d.State == ForceState.散户缩量卖出);
+                    case NetbuyMode.昨日主力拉伸初期:
+                        expression = expression.And(d => d.State == ForceState.la);
                         break;
                     default:
                         break;
@@ -217,7 +220,7 @@ namespace GushWeb.Controllers
                 pd = groups.OrderByDescending(d => d.date).FirstOrDefault()?.queue.AsQueryable()
                     .Where(d => codes.Contains(d.Code)).ConvertAll(d => samples.ContainsKey(d.Code) ? d.SetNum(samples[d.Code]) : d);
 
-                Expression<Func<t_foam, decimal?>> odby = d => d.State == ForceState.主力放量买入 ? 1 : 0;
+                Expression<Func<t_foam, decimal?>> odby = d => d.State == ForceState.XI ? 1 : 0;
 
                 switch (col)
                 {
@@ -230,7 +233,10 @@ namespace GushWeb.Controllers
                     case 3:
                         odby = d => d.Ltotal;
                         break;
-                    case 4:
+                    //case 4:
+                    //    odby = d => d.Foam;
+                    //    break;
+                    case 5:
                         odby = d => d.Num;
                         break;
                     default:
@@ -400,6 +406,15 @@ namespace GushWeb.Controllers
 
                 switch (skip)
                 {
+                    case "-1":
+                        samples.Add(obj.Code, num);//-1
+                        break;
+                    case "1":
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_7 - num : obj.Num_8 - num);//2
+                        break;
+                    case "2":
+                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num);//3
+                        break;
                     case "3":
                         samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_5 - num : obj.Num_6 - num);//4
                         break;
@@ -415,7 +430,6 @@ namespace GushWeb.Controllers
                     case "7":
                         samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_1 - num : obj.Num_2 - num);//8
                         break;
-                    case "0":
                     default:
                         samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num);//3
                         break;
@@ -445,60 +459,60 @@ namespace GushWeb.Controllers
                 case NetbuyMode.只看净卖:
                     expression = expression.And(d => d.Netbuy < 0m);
                     break;
-                case NetbuyMode.主力放量买入:
-                    expression = expression.And(d => d.State == ForceState.主力放量买入);
+                case NetbuyMode.主力洗筹初期:
+                    expression = expression.And(d => d.State == ForceState.XI);
                     break;
-                case NetbuyMode.主力放量卖出:
-                    expression = expression.And(d => d.State == ForceState.主力放量卖出);
+                case NetbuyMode.主力大互盘:
+                    expression = expression.And(d => d.State == ForceState.HU);
                     break;
-                case NetbuyMode.主力缩量买入:
-                    expression = expression.And(d => d.State == ForceState.主力缩量买入);
+                case NetbuyMode.主力洗筹末期:
+                    expression = expression.And(d => d.State == ForceState.xi);
                     break;
-                case NetbuyMode.主力缩量卖出:
-                    expression = expression.And(d => d.State == ForceState.主力缩量卖出);
+                case NetbuyMode.主力小互盘:
+                    expression = expression.And(d => d.State == ForceState.hu);
                     break;
-                case NetbuyMode.散户放量买入:
-                    expression = expression.And(d => d.State == ForceState.散户放量买入);
+                case NetbuyMode.主力大砸盘:
+                    expression = expression.And(d => d.State == ForceState.ZA);
                     break;
-                case NetbuyMode.散户放量卖出:
-                    expression = expression.And(d => d.State == ForceState.散户放量卖出);
+                case NetbuyMode.主力拉伸末期:
+                    expression = expression.And(d => d.State == ForceState.LA);
                     break;
-                case NetbuyMode.散户缩量买入:
-                    expression = expression.And(d => d.State == ForceState.散户缩量买入);
+                case NetbuyMode.主力小砸盘:
+                    expression = expression.And(d => d.State == ForceState.za);
                     break;
-                case NetbuyMode.散户缩量卖出:
-                    expression = expression.And(d => d.State == ForceState.散户缩量卖出);
+                case NetbuyMode.主力拉伸初期:
+                    expression = expression.And(d => d.State == ForceState.la);
                     break;
-                case NetbuyMode.昨天主力放量买入:
-                    expression = expression.And(d => d.State == ForceState.主力放量买入);
+                case NetbuyMode.昨日主力洗筹初期:
+                    expression = expression.And(d => d.State == ForceState.XI);
                     isYestoday = true;
                     break;
-                case NetbuyMode.昨天主力放量卖出:
-                    expression = expression.And(d => d.State == ForceState.主力放量卖出);
+                case NetbuyMode.昨日主力大互盘:
+                    expression = expression.And(d => d.State == ForceState.HU);
                     isYestoday = true;
                     break;
-                case NetbuyMode.昨天主力缩量买入:
-                    expression = expression.And(d => d.State == ForceState.主力缩量买入);
+                case NetbuyMode.昨日主力洗筹末期:
+                    expression = expression.And(d => d.State == ForceState.xi);
                     isYestoday = true;
                     break;
-                case NetbuyMode.昨天主力缩量卖出:
-                    expression = expression.And(d => d.State == ForceState.主力缩量卖出);
+                case NetbuyMode.昨日主力小互盘:
+                    expression = expression.And(d => d.State == ForceState.hu);
                     isYestoday = true;
                     break;
-                case NetbuyMode.昨天散户放量买入:
-                    expression = expression.And(d => d.State == ForceState.散户放量买入);
+                case NetbuyMode.昨日主力大砸盘:
+                    expression = expression.And(d => d.State == ForceState.ZA);
                     isYestoday = true;
                     break;
-                case NetbuyMode.昨天散户放量卖出:
-                    expression = expression.And(d => d.State == ForceState.散户放量卖出);
+                case NetbuyMode.昨日主力拉伸末期:
+                    expression = expression.And(d => d.State == ForceState.LA);
                     isYestoday = true;
                     break;
-                case NetbuyMode.昨天散户缩量买入:
-                    expression = expression.And(d => d.State == ForceState.散户缩量买入);
+                case NetbuyMode.昨日主力小砸盘:
+                    expression = expression.And(d => d.State == ForceState.za);
                     isYestoday = true;
                     break;
-                case NetbuyMode.昨天散户缩量卖出:
-                    expression = expression.And(d => d.State == ForceState.散户缩量卖出);
+                case NetbuyMode.昨日主力拉伸初期:
+                    expression = expression.And(d => d.State == ForceState.la);
                     isYestoday = true;
                     break;
                 default:
@@ -511,29 +525,28 @@ namespace GushWeb.Controllers
                 .Select(g => new { date = g.Key, queue = g });
             IEnumerable<t_foam> pd = new List<t_foam>();
 
-            if (!groups.Any())
+            if (groups.Any())
             {
-
-            }
-            else if (groups.SelectMany(d => d.queue).GroupBy(d => d.Code).Count() == 1)
-            {
-                pd = groups.SelectMany(d => d.queue).OrderByDescending(d => d.Date)
-                    .ConvertAll(d => samples.ContainsKey(d.Code + d.Date) ? d.SetNum(samples[d.Code + d.Date]) : d);
-            }
-            else if (isYestoday)
-            {
-                if (groups.Count() > 1)
+                if (groups.SelectMany(d => d.queue).GroupBy(d => d.Code).Count() == 1)
                 {
-                    var codes = groups.OrderByDescending(d => d.date).Skip(1).FirstOrDefault()?.queue.AsQueryable()
-                        .Where(expression).Select(d => d.Code);
-                    pd = groups.OrderByDescending(d => d.date).FirstOrDefault()?.queue.AsQueryable().Where(d => codes.Contains(d.Code))
-                                        .ConvertAll(d => samples.ContainsKey(d.Code + d.Date) ? d.SetNum(samples[d.Code + d.Date]) : d);
+                    pd = groups.SelectMany(d => d.queue).OrderByDescending(d => d.Date)
+                        .ConvertAll(d => samples.ContainsKey(d.Code + d.Date) ? d.SetNum(samples[d.Code + d.Date]) : d);
                 }
-            }
-            else
-            {
-                pd = groups.OrderByDescending(d => d.date).FirstOrDefault()?.queue.AsQueryable().Where(expression)
-                    .ConvertAll(d => samples.ContainsKey(d.Code + d.Date) ? d.SetNum(samples[d.Code + d.Date]) : d);
+                else if (isYestoday)
+                {
+                    if (groups.Count() > 1)
+                    {
+                        var codes = groups.OrderByDescending(d => d.date).Skip(1).FirstOrDefault()?.queue.AsQueryable()
+                            .Where(expression).Select(d => d.Code);
+                        pd = groups.OrderByDescending(d => d.date).FirstOrDefault()?.queue.AsQueryable().Where(d => codes.Contains(d.Code))
+                            .ConvertAll(d => samples.ContainsKey(d.Code + d.Date) ? d.SetNum(samples[d.Code + d.Date]) : d);
+                    }
+                }
+                else
+                {
+                    pd = groups.OrderByDescending(d => d.date).FirstOrDefault()?.queue.AsQueryable().Where(expression)
+                        .ConvertAll(d => samples.ContainsKey(d.Code + d.Date) ? d.SetNum(samples[d.Code + d.Date]) : d);
+                }
             }
 
             return View(isOns ? "NetbuyOns" : "Netbuy", pd.ToPagedList(index, pageSize));
@@ -564,24 +577,24 @@ namespace GushWeb.Controllers
 
 
                 Dictionary<string, ForceState[]> dicModes = new Dictionary<string, ForceState[]>();
-                dicModes.Add("主力", new ForceState[] { ForceState.主力放量买入, ForceState.主力放量卖出, ForceState.主力缩量买入, ForceState.主力缩量卖出 });
-                dicModes.Add("散户", new ForceState[] { ForceState.散户放量买入, ForceState.散户放量卖出, ForceState.散户缩量买入, ForceState.散户缩量卖出 });
-                dicModes.Add("放量", new ForceState[] { ForceState.主力放量买入, ForceState.主力放量卖出, ForceState.散户放量买入, ForceState.散户放量卖出 });
-                dicModes.Add("缩量", new ForceState[] { ForceState.主力缩量买入, ForceState.主力缩量卖出, ForceState.散户缩量买入, ForceState.散户缩量卖出 });
-                dicModes.Add("买入", new ForceState[] { ForceState.主力放量买入, ForceState.主力缩量买入, ForceState.散户放量买入, ForceState.散户缩量买入 });
-                dicModes.Add("卖出", new ForceState[] { ForceState.主力放量卖出, ForceState.主力缩量卖出, ForceState.散户放量卖出, ForceState.散户缩量卖出 });
+                dicModes.Add("主力", new ForceState[] { ForceState.XI, ForceState.HU, ForceState.xi, ForceState.hu });
+                dicModes.Add("散户", new ForceState[] { ForceState.ZA, ForceState.LA, ForceState.za, ForceState.la });
+                dicModes.Add("放量", new ForceState[] { ForceState.XI, ForceState.HU, ForceState.ZA, ForceState.LA });
+                dicModes.Add("缩量", new ForceState[] { ForceState.xi, ForceState.hu, ForceState.za, ForceState.la });
+                dicModes.Add("买入", new ForceState[] { ForceState.XI, ForceState.xi, ForceState.ZA, ForceState.za });
+                dicModes.Add("卖出", new ForceState[] { ForceState.HU, ForceState.hu, ForceState.LA, ForceState.la });
 
                 foreach (var mode in modes)
                 {
                     if (dicModes.ContainsKey(mode))
                     {
-                        if (!pp.Any())
+                        if (pp.Any())
                         {
-                            pp.AddRange(dicModes[mode]);
+                            pp = pp.Intersect(dicModes[mode]).ToList();
                         }
                         else
                         {
-                            pp = pp.Intersect(dicModes[mode]).ToList();
+                            pp.AddRange(dicModes[mode]);
                         }
                     }
                 }
@@ -604,27 +617,27 @@ namespace GushWeb.Controllers
                 NetbuyMode.只看下跌,
                 NetbuyMode.只看净买,
                 NetbuyMode.只看净卖,
-                NetbuyMode.主力放量买入,
-                NetbuyMode.主力放量卖出,
-                NetbuyMode.主力缩量买入,
-                NetbuyMode.主力缩量卖出,
-                NetbuyMode.散户放量买入,
-                NetbuyMode.散户放量卖出,
-                NetbuyMode.散户缩量买入,
-                NetbuyMode.散户缩量卖出,
+                NetbuyMode.主力洗筹初期,
+                NetbuyMode.主力大互盘,
+                NetbuyMode.主力洗筹末期,
+                NetbuyMode.主力小互盘,
+                NetbuyMode.主力大砸盘,
+                NetbuyMode.主力拉伸末期,
+                NetbuyMode.主力小砸盘,
+                NetbuyMode.主力拉伸初期,
                 NetbuyMode.全部
             };
 
             NetbuyMode[] subArray =
             {
-                NetbuyMode.昨天主力放量买入,
-                NetbuyMode.昨天主力放量卖出,
-                NetbuyMode.昨天主力缩量买入,
-                NetbuyMode.昨天主力缩量卖出,
-                NetbuyMode.昨天散户放量买入,
-                NetbuyMode.昨天散户放量卖出,
-                NetbuyMode.昨天散户缩量买入,
-                NetbuyMode.昨天散户缩量卖出
+                NetbuyMode.昨日主力洗筹初期,
+                NetbuyMode.昨日主力大互盘,
+                NetbuyMode.昨日主力洗筹末期,
+                NetbuyMode.昨日主力小互盘,
+                NetbuyMode.昨日主力大砸盘,
+                NetbuyMode.昨日主力拉伸末期,
+                NetbuyMode.昨日主力小砸盘,
+                NetbuyMode.昨日主力拉伸初期
             };
 
             IEnumerable<t_foam> pd = new List<t_foam>();
@@ -646,21 +659,20 @@ namespace GushWeb.Controllers
                 var group = db.FoamList.Where(d => date.Contains(d.Code) || date.Contains(d.Name)).GroupBy(d => d.Date)
                     .Select(g => new { date = g.Key, queue = g }).OrderByDescending(d => d.date);
 
-                if (!group.Any())
+                if (group.Any())
                 {
-
-                }
-                else if (group.SelectMany(d => d.queue).GroupBy(d => d.Code).Count() == 1)
-                {
-                    pd = group.SelectMany(d => d.queue);
-                }
-                else
-                {
-                    pd = group.FirstOrDefault()?.queue;
-
-                    if (group.Count() > 1)
+                    if (group.SelectMany(d => d.queue).GroupBy(d => d.Code).Count() == 1)
                     {
-                        subpd = group.Skip(1).FirstOrDefault()?.queue;
+                        pd = group.SelectMany(d => d.queue);
+                    }
+                    else
+                    {
+                        pd = group.FirstOrDefault()?.queue;
+
+                        if (group.Count() > 1)
+                        {
+                            subpd = group.Skip(1).FirstOrDefault()?.queue;
+                        }
                     }
                 }
             }
@@ -683,29 +695,29 @@ namespace GushWeb.Controllers
                     case NetbuyMode.只看净卖:
                         count = pd.Where(d => d.Netbuy < 0m).Count();
                         break;
-                    case NetbuyMode.主力放量买入:
-                        count = pd.Where(d => d.State == ForceState.主力放量买入).Count();
+                    case NetbuyMode.主力洗筹初期:
+                        count = pd.Where(d => d.State == ForceState.XI).Count();
                         break;
-                    case NetbuyMode.主力放量卖出:
-                        count = pd.Where(d => d.State == ForceState.主力放量卖出).Count();
+                    case NetbuyMode.主力大互盘:
+                        count = pd.Where(d => d.State == ForceState.HU).Count();
                         break;
-                    case NetbuyMode.主力缩量买入:
-                        count = pd.Where(d => d.State == ForceState.主力缩量买入).Count();
+                    case NetbuyMode.主力洗筹末期:
+                        count = pd.Where(d => d.State == ForceState.xi).Count();
                         break;
-                    case NetbuyMode.主力缩量卖出:
-                        count = pd.Where(d => d.State == ForceState.主力缩量卖出).Count();
+                    case NetbuyMode.主力小互盘:
+                        count = pd.Where(d => d.State == ForceState.hu).Count();
                         break;
-                    case NetbuyMode.散户放量买入:
-                        count = pd.Where(d => d.State == ForceState.散户放量买入).Count();
+                    case NetbuyMode.主力大砸盘:
+                        count = pd.Where(d => d.State == ForceState.ZA).Count();
                         break;
-                    case NetbuyMode.散户放量卖出:
-                        count = pd.Where(d => d.State == ForceState.散户放量卖出).Count();
+                    case NetbuyMode.主力拉伸末期:
+                        count = pd.Where(d => d.State == ForceState.LA).Count();
                         break;
-                    case NetbuyMode.散户缩量买入:
-                        count = pd.Where(d => d.State == ForceState.散户缩量买入).Count();
+                    case NetbuyMode.主力小砸盘:
+                        count = pd.Where(d => d.State == ForceState.za).Count();
                         break;
-                    case NetbuyMode.散户缩量卖出:
-                        count = pd.Where(d => d.State == ForceState.散户缩量卖出).Count();
+                    case NetbuyMode.主力拉伸初期:
+                        count = pd.Where(d => d.State == ForceState.la).Count();
                         break;
                     case NetbuyMode.全部:
                         count = pd.Count();
@@ -724,29 +736,29 @@ namespace GushWeb.Controllers
 
                 switch (mode)
                 {
-                    case NetbuyMode.昨天主力放量买入:
-                        count = subpd.Where(d => d.State == ForceState.主力放量买入).Count();
+                    case NetbuyMode.昨日主力洗筹初期:
+                        count = subpd.Where(d => d.State == ForceState.XI).Count();
                         break;
-                    case NetbuyMode.昨天主力放量卖出:
-                        count = subpd.Where(d => d.State == ForceState.主力放量卖出).Count();
+                    case NetbuyMode.昨日主力大互盘:
+                        count = subpd.Where(d => d.State == ForceState.HU).Count();
                         break;
-                    case NetbuyMode.昨天主力缩量买入:
-                        count = subpd.Where(d => d.State == ForceState.主力缩量买入).Count();
+                    case NetbuyMode.昨日主力洗筹末期:
+                        count = subpd.Where(d => d.State == ForceState.xi).Count();
                         break;
-                    case NetbuyMode.昨天主力缩量卖出:
-                        count = subpd.Where(d => d.State == ForceState.主力缩量卖出).Count();
+                    case NetbuyMode.昨日主力小互盘:
+                        count = subpd.Where(d => d.State == ForceState.hu).Count();
                         break;
-                    case NetbuyMode.昨天散户放量买入:
-                        count = subpd.Where(d => d.State == ForceState.散户放量买入).Count();
+                    case NetbuyMode.昨日主力大砸盘:
+                        count = subpd.Where(d => d.State == ForceState.ZA).Count();
                         break;
-                    case NetbuyMode.昨天散户放量卖出:
-                        count = subpd.Where(d => d.State == ForceState.散户放量卖出).Count();
+                    case NetbuyMode.昨日主力拉伸末期:
+                        count = subpd.Where(d => d.State == ForceState.LA).Count();
                         break;
-                    case NetbuyMode.昨天散户缩量买入:
-                        count = subpd.Where(d => d.State == ForceState.散户缩量买入).Count();
+                    case NetbuyMode.昨日主力小砸盘:
+                        count = subpd.Where(d => d.State == ForceState.za).Count();
                         break;
-                    case NetbuyMode.昨天散户缩量卖出:
-                        count = subpd.Where(d => d.State == ForceState.散户缩量卖出).Count();
+                    case NetbuyMode.昨日主力拉伸初期:
+                        count = subpd.Where(d => d.State == ForceState.la).Count();
                         break;
                     default:
                         break;
@@ -781,6 +793,117 @@ namespace GushWeb.Controllers
                 return NetbuyAsynByDate(Today, col, odcol, mode, index, true, daytype, true);
             }
             return NetbuyAsynByCodeOrName(date, mode, index, true);
+        }
+
+        private ActionResult NetbuyStatusByDate(string date, int col, bool isPage, int index)
+        {
+            //Expression<Func<t_foamState, bool>> expression = d => true;
+
+            //if (!String.IsNullOrEmpty(status))
+            //{
+            //    List<ForceState?> s = new List<ForceState?>();
+
+            //    status.Split(',').ForEach(d =>
+            //    {
+            //        if (!Enum.IsDefined(typeof(ForceState), d))
+            //        {
+            //            s.Add(null);
+            //        }
+            //        else
+            //        {
+            //            s.Add((ForceState)Enum.Parse(typeof(ForceState), d));
+            //        }
+            //    });
+
+            //    expression = d => d.Status.IndexOf(s.ToArray()) == 0;
+
+            //}
+
+            var queue = db.SettlementList.GroupBy(d => d.Code).Select(g => new
+            { code = g.Key, queue = g.Where(d => d.Date.CompareTo(date) <= 0).OrderByDescending(d => d.Date) }).ConvertAll(d => new t_foamState(d.queue));
+            Expression<Func<t_foamState, long?>> odby = d => d.Volume;
+
+            var pd = col % 2 == 0 ? queue.AsQueryable().OrderBy(odby).Take(pageSize).ToPagedList(index, pageSize) : queue.AsQueryable().OrderByDescending(odby).Take(pageSize).ToPagedList(index, pageSize);
+
+            if (isPage)
+            {
+                return PartialView("pview_netbuyState", pd);
+            }
+
+            return View(pd);
+        }
+
+        private ActionResult NetbuyStatusByCodeOrName(string date, int col, bool isPage, int index)
+        {
+            //Expression<Func<t_foamState, bool>> expression = d => true;
+
+            //if (!String.IsNullOrEmpty(status))
+            //{
+            //    List<ForceState?> s = new List<ForceState?>();
+
+            //    status.Split(',').ForEach(d =>
+            //    {
+            //        if (!Enum.IsDefined(typeof(ForceState), d))
+            //        {
+            //            s.Add(null);
+            //        }
+            //        else
+            //        {
+            //            s.Add((ForceState)Enum.Parse(typeof(ForceState), d));
+            //        }
+            //    });
+
+            //    expression = d => d.Status.IndexOf(s.ToArray()) == 0;
+
+            //}
+
+            var queue = db.SettlementList.Where(d=> date.Contains(d.Code) || date.Contains(d.Name)).GroupBy(d => d.Code).Select(g => new
+            { code = g.Key, queue = g }).ConvertAll(d => new t_foamState(d.queue));
+            Expression<Func<t_foamState, long?>> odby = d => d.Volume;
+
+            var pd = col % 2 == 0 ? queue.AsQueryable().OrderBy(odby).Take(pageSize).ToPagedList(index, pageSize) : queue.AsQueryable().OrderByDescending(odby).Take(pageSize).ToPagedList(index, pageSize);
+
+            if (isPage)
+            {
+                return PartialView("pview_netbuyState", pd);
+            }
+
+            return View(pd);
+        }
+
+        public ActionResult NetbuyStatus()
+        {
+            string date = Today;
+            int col = 0;
+
+            ViewData["date"] = date;
+            ViewData["col"] = col;
+
+            if (date.IsDateTime())
+            {
+                return NetbuyStatusByDate(date, col, false, 1);
+            }
+
+            return NetbuyStatusByCodeOrName(date, col, false, 1);
+        }
+
+        [HttpPost]
+        public ActionResult NetbuyStatusAsycn(string date, int col = 0, int index = 1)
+        {
+            if (!Request.IsAjaxRequest())
+            {
+                return HttpNotFound();
+            }
+
+            ViewData["date"] = date;
+            ViewData["col"] = col;
+
+            if (date.IsDateTime())
+            {
+                return NetbuyStatusByDate(date, col, true, index);
+            }
+
+            return NetbuyStatusByCodeOrName(date, col, true, index);
         }
     }
 }

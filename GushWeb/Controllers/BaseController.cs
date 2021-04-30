@@ -16,7 +16,7 @@ namespace GushWeb.Controllers
         {
             get
             {
-                if (DateTime.Now.Hour < 9)
+                if (DateTime.Now.Hour < 9 || DateTime.Now.Hour >= 16)
                 {
                     return LastDate ?? DateTime.Today.ToYYYYMMDD();
                 }

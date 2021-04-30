@@ -12,6 +12,7 @@ namespace GushWeb
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.MapMvcAttributeRoutes();//[Route("")]起作用
 
             routes.MapRoute(
                 name: "Default",//指定路由名

@@ -123,6 +123,15 @@
   <data name="backto" xml:space="preserve">
     <value>Backto</value>
   </data>
+  <data name="board" xml:space="preserve">
+    <value>Board</value>
+  </data>
+  <data name="breakPlate" xml:space="preserve">
+    <value>BreakPlate</value>
+  </data>
+  <data name="breakRate" xml:space="preserve">
+    <value>BreakRate</value>
+  </data>
   <data name="cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -132,8 +141,17 @@
   <data name="changes" xml:space="preserve">
     <value>ChangeList</value>
   </data>
+  <data name="continuousPlate" xml:space="preserve">
+    <value>ContinuousPlate</value>
+  </data>
+  <data name="continuousRate" xml:space="preserve">
+    <value>ContinuousRate</value>
+  </data>
   <data name="dayK" xml:space="preserve">
     <value>Day-Kline</value>
+  </data>
+  <data name="downPlate" xml:space="preserve">
+    <value>DownPlate</value>
   </data>
   <data name="email" xml:space="preserve">
     <value>Email</value>
@@ -176,5 +194,17 @@
   </data>
   <data name="update" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="upPlate" xml:space="preserve">
+    <value>UpPlate</value>
+  </data>
+  <data name="downRate" xml:space="preserve">
+    <value>DownRate</value>
+  </data>
+  <data name="upRate" xml:space="preserve">
+    <value>UpRate</value>
+  </data>
+  <data name="netbuyFund" xml:space="preserve">
+    <value>NetbuyFund</value>
   </data>
 </root>

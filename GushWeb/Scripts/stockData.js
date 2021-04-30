@@ -37,17 +37,6 @@ function getStockStr(codes) {
     return codesArray.join();
 }
 
-function morethan(num) {
-    $("a[name='num']").each(function () {
-        var i = parseInt($(this).attr("value"));
-        if (i <= parseInt(num)) {
-            $(this).css({ "border": "solid" })
-        } else {
-            $(this).css({ "border": "" })
-        }
-    });
-}
-
 
 class Url {
     /**

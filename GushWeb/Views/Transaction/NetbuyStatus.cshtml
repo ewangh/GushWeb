@@ -1,4 +1,4 @@
-﻿@model IEnumerable<t_catapult>
+﻿@model IEnumerable<t_foamState>
 
 @{
     ViewBag.Title = "Catapult";
@@ -16,42 +16,20 @@
         InsertionMode = InsertionMode.Replace
     };
 }
-@using (Ajax.BeginForm("CatapultAsyn", ajaxOption))
+@using (Ajax.BeginForm("NetbuyStatusAsycn", ajaxOption))
 {
     <br />
     <div class="input-group">
-        @*<label class="radio-inline">
-                <input type="radio" name="daytype" value="1">2
-            </label>*@
-        <label class="radio-inline">
-            <input type="radio" name="daytype" value="2" checked="">3
-        </label>
-        <label class="radio-inline">
-            <input type="radio" name="daytype" value="3">4
-        </label>
-        <label class="radio-inline">
-            <input type="radio" name="daytype" value="4">5
-        </label>
-        <label class="radio-inline">
-            <input type="radio" name="daytype" value="5">6
-        </label>
-        <label class="radio-inline">
-            <input type="radio" name="daytype" value="6">7
-        </label>
-        <label class="radio-inline">
-            <input type="radio" name="daytype" value="7">8
-        </label>
-        <label class="radio-inline">
-            <input type="radio" name="daytype" value="-1">N
-        </label>
         @Html.Hidden("col")
-        @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search date", @readonly = "readonly" })
+        @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search code or name" })
         <span class="input-group-btn">
-            <button class="btn btn-default" type="submit" onclick="setCol(0,0)">NextOpen</button>
+            <button class="btn btn-default" type="submit" onclick="setCol(0,0)">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
         </span>
     </div>
     <br />
-    @Html.Partial("pview_catapult", Model)
+    @Html.Partial("pview_netbuyState", Model)
     <p>
         @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
     </p>
@@ -63,6 +41,7 @@
 {
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/stockData.js"></script>
     <script>
         function onBegin() {
             //显示
@@ -95,15 +74,38 @@
             return true;
         }
 
-        function sameState(val) {
-            $("a[name='num']").each(function () {
-                var i = $(this).attr("value");
-                if (i == val) {
-                    $(this).css({ "border": "solid" })
-                } else {
-                    $(this).css({ "border": "" })
+        var today = new Date();
+        var timer = self.setInterval("elapsed()", 6000);
+
+        function elapsed() {
+            //if (isToday()) {
+            asyncGetStockData(getCodes).then(function (dataArray) {
+                dataArray.forEach(function (item, index) {
+                    updateChange(item[6], item[3]);
+                });
+            });
+            //}
+        }
+
+        function updateChange(code, change) {
+            $("span").each(function () {
+                if ($(this).attr("name") == code + today.Format("yyyy-MM-dd")) {
+                    var color = change < 0 ? "green" : "red";
+                    $(this).html(change + '%');
+                    $(this).css("color", color);
                 }
             });
+        }
+
+        function getCodes() {
+            var arry = new Array();
+            $("[type=hidden][name='codes']").each(function () {
+                var code = $(this).val() || '';
+                if (code != '') {
+                    arry.push(code);
+                }
+            });
+            return arry;
         }
 
         (function () {

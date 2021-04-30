@@ -13,7 +13,7 @@ namespace GushWeb.Controllers
     public class OwnController : BaseController
     {
         private WebDBContext db = new WebDBContext();
-
+        
         // GET: Own
         public ActionResult Index()
         {
@@ -170,6 +170,12 @@ namespace GushWeb.Controllers
             _code = code;
             ViewBag.LastError = "alert('ok')";
             return View();
+        }
+
+        [Route("abc")]
+        public ActionResult Test04()
+        {
+            return File("./App_Data/try.m3u8", "application/vnd.apple.mpegurl", "try.m3u8");
         }
     }
 }

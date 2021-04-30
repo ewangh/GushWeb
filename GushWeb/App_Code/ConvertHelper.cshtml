@@ -38,35 +38,12 @@
 
 @helper ForceConvert(ForceState? state)
 {
-    switch (state)
-    {
-        case ForceState.主力放量买入:
-            <font color="red">@ForceState.主力放量买入.ToString()</font>
-            break;
-        case ForceState.主力放量卖出:
-            <font color="green">@ForceState.主力放量卖出.ToString()</font>
-            break;
-        case ForceState.主力缩量买入:
-            <font color="red">@ForceState.主力缩量买入.ToString()</font>
-            break;
-        case ForceState.主力缩量卖出:
-            <font color="green">@ForceState.主力缩量卖出.ToString()</font>
-            break;
-        case ForceState.散户放量买入:
-            <font color="red">@ForceState.散户放量买入.ToString()</font>
-            break;
-        case ForceState.散户放量卖出:
-            <font color="green">@ForceState.散户放量卖出.ToString()</font>
-            break;
-        case ForceState.散户缩量买入:
-            <font color="red">@ForceState.散户缩量买入.ToString()</font>
-            break;
-        case ForceState.散户缩量卖出:
-            <font color="green">@ForceState.散户缩量卖出.ToString()</font>
-            break;
-        case ForceState.Unknow:
-        default:
-            @String.Empty
-            break;
-    }
+    <font color=@(state==ForceState.LA?"green":state==ForceState.la?"red":"grey")>@state.ToString()</font>
 }
+
+
+@helper BoardRemarkConvert(int days, int plates)
+{
+    <span>@($"{days}天{plates}板")</span>
+}
+

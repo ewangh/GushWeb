@@ -1,0 +1,59 @@
+﻿@model IEnumerable<t_change>
+<div style="padding:20px">
+    <ul class="nav nav-tabs" role="navigation">
+        <li class="active"><a href="#continuous" data-toggle="tab">@Resources.Resource1.continuousPlate</a></li>
+        <li><a href="#break" data-toggle="tab">@Resources.Resource1.breakPlate</a></li>
+        <li><a href="#up" data-toggle="tab">@Resources.Resource1.upPlate</a></li>
+        <li><a href="#down" data-toggle="tab">@Resources.Resource1.downPlate</a></li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <br />
+        <div class="tab-pane fade in active" id="continuous">
+            @Html.Partial("pview_continuous", Model)
+        </div>
+        <div class="tab-pane fade" id="break">
+            @Html.Partial("pview_break", Model)
+        </div>
+        <div class="tab-pane fade" id="up">
+            @Html.Partial("pview_up", Model)
+        </div>
+        <div class="tab-pane fade" id="down">
+            @Html.Partial("pview_down", Model)
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/stockData.js"></script>
+<script>
+    var today = new Date();
+    var timer = self.setInterval("elapsed()", 6000);
+
+    function elapsed() {
+        asyncGetStockData(getCodes).then(function (dataArray) {
+            dataArray.forEach(function (item, index) {
+                updateChange(item[6], item[3]);
+            });
+        });
+    }
+
+    function updateChange(code, change) {
+        $("span").each(function () {
+            if ($(this).attr("name") == code + today.Format("yyyy-MM-dd")) {
+                var color = change < 0 ? "green" : "red";
+                $(this).html(change + '%');
+                $(this).css("color", color);
+            }
+        });
+    }
+
+    function getCodes() {
+        var arry = new Array();
+        $("[type=hidden][name='codes']").each(function() {
+            var code = $(this).val() || '';
+            if (code != '') {
+                arry.push(code);
+            }
+        });
+        return arry;
+    }
+</script>

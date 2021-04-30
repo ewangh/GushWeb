@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
+using GushLibrary;
 using GushLibrary.Models;
+using GushWeb.ActionFilters;
 using GushWeb.Helpers;
 using GushWeb.Models;
 using GushWeb.Utility;
@@ -180,9 +182,26 @@ namespace GushWeb.Controllers
             return View(changesList);
         }
 
+        public async Task<ActionResult> Board()
+        {
+            var changesList = db.ChangesList.Where(d => !String.IsNullOrEmpty(d.Date_x));
+
+            if (changesList.Any())
+            {
+                changesList = changesList.Where(d => d.Limit_9.HasValue && d.Limit_9 != 0);
+            }
+            else
+            {
+                changesList = db.ChangesList.Where(d => d.Limit_8.HasValue && d.Limit_8 != 0);
+            }
+
+            return View(changesList);
+        }
+
+        [AlarmnotesActionFilters]
         public async Task<ActionResult> Catapult()
         {
-            string date = DateTime.Now.ToYYYYMMDD();
+            string date = Today;
             ViewData["date"] = date;
             ViewData["daytype"] = -1;
             IEnumerable<t_catapult> catapultList = await proc.ProcServer.ExecCatapultProc(date, (int)ViewData["daytype"]);
@@ -190,8 +209,9 @@ namespace GushWeb.Controllers
             return View(pd);
         }
 
+        [AlarmnotesActionFilters]
         [HttpPost]
-        public async Task<ActionResult> CatapultAsyn(string date, int daytype, int col, int index = 1)
+        public async Task<ActionResult> CatapultAsyn(string date, int daytype, int col = 0, int index = 1)
         {
             ViewData["date"] = date;
             ViewData["daytype"] = daytype;
@@ -208,15 +228,28 @@ namespace GushWeb.Controllers
                         t_catapults = t_catapults.OrderBy(d => d.Rank);
                         break;
                     case 2:
-                        t_catapults = t_catapults.OrderByDescending(d => d.Ltotal);
+                        t_catapults = t_catapults.OrderByDescending(d => d.Rank);
                         break;
                     case 3:
-                        t_catapults = t_catapults.OrderByDescending(d => d.NextPrice / d.Price).ThenBy(d => d.Price / d.Closed);
+                        t_catapults = t_catapults.OrderBy(d => d.Ltotal);
                         break;
                     case 4:
-                        t_catapults = t_catapults.OrderByDescending(d => d.NextOpen / d.Price).ThenBy(d => d.Price / d.Closed);
+                        t_catapults = t_catapults.OrderByDescending(d => d.Ltotal);
+                        break;
+                    case 5:
+                        t_catapults = t_catapults.OrderBy(d => d.NextPrice / d.Price).ThenBy(d => d.Price / d.Closed);
+                        break;
+                    case 6:
+                        t_catapults = t_catapults.OrderByDescending(d => d.NextPrice / d.Price).ThenBy(d => d.Price / d.Closed);
+                        break;
+                    case 7:
+                        t_catapults = t_catapults.OrderBy(d => d.Price / d.Closed);
+                        break;
+                    case 8:
+                        t_catapults = t_catapults.OrderByDescending(d => d.Price / d.Closed);
                         break;
                     default:
+                        t_catapults = t_catapults.OrderByDescending(d => d.NextOpen/d.Price).ThenBy(d => d.Price / d.Closed);
                         break;
                 }
             }
@@ -386,7 +419,7 @@ namespace GushWeb.Controllers
                 fPrice = d.fPrice,
                 gPrice = d.gPrice,
                 Time = d.Time,
-                Isst = d.Isst,
+                Isst = d.IsLimit,
                 CoordDate = CoordDate,
                 ZeroDate = ZeroDate,
             }));

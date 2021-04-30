@@ -1,6 +1,5 @@
-﻿@using PagedList
-@using PagedList.Mvc
-@using System.Configuration
+﻿@using System.Configuration
+@using GushWeb.Utility
 @model IEnumerable<t_foam>
 @{
     var ajaxOption = new AjaxOptions
@@ -16,7 +15,8 @@
         InsertionMode = InsertionMode.Replace
     };
 
-    var maxDate = Model.Max(d => d.Date);
+    var maxDate = DateTime.Today.ToYYYYMMDD();
+    ;
 }
 <div id="app">
     <div id="div_rises" class="alert alert-info alert-dismissable">
@@ -24,22 +24,22 @@
         <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.只看下跌))" value="@Convert.ToInt32(NetbuyMode.只看下跌)">@NetbuyMode.只看下跌.ToString()</a>[]<span>&nbsp;</span>
         <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.只看净买))" value="@Convert.ToInt32(NetbuyMode.只看净买)">@NetbuyMode.只看净买.ToString()</a>[]<span>&nbsp;</span>
         <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.只看净卖))" value="@Convert.ToInt32(NetbuyMode.只看净卖)">@NetbuyMode.只看净卖.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力放量买入))" value="@Convert.ToInt32(NetbuyMode.主力放量买入)">@NetbuyMode.主力放量买入.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力放量卖出))" value="@Convert.ToInt32(NetbuyMode.主力放量卖出)">@NetbuyMode.主力放量卖出.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力缩量买入))" value="@Convert.ToInt32(NetbuyMode.主力缩量买入)">@NetbuyMode.主力缩量买入.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力缩量卖出))" value="@Convert.ToInt32(NetbuyMode.主力缩量卖出)">@NetbuyMode.主力缩量卖出.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户放量买入))" value="@Convert.ToInt32(NetbuyMode.散户放量买入)">@NetbuyMode.散户放量买入.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户放量卖出))" value="@Convert.ToInt32(NetbuyMode.散户放量卖出)">@NetbuyMode.散户放量卖出.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户缩量买入))" value="@Convert.ToInt32(NetbuyMode.散户缩量买入)">@NetbuyMode.散户缩量买入.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.散户缩量卖出))" value="@Convert.ToInt32(NetbuyMode.散户缩量卖出)">@NetbuyMode.散户缩量卖出.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天主力放量买入))" value="@Convert.ToInt32(NetbuyMode.昨天主力放量买入)">@NetbuyMode.昨天主力放量买入.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天主力放量卖出))" value="@Convert.ToInt32(NetbuyMode.昨天主力放量卖出)">@NetbuyMode.昨天主力放量卖出.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天主力缩量买入))" value="@Convert.ToInt32(NetbuyMode.昨天主力缩量买入)">@NetbuyMode.昨天主力缩量买入.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天主力缩量卖出))" value="@Convert.ToInt32(NetbuyMode.昨天主力缩量卖出)">@NetbuyMode.昨天主力缩量卖出.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天散户放量买入))" value="@Convert.ToInt32(NetbuyMode.昨天散户放量买入)">@NetbuyMode.昨天散户放量买入.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天散户放量卖出))" value="@Convert.ToInt32(NetbuyMode.昨天散户放量卖出)">@NetbuyMode.昨天散户放量卖出.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天散户缩量买入))" value="@Convert.ToInt32(NetbuyMode.昨天散户缩量买入)">@NetbuyMode.昨天散户缩量买入.ToString()</a>[]<span>&nbsp;</span>
-        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨天散户缩量卖出))" value="@Convert.ToInt32(NetbuyMode.昨天散户缩量卖出)">@NetbuyMode.昨天散户缩量卖出.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力洗筹初期))" value="@Convert.ToInt32(NetbuyMode.主力洗筹初期)">@NetbuyMode.主力洗筹初期.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力大互盘))" value="@Convert.ToInt32(NetbuyMode.主力大互盘)">@NetbuyMode.主力大互盘.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力洗筹末期))" value="@Convert.ToInt32(NetbuyMode.主力洗筹末期)">@NetbuyMode.主力洗筹末期.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力小互盘))" value="@Convert.ToInt32(NetbuyMode.主力小互盘)">@NetbuyMode.主力小互盘.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力大砸盘))" value="@Convert.ToInt32(NetbuyMode.主力大砸盘)">@NetbuyMode.主力大砸盘.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力拉伸末期))" value="@Convert.ToInt32(NetbuyMode.主力拉伸末期)">@NetbuyMode.主力拉伸末期.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力小砸盘))" value="@Convert.ToInt32(NetbuyMode.主力小砸盘)">@NetbuyMode.主力小砸盘.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.主力拉伸初期))" value="@Convert.ToInt32(NetbuyMode.主力拉伸初期)">@NetbuyMode.主力拉伸初期.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨日主力洗筹初期))" value="@Convert.ToInt32(NetbuyMode.昨日主力洗筹初期)">@NetbuyMode.昨日主力洗筹初期.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨日主力大互盘))" value="@Convert.ToInt32(NetbuyMode.昨日主力大互盘)">@NetbuyMode.昨日主力大互盘.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨日主力洗筹末期))" value="@Convert.ToInt32(NetbuyMode.昨日主力洗筹末期)">@NetbuyMode.昨日主力洗筹末期.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨日主力小互盘))" value="@Convert.ToInt32(NetbuyMode.昨日主力小互盘)">@NetbuyMode.昨日主力小互盘.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨日主力大砸盘))" value="@Convert.ToInt32(NetbuyMode.昨日主力大砸盘)">@NetbuyMode.昨日主力大砸盘.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨日主力拉伸末期))" value="@Convert.ToInt32(NetbuyMode.昨日主力拉伸末期)">@NetbuyMode.昨日主力拉伸末期.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨日主力小砸盘))" value="@Convert.ToInt32(NetbuyMode.昨日主力小砸盘)">@NetbuyMode.昨日主力小砸盘.ToString()</a>[]<span>&nbsp;</span>
+        <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.昨日主力拉伸初期))" value="@Convert.ToInt32(NetbuyMode.昨日主力拉伸初期)">@NetbuyMode.昨日主力拉伸初期.ToString()</a>[]<span>&nbsp;</span>
         <a name="amode" href="javascript:;" onclick="getModeQueue(@Convert.ToInt32(NetbuyMode.全部))" value="@Convert.ToInt32(NetbuyMode.全部)">@NetbuyMode.全部.ToString()</a>[]
     </div>
     <table class="table table-striped">
@@ -52,7 +52,7 @@
                     @Html.DisplayNameFor(model => model.Code)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    <a href="javascript:;" onclick="getChkNames()">@Html.DisplayNameFor(model => model.Name)</a>
                 </th>
                 <th>
                     <a href="javascript:;" onclick="getColQueue(1)">@Html.DisplayNameFor(model => model.Netbuy)</a>
@@ -64,7 +64,7 @@
                     <a href="javascript:;" onclick="getColQueue(3)">@Html.DisplayNameFor(model => model.Ltotal)</a>
                 </th>
                 <th>
-                    <a href="javascript:;" onclick="getColQueue(4)">@Html.DisplayNameFor(model => model.Num)</a>
+                    <a href="javascript:;" onclick="getColQueue(5)">@Html.DisplayNameFor(model => model.Num)</a>
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.State)
@@ -82,7 +82,6 @@
             {
                 <tr>
                     <td>
-                        @Html.CheckBox("ckb")
                         @Html.Hidden("codes", item.Date == maxDate ? item.Code : "")
                     </td>
                     <td>
@@ -90,6 +89,7 @@
                     </td>
                     <td>
                         <a href="javascript:;" onclick="getCodeQueue('@item.Code')">@item.Name</a>
+                        @Html.CheckBox("ckb", new { value = @item.Name })
                     </td>
                     <td>
                         @ConvertHelper.ColorConvert(item.Netbuy)
@@ -116,8 +116,17 @@
             }
         </tbody>
     </table>
-    <div style="text-align: center;">
-        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyPage", new { index = page, date = Request["date"], daytype = Request["daytype"], mode = Request["mode"], col = Request["col"], odcol = ViewData["odcol"] }))
-    </div>
 </div>
+<script>
+    function getChkNames() {
+        var chk_value = [];
+        $('input[name="ckb"]:checked').each(function () {
+            chk_value.push($(this).val());
+        });
+        if (chk_value.length > 0) {
+            var content = prompt("", chk_value);
+            window.clipboardData.setData("Text", content);
+        }
+    }
+</script>
 

@@ -256,6 +256,7 @@
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Rise.cs" />
     <Compile Include="Models\TempTokenModel.cs" />
+    <Compile Include="Models\t_foamState.cs" />
     <Compile Include="Utility\ConfigEntity.cs" />
     <Compile Include="Utility\CookieDocument.cs" />
     <Compile Include="Utility\MyExtensions.cs" />
@@ -602,6 +603,13 @@
     <Content Include="Views\Transaction\NetbuyHistory.cshtml" />
     <Content Include="Views\Transaction\pview_netbuyHistory.cshtml" />
     <Content Include="Views\Transaction\NetbuyOns.cshtml" />
+    <Content Include="Views\Settlement\pview_continuous.cshtml" />
+    <Content Include="Views\Settlement\Board.cshtml" />
+    <Content Include="Views\Settlement\pview_break.cshtml" />
+    <Content Include="Views\Settlement\pview_up.cshtml" />
+    <Content Include="Views\Settlement\pview_down.cshtml" />
+    <Content Include="Views\Transaction\NetbuyStatus.cshtml" />
+    <Content Include="Views\Transaction\pview_netbuyState.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

@@ -177,4 +177,34 @@
   <data name="netbuyhistory" xml:space="preserve">
     <value>净买历史</value>
   </data>
+  <data name="board" xml:space="preserve">
+    <value>连断板</value>
+  </data>
+  <data name="breakRate" xml:space="preserve">
+    <value>断板率</value>
+  </data>
+  <data name="continuousRate" xml:space="preserve">
+    <value>连扳率</value>
+  </data>
+  <data name="breakPlate" xml:space="preserve">
+    <value>断板</value>
+  </data>
+  <data name="continuousPlate" xml:space="preserve">
+    <value>连扳</value>
+  </data>
+  <data name="downPlate" xml:space="preserve">
+    <value>下跌</value>
+  </data>
+  <data name="downRate" xml:space="preserve">
+    <value>下跌率</value>
+  </data>
+  <data name="upPlate" xml:space="preserve">
+    <value>上涨</value>
+  </data>
+  <data name="upRate" xml:space="preserve">
+    <value>上涨率</value>
+  </data>
+  <data name="netbuyFund" xml:space="preserve">
+    <value>资金板</value>
+  </data>
 </root>

@@ -25,10 +25,16 @@
                         @Html.ActionLink(@Resources.Resource1.changes, "Changes", "Settlement")
                     </li>
                     <li>
+                        @Html.ActionLink(@Resources.Resource1.board, "Board", "Settlement")
+                    </li>
+                    <li>
                         @Html.ActionLink(@Resources.Resource1.catapult, "Catapult", "Settlement")
                     </li>
                     <li>
                         @Html.ActionLink(@Resources.Resource1.netbuy, "Netbuy", "Transaction")
+                    </li>
+                    <li>
+                        @Html.ActionLink(@Resources.Resource1.netbuyFund, "NetbuyStatus", "Transaction")
                     </li>
                     <li>
                         @Html.ActionLink(@Resources.Resource1.netbuyhistory, "NetbuyHistory", "Transaction")
@@ -37,9 +43,12 @@
                     <li>
                         @Html.ActionLink("Test", "Index", "Alarmnotes")
                     </li>
+                    <li class="divider"></li>
+                    <li>
+                        @Html.ActionLink(@Resources.Resource1.logout, "Logout", "Member", new { }, new { id = "logoutLink", onclick = "return confirm('Logout?')" })
+                    </li>
                 </ul>
             </li>
-            <li>@Html.ActionLink(@Resources.Resource1.logout, "Logout", "Member", new{ },new { id = "logoutLink",  onclick = "return confirm('Logout?')" })</li>
         </ul>
     }
 }
@@ -64,10 +73,13 @@ else
                         @Html.ActionLink(@Resources.Resource1.changes, "Changes", "Settlement")
                     </li>
                     <li>
-                        @Html.ActionLink(@Resources.Resource1.catapult, "Catapult", "Settlement")
+                        @Html.ActionLink(@Resources.Resource1.board, "Board", "Settlement")
                     </li>
                     <li>
                         @Html.ActionLink(@Resources.Resource1.netbuy, "Netbuy", "Transaction")
+                    </li>
+                    <li>
+                        @Html.ActionLink(@Resources.Resource1.netbuyFund, "NetbuyStatus", "Transaction")
                     </li>
                     <li class="divider"></li>
                     <li>

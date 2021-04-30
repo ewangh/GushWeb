@@ -21,7 +21,7 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Rank)
+                    <button class="btn-link" type="submit" onclick="setCol(1,2)">@Html.DisplayNameFor(model => model.Rank)</button>
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Code)
@@ -30,20 +30,20 @@
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Ltotal)
+                    <button class="btn-link" type="submit" onclick="setCol(3,4)">@Html.DisplayNameFor(model => model.Ltotal)</button>
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.State)
                 </th>
                 <th>
-                    Change
+                    <button class="btn-link" type="submit" onclick="setCol(7,8)">Change</button>
                 </th>
                 <th>
-                    NextChange
+                    <button class="btn-link" type="submit" onclick="setCol(5,6)">NextChange</button>
                 </th>
-                @*<th>
-            NextOpen
-        </th>*@
+                <th>
+                    NextOpen
+                </th>
                 <th>
                     Date
                 </th>
@@ -52,36 +52,36 @@
         <tbody id="tb">
             @foreach (var item in Model)
             {
-            <tr>
-                <td>
-                    @Html.CheckBox("ckb")
-                    @Html.DisplayFor(modelItem => item.Rank)
-                </td>
-                <td>
-                    @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
-                </td>
-                <td>
-                    @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ltotal)
-                </td>
-                <td>
-                    @ConvertHelper.ForceConvert(item.State)
-                </td>
-                <td>
-                    @ConvertHelper.AmplitudeConvert(item.Closed, item.Price)
-                </td>
-                <td>
-                    @ConvertHelper.AmplitudeConvert(item.Price, item.NextPrice)
-                </td>
-                @*<td>
-            @ConvertHelper.AmplitudeConvert(item.Price, item.NextOpen)
-        </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rank)
+                    </td>
+                    <td>
+                        @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
+                        @Html.CheckBox("ckb")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ltotal)
+                    </td>
+                    <td>
+                        <a name="num" href="javascript:;" onclick="sameState('@item.State')" value="@item.State">@ConvertHelper.ForceConvert(item.State)</a>
+                    </td>
+                    <td>
+                        @ConvertHelper.AmplitudeConvert(item.Closed, item.Price)
+                    </td>
+                    <td>
+                        @ConvertHelper.AmplitudeConvert(item.Price, item.NextPrice)
+                    </td>
+                    <td>
+                        @ConvertHelper.AmplitudeConvert(item.Price, item.NextOpen)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

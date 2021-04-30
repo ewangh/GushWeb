@@ -1,4 +1,5 @@
-﻿
+﻿@using PagedList
+@using PagedList.Mvc
 @using GushWeb.Models
 @model IEnumerable<t_foam>
 
@@ -25,6 +26,9 @@
         @Html.Hidden("mode", "")
         @Html.Hidden("col", "")
         @Html.Hidden("odcol", "")
+        @*<label class="radio-inline">
+            <input type="radio" name="daytype" value="1">2
+        </label>*@
         <label class="radio-inline">
             <input type="radio" name="daytype" value="2">3
         </label>
@@ -43,6 +47,9 @@
         <label class="radio-inline">
             <input type="radio" name="daytype" value="7">8
         </label>
+        <label class="radio-inline">
+            <input type="radio" name="daytype" value="-1">N
+        </label>
         @Html.TextBox("date", null, new { @class = "form-control pull-right", @placeholder = "Search code or name" })
         <span class="input-group-btn">
             <a class="btn input-group-btn btn-info" href="javascript:;" onclick="getDateQueue()">
@@ -52,6 +59,9 @@
     </div>
     <br />
     @Html.Partial("pview_netbuy", Model)
+    <div style="text-align: center;">
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("NetbuyOnsPage", new { index = page, date = Request["date"], daytype = Request["daytype"], mode = Request["mode"], col = Request["col"], odcol = ViewData["odcol"] }))
+    </div>
     <p>
         @Html.ActionLink(@Resources.Resource1.backto, "Index", "Alarmnotes", new { area = "", target = "view_window" }, null)
     </p>
@@ -131,19 +141,15 @@
         }
 
         (function() {
-            var daytype = getQueryVariable("daytype");
+            var daytype = getQueryVariable("daytype") || 2;
 
-            if (daytype == "undefined") {
-                $("[type=radio][name='daytype']:first").attr("checked", "checked");
-            } else {
-                $("[type=radio][name='daytype']").each(function () {
-                    if ($(this).val() == daytype) {
-                        $(this).attr("checked", "checked");
-                    }
-                });
-            }
-            
-            var data = { ptype: '@Request["mode"]', date: '@Request["date"]' };
+            $("[type=radio][name='daytype']").each(function() {
+                if ($(this).val() == daytype) {
+                    $(this).attr("checked", "checked");
+                }
+            });
+
+            var data = { ptype: '@Request["mode"]', date: today.Format("yyyy-MM-dd") };
             getRises(funRises, data, risesId, getModeQueue.name);
         })()
 
@@ -182,6 +188,8 @@
             });
             return arry;
         }
+
+        
     </script>
 }
 

@@ -1,0 +1,61 @@
+﻿@using GushLibrary
+@using System.Configuration
+@using ServiceStack.Common
+@model IEnumerable<t_change>
+@{
+    IEnumerable<t_change> list = null;
+
+    if (Model.Any(d => !String.IsNullOrEmpty(d.Date_x)))
+    {
+        list = Model.Where(d => d.Limit_x.HasValue && d.Limit_x != 0).OrderByDescending(d => d.Limit_x).ThenByDescending(d => d.Limit_9).ThenByDescending(d => d.Limit_8).ThenByDescending(d => d.Limit_7).ThenByDescending(d => d.Limit_6).ThenByDescending(d => d.Limit_5).ThenByDescending(d => d.Limit_4).ThenByDescending(d => d.Limit_3).ThenByDescending(d => d.Limit_2).ThenByDescending(d => d.Limit_1);
+    }
+    else
+    {
+        list = Model.Where(d => d.Limit_9.HasValue && d.Limit_9 != 0).OrderByDescending(d => d.Limit_x).ThenByDescending(d => d.Limit_9).ThenByDescending(d => d.Limit_8).ThenByDescending(d => d.Limit_7).ThenByDescending(d => d.Limit_6).ThenByDescending(d => d.Limit_5).ThenByDescending(d => d.Limit_4).ThenByDescending(d => d.Limit_3).ThenByDescending(d => d.Limit_2).ThenByDescending(d => d.Limit_1);
+    }
+
+    var i = Convert.ToDouble(list.Count());
+    var j = Convert.ToDouble(Model.Count());
+    var rate = j == 0 ? "0" : (i / j).ToString("F2");
+}
+@using (Html.BeginForm())
+{
+    <span>@Resources.Resource1.continuousRate ：@rate</span>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>Change</th>
+                <th>Remark</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in list)
+            {
+                <tr>
+                    <td>
+                        @Html.Hidden("codes", item.Code)
+                        @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
+                        @Html.CheckBox("ckb")
+                    </td>
+                    <td>
+                        <span name="@(item.Code + item.Date_x ?? item.Date_9)">@ConvertHelper.AmplitudeConvert(item.Date_x.IsNullOrEmpty() ? ((item.Change_9 / item.Change_8) - 1) * 100 : ((item.Change_x / item.Change_9) - 1) * 100)</span>
+                    </td>
+                    <td>@ConvertHelper.BoardRemarkConvert(item.Num_Limit, item.Num_Plate)</td>
+                    <td>
+                        @(item.Date_x ?? item.Date_9)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
