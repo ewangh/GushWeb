@@ -21,7 +21,7 @@ namespace GushWeb.Models
             }
             else
             {
-                _list = list.OrderByDescending(d=>d.Date).Take(size);
+                _list = list.OrderByDescending(d => d.Date).Take(size);
             }
 
         }
@@ -31,8 +31,10 @@ namespace GushWeb.Models
         public string Code => _list.FirstOrDefault()?.Code;
 
         public string Name => _list.FirstOrDefault()?.Name;
-        [DisplayName("剩余量")]
+        [DisplayName("累积量(手)")]
         public long? Volume => _list.OrderBy(d => d.Volume).MinusAbs(d => d.Volume);
+        [DisplayName("资金量(亿)")]
+        public decimal? Funds => Volume * Price / 100;
         public decimal? Closed => _list.OrderByDescending(d => d.Date).FirstOrDefault()?.Closed;
         public decimal? Price => _list.OrderByDescending(d => d.Date).FirstOrDefault()?.Price;
         public string Date => _list.Max(d => d.Date);

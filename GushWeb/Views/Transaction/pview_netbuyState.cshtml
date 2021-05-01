@@ -33,6 +33,9 @@
                     <button class="btn-link" type="submit" onclick="setCol(0,1)">@Html.DisplayNameFor(model => model.Volume)</button>
                 </th>
                 <th>
+                    <button class="btn-link" type="submit" onclick="setCol(2,3)">@Html.DisplayNameFor(model => model.Funds)</button>
+                </th>
+                <th>
                     涨跌幅(%)
                 </th>
                 <th>
@@ -43,25 +46,32 @@
         <tbody id="tb">
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.Hidden("codes", item.Date == maxDate ? item.Code : "")
-                        @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
-                    </td>
-                    <td>
-                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
-                        @Html.CheckBox("ckb", new { value = @item.Name })
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Volume)
-                    </td>
-                    <td>
-                        <span name="@(item.Code + item.Date)">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                </tr>
+                if (String.IsNullOrEmpty(item.Code))
+                {
+                    continue;
+                }
+            <tr>
+                <td>
+                    @Html.Hidden("codes", item.Date == maxDate ? item.Code : "")
+                    @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
+                </td>
+                <td>
+                    @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
+                    @Html.CheckBox("ckb", new { value = @item.Name })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Volume)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Funds)
+                </td>
+                <td>
+                    <span name="@(item.Code + item.Date)">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+            </tr>
             }
         </tbody>
     </table>

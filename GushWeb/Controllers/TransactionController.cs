@@ -821,7 +821,17 @@ namespace GushWeb.Controllers
 
             var queue = db.SettlementList.GroupBy(d => d.Code).Select(g => new
             { code = g.Key, queue = g.Where(d => d.Date.CompareTo(date) <= 0).OrderByDescending(d => d.Date) }).ConvertAll(d => new t_foamState(d.queue));
-            Expression<Func<t_foamState, long?>> odby = d => d.Volume;
+            Expression<Func<t_foamState, decimal?>> odby = d => d.Volume;
+
+            switch (col)
+            {
+                case 2:
+                case 3:
+                    odby = d => d.Funds;
+                    break;
+                default:
+                    break;
+            }
 
             var pd = col % 2 == 0 ? queue.AsQueryable().OrderBy(odby).Take(pageSize).ToPagedList(index, pageSize) : queue.AsQueryable().OrderByDescending(odby).Take(pageSize).ToPagedList(index, pageSize);
 
@@ -859,7 +869,17 @@ namespace GushWeb.Controllers
 
             var queue = db.SettlementList.Where(d=> date.Contains(d.Code) || date.Contains(d.Name)).GroupBy(d => d.Code).Select(g => new
             { code = g.Key, queue = g }).ConvertAll(d => new t_foamState(d.queue));
-            Expression<Func<t_foamState, long?>> odby = d => d.Volume;
+            Expression<Func<t_foamState, decimal?>> odby = d => d.Volume;
+
+            switch (col)
+            {
+                case 2:
+                case 3:
+                    odby = d => d.Funds;
+                    break;
+                default:
+                    break;
+            }
 
             var pd = col % 2 == 0 ? queue.AsQueryable().OrderBy(odby).Take(pageSize).ToPagedList(index, pageSize) : queue.AsQueryable().OrderByDescending(odby).Take(pageSize).ToPagedList(index, pageSize);
 
