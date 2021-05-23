@@ -140,16 +140,16 @@
                 });
         }
 
-        (function() {
+        (function () {
+            enableShiftCheck($('input[name="ckb"]'));
             var daytype = getQueryVariable("daytype") || 2;
-
             $("[type=radio][name='daytype']").each(function() {
                 if ($(this).val() == daytype) {
                     $(this).attr("checked", "checked");
                 }
             });
 
-            var data = { ptype: '@Request["mode"]', date: today.Format("yyyy-MM-dd") };
+            var data = { ptype: '@Request["mode"]', date: $('#date').val().length == 0 ? today.Format("yyyy-MM-dd") : $('#date').val() };
             getRises(funRises, data, risesId, getModeQueue.name);
         })()
 
@@ -166,7 +166,7 @@
         function updateChange(code, change) {
             $("span").each(function() {
                 if ($(this).attr("name") == code + today.Format("yyyy-MM-dd")) {
-                    var color = change < 0 ? "green" : "red";
+                    var color = change > 0 ? "red" : "green";
                     $(this).html(change + '%');
                     $(this).css("color", color);
                 }

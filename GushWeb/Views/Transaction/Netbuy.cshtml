@@ -101,7 +101,8 @@
                 { date: $('#date').val(), mode: $('#mode').val(), col: $('#col').val(), odcol: $('#odcol').val() });
         }
 
-        (function() {
+        (function () {
+            enableShiftCheck($('input[name="ckb"]'));
             $("#date").datetimepicker({
                 format: 'yyyy-mm-dd',
                 daysOfWeekDisabled: '0,6',
@@ -130,7 +131,7 @@
         function updateChange(code, change) {
             $("span").each(function() {
                 if ($(this).attr("name") == code + today.Format("yyyy-MM-dd")) {
-                    var color = change < 0 ? "green" : "red";
+                    var color = change > 0 ? "red" : "green";
                     $(this).html(change + '%');
                     $(this).css("color", color);
                 }

@@ -30,10 +30,13 @@
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th>
-                    <button class="btn-link" type="submit" onclick="setCol(0,1)">@Html.DisplayNameFor(model => model.Volume)</button>
+                    <button class="btn-link" type="submit" onclick="setCol(0,1)">@Html.DisplayNameFor(model => model.Quantity)</button>
                 </th>
                 <th>
-                    <button class="btn-link" type="submit" onclick="setCol(2,3)">@Html.DisplayNameFor(model => model.Funds)</button>
+                    <button class="btn-link" type="submit" onclick="setCol(4,5)">@Html.DisplayNameFor(model => model.Funds)</button>
+                </th>
+                <th>
+                    <button class="btn-link" type="submit" onclick="setCol(2,3)">@Html.DisplayNameFor(model => model.Ltotal)</button>
                 </th>
                 <th>
                     涨跌幅(%)
@@ -56,14 +59,17 @@
                     @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
                 </td>
                 <td>
-                    @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
+                    @Html.ActionLink(item.Name, "NetbuyStatus", new { date = item.Code }, new { target = "view_window" })
                     @Html.CheckBox("ckb", new { value = @item.Name })
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Volume)
+                    @Html.DisplayFor(modelItem => item.Quantity)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Funds)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ltotal)
                 </td>
                 <td>
                     <span name="@(item.Code + item.Date)">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>

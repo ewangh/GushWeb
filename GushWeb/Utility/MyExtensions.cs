@@ -116,5 +116,15 @@ namespace GushWeb.Utility
 
             return equal;
         }
+
+        //public static bool HasAny(this string value, IEnumerable<string> queue)
+        //{
+        //    foreach (string obj in queue)
+        //    {
+        //        return obj.Contains(value);
+        //    }
+
+        //    return false;
+        //}
     }
 }

@@ -31,10 +31,16 @@
                     @Html.DisplayNameFor(model => model.Code)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    <a href="javascript:;" onclick="getChkNames()">@Html.DisplayNameFor(model => model.Name)</a>
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Price)%
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Ltotal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Num)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Time)
@@ -49,6 +55,7 @@
 @section scripts
 {
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/stockBase.js"></script>
     <script src="~/Scripts/stockData.js"></script>
     <script>
         function onBegin() {
@@ -74,7 +81,8 @@
             window.location.href = '@Url.Action("Index")?date=' + date;
         }
 
-        (function() {
+        (function () {
+            enableShiftCheck($('input[name="ckb"]'));
             if (isToday()) {
                 var timer = setInterval(function() { $("form").submit(); }, 30000);
             }
@@ -109,24 +117,25 @@
             var tagClosed = parseFloat(span.attr("tagc"));
             if (isToday()) {
                 if (!tagClosed.isNaN || tagClosed != 0) {
-                    var color = tagPrice > price ? "green" : "red";
+                    var color = tagPrice < price ? "red" : "green";
                     span.html(((price / tagClosed - 1) * 100).toFixed(2) + '%');
                     span.css("color", color);
                 }
-            } else {
-                if (!tagPrice.isNaN || tagPrice != 0) {
-                    var color = tagPrice > price ? "green" : "red";
-                    span.html(((price / tagPrice - 1) * 100).toFixed(2) + '%');
-                    span.css("color", color);
-                }
             }
+            //else {
+            //    if (!tagPrice.isNaN || tagPrice != 0) {
+            //        var color = tagPrice < price ? "red" : "green";
+            //        span.html(((price / tagPrice - 1) * 100).toFixed(2) + '%');
+            //        span.css("color", color);
+            //    }
+            //}
         }
 
         function updateCprice(span,price) {
             var tagCprice = parseFloat(span.attr("tagc"));
             if (isToday()) {
                 if (!tagCprice.isNaN) {
-                    var color = tagCprice > price ? "green" : "red";
+                    var color = tagCprice < price ? "red" : "green";
                     span.html(price);
                     span.css("color", color);
                 }

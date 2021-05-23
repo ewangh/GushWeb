@@ -18,21 +18,46 @@
         @ControlHelper.UrlControl(url, item.Code)
     </td>
     <td>
-        @Html.ActionLink(item.Name, "Details", new { id = item.Code }, new { target = "_blank" })
+        @*@Html.ActionLink(item.Name, "Details", new { id = item.Code }, new { target = "_blank" })*@
+        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
+        @Html.CheckBox("ckb", new { value = @item.Name })
     </td>
     <td>
-        <span name="@item.Code" mode="change" tagp="@item.Price" tagc="@item.Closed">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
+        <span name="@item.Code" mode="change" tagp="@item.Price2" tagc="@item.Closed" style="color:@(item.Price2>item.Price?"red":"green")">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price2)</span>
         <span>|</span>
         <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
     </td>
-    @*<td>
-            @if (samples.ContainsKey(item.Code))
-            {
-                <a name="num" href="javascript:;" onclick="morethan(@samples[item.Code])" value="@samples[item.Code]">@samples[item.Code]</a>
-            }
-        </td>*@
+    <td>
+        @Html.DisplayFor(modelItem => item.Ltotal)
+    </td>
+    <td>
+        <a name="num" href="javascript:;" onclick="morethan(@item.Num)" value="@item.Num">@item.Num</a>
+    </td>
     <td>
         @Html.DisplayFor(modelItem => item.Time)
     </td>
 </tr>
 }
+<script>
+    function getChkNames() {
+        var chk_value = [];
+        $('input[name="ckb"]:checked').each(function () {
+            chk_value.push($(this).val());
+        });
+        if (chk_value.length > 0) {
+            var content = prompt("", chk_value);
+            window.clipboardData.setData("Text", content);
+        }
+    }
+
+    function morethan(num) {
+        $("a[name='num']").each(function () {
+            var i = parseInt($(this).attr("value"));
+            if (i <= parseInt(num)) {
+                $(this).css({ "border": "solid" })
+            } else {
+                $(this).css({ "border": "" })
+            }
+        });
+    }
+</script>

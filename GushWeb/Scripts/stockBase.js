@@ -38,3 +38,24 @@ function getQueryVariable(variable) {
     }
     return (false);
 }
+
+function enableShiftCheck(checkboxs) {
+    let startChecked;
+    function handleCheck(e) {
+        if (e.shiftKey) {
+            let thisIndex = checkboxs.index(this);
+            let startIndex = checkboxs.index(startChecked);
+            let startNum = thisIndex < startIndex ? thisIndex : startIndex;
+            let endNum = thisIndex > startIndex ? thisIndex : startIndex;
+            for (let i = startNum; i <= endNum; i++) {
+                if (this.checked) {
+                    checkboxs.eq(i).prop("checked", true);
+                } else {
+                    checkboxs.eq(i).prop("checked", false);
+                }
+            }
+        }
+        startChecked = this;
+    }
+    checkboxs.click(handleCheck);
+}

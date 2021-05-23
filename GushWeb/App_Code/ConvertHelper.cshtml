@@ -3,7 +3,7 @@
 {
     if (closed.HasValue && closed != 0 && price.HasValue && price != 0)
     {
-        <font color=@(price<closed?"green":"red")>@String.Format("{0:P}", price / closed - 1)</font>
+        <font color=@(price>closed?"red":"green")>@String.Format("{0:P}", price / closed - 1)</font>
         //@:%
     }
     else

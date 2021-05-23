@@ -33,27 +33,25 @@ namespace GushWeb.Controllers
         [AllowAnonymous]
         public ActionResult Netbuy(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
-            IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => true;
 
             if (date.IsDateTime())
             {
                 return NetbuyAsynByDate(date, col, odcol, mode, index, false, "");
             }
-            return NetbuyAsynByCodeOrName(date, mode, index);
+            return NetbuyAsynByCodeOrName(date, col, odcol, mode, index, false, "");
         }
 
         [AllowAnonymous]
         public ActionResult NetbuyPage(string date, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
         {
-            IEnumerable<t_foam> t_foams = new List<t_foam>();
             Expression<Func<t_foam, bool>> expression = d => true;
 
             if (date.IsDateTime())
             {
                 return NetbuyAsynByDate(date, col, odcol, mode, index, true, "");
             }
-            return NetbuyAsynByCodeOrName(date, mode, index);
+            return NetbuyAsynByCodeOrName(date, col, odcol, mode, index, true, "");
         }
 
         [AllowAnonymous]
@@ -99,6 +97,10 @@ namespace GushWeb.Controllers
                 case NetbuyMode.主力拉伸初期:
                     expression = expression.And(d => d.State == ForceState.la);
                     break;
+                case NetbuyMode.昨日上涨:
+                case NetbuyMode.昨日下跌:
+                case NetbuyMode.昨日净买:
+                case NetbuyMode.昨日净卖:
                 case NetbuyMode.昨日主力洗筹初期:
                 case NetbuyMode.昨日主力大互盘:
                 case NetbuyMode.昨日主力洗筹末期:
@@ -134,8 +136,7 @@ namespace GushWeb.Controllers
                     break;
             }
 
-            var samples = isOns ? OnsSamples(date, daytype) : SetSamplesByDate(date);
-
+            var samples = GetSamples(date,daytype,isOns);//isOns ? OnsSamples(date, daytype) : SetSamplesByDate(date);
 
             IEnumerable<t_foam> t_foams = db.FoamList.Where(expression).ConvertAll(d => samples.ContainsKey(d.Code) ? d.SetNum(samples[d.Code]) : d);
 
@@ -186,6 +187,18 @@ namespace GushWeb.Controllers
 
                 switch (mode)
                 {
+                    case NetbuyMode.昨日上涨:
+                        expression = expression.And(d => d.Change >= 0m);
+                        break;
+                    case NetbuyMode.昨日下跌:
+                        expression = expression.And(d => d.Change < 0m);
+                        break;
+                    case NetbuyMode.昨日净买:
+                        expression = expression.And(d => d.Netbuy >= 0m);
+                        break;
+                    case NetbuyMode.昨日净卖:
+                        expression = expression.And(d => d.Netbuy < 0m);
+                        break;
                     case NetbuyMode.昨日主力洗筹初期:
                         expression = expression.And(d => d.State == ForceState.XI);
                         break;
@@ -273,68 +286,6 @@ namespace GushWeb.Controllers
             return View(isOns ? "NetbuyOns" : "Netbuy", pd.ToPagedList(index, pageSize));
         }
 
-        private Dictionary<string, int?> SetSamplesByDate(string date)
-        {
-            Dictionary<string, int?> samples = db.ChangesList.GroupBy(d => d.Date_9).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_9);
-
-            if (samples != null)
-            {
-                return samples;
-            }
-            samples = db.ChangesList.GroupBy(d => d.Date_8).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_8);
-
-
-            if (samples != null)
-            {
-                return samples;
-            }
-            samples = db.ChangesList.GroupBy(d => d.Date_7).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_7);
-
-            if (samples != null)
-            {
-                return samples;
-            }
-            samples = db.ChangesList.GroupBy(d => d.Date_6).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_6);
-
-            if (samples != null)
-            {
-                return samples;
-            }
-            samples = db.ChangesList.GroupBy(d => d.Date_5).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_5);
-
-            if (samples != null)
-            {
-                return samples;
-            }
-            samples = db.ChangesList.GroupBy(d => d.Date_4).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_4);
-
-            if (samples != null)
-            {
-                return samples;
-            }
-            samples = db.ChangesList.GroupBy(d => d.Date_3).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_3);
-
-            if (samples != null)
-            {
-                return samples;
-            }
-            samples = db.ChangesList.GroupBy(d => d.Date_2).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_2);
-
-            if (samples != null)
-            {
-                return samples;
-            }
-            samples = db.ChangesList.GroupBy(d => d.Date_1).Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue.ToDictionary(pair => pair.Code, pair => pair.Num_1);
-
-            if (samples != null)
-            {
-                return samples;
-            }
-
-            samples = new Dictionary<string, int?>();
-            return samples;
-        }
-
         private Dictionary<string, int?> SetSamplesByDateByCodeOrName(string code)
         {
             Dictionary<string, int?> samples = new Dictionary<string, int?>();
@@ -383,64 +334,8 @@ namespace GushWeb.Controllers
             return samples;
         }
 
-        private Dictionary<string, int?> OnsSamples(string date, string skip)
-        {
-            Dictionary<string, int?> samples = new Dictionary<string, int?>();
-
-            var list = db.ChangesList.Where(d => (d.Date_x ?? d.Date_9).CompareTo(date) == 0).OrderByDescending(d => d.Change_x);
-            int? num = 0;
-            decimal? prevChange = decimal.MaxValue;
-
-            foreach (var obj in list)
-            {
-                if (samples.ContainsKey(obj.Code))
-                {
-                    continue;
-                }
-
-                if (obj.Change_x.HasValue && obj.Change_x < prevChange)
-                {
-                    prevChange = obj.Change_x;
-                    num++;
-                }
-
-                switch (skip)
-                {
-                    case "-1":
-                        samples.Add(obj.Code, num);//-1
-                        break;
-                    case "1":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_7 - num : obj.Num_8 - num);//2
-                        break;
-                    case "2":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num);//3
-                        break;
-                    case "3":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_5 - num : obj.Num_6 - num);//4
-                        break;
-                    case "4":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_4 - num : obj.Num_5 - num);//5
-                        break;
-                    case "5":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_3 - num : obj.Num_4 - num);//6
-                        break;
-                    case "6":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_2 - num : obj.Num_3 - num);//7
-                        break;
-                    case "7":
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_1 - num : obj.Num_2 - num);//8
-                        break;
-                    default:
-                        samples.Add(obj.Code, String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num);//3
-                        break;
-                }
-            }
-
-            return samples;
-        }
-
         [AllowAnonymous]
-        public ActionResult NetbuyAsynByCodeOrName(string date, NetbuyMode mode, int index, bool isOns = false)
+        public ActionResult NetbuyAsynByCodeOrName(string date, int col, int odcol, NetbuyMode mode, int index, bool isPage, string daytype, bool isOns = false)
         {
             Expression<Func<t_foam, bool>> expression = d => true;
             bool isYestoday = false;
@@ -482,6 +377,22 @@ namespace GushWeb.Controllers
                     break;
                 case NetbuyMode.主力拉伸初期:
                     expression = expression.And(d => d.State == ForceState.la);
+                    break;
+                case NetbuyMode.昨日上涨:
+                    expression = expression.And(d => d.Change >= 0m);
+                    isYestoday = true;
+                    break;
+                case NetbuyMode.昨日下跌:
+                    expression = expression.And(d => d.Change < 0m);
+                    isYestoday = true;
+                    break;
+                case NetbuyMode.昨日净买:
+                    expression = expression.And(d => d.Netbuy >= 0m);
+                    isYestoday = true;
+                    break;
+                case NetbuyMode.昨日净卖:
+                    expression = expression.And(d => d.Netbuy < 0m);
+                    isYestoday = true;
                     break;
                 case NetbuyMode.昨日主力洗筹初期:
                     expression = expression.And(d => d.State == ForceState.XI);
@@ -529,7 +440,7 @@ namespace GushWeb.Controllers
             {
                 if (groups.SelectMany(d => d.queue).GroupBy(d => d.Code).Count() == 1)
                 {
-                    pd = groups.SelectMany(d => d.queue).OrderByDescending(d => d.Date)
+                    pd = groups.SelectMany(d => d.queue)
                         .ConvertAll(d => samples.ContainsKey(d.Code + d.Date) ? d.SetNum(samples[d.Code + d.Date]) : d);
                 }
                 else if (isYestoday)
@@ -546,6 +457,56 @@ namespace GushWeb.Controllers
                 {
                     pd = groups.OrderByDescending(d => d.date).FirstOrDefault()?.queue.AsQueryable().Where(expression)
                         .ConvertAll(d => samples.ContainsKey(d.Code + d.Date) ? d.SetNum(samples[d.Code + d.Date]) : d);
+                }
+
+                Expression<Func<t_foam, decimal?>> odby = d => d.State == ForceState.XI ? 1 : 0;
+
+                switch (col)
+                {
+                    case 1:
+                        odby = d => d.Netbuy;
+                        break;
+                    case 2:
+                        odby = d => d.Change;
+                        break;
+                    case 3:
+                        odby = d => d.Ltotal;
+                        break;
+                    //case 4:
+                    //    odby = d => d.Foam;
+                    //    break;
+                    case 5:
+                        odby = d => d.Num;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (isPage || index > 1)
+                {
+                    ViewData["odcol"] = odcol;
+
+                    if (col == odcol)
+                    {
+                        pd = pd.AsQueryable().OrderBy(d => d.Date).ThenBy(odby);
+                    }
+                    else
+                    {
+                        pd = pd.AsQueryable().OrderByDescending(d => d.Date).ThenBy(odby);
+                    }
+                }
+                else
+                {
+                    if (col == odcol)
+                    {
+                        ViewData["odcol"] = 0;
+                        pd = pd.AsQueryable().OrderByDescending(d => d.Date).ThenBy(odby);
+                    }
+                    else
+                    {
+                        ViewData["odcol"] = col;
+                        pd = pd.AsQueryable().OrderBy(d => d.Date).ThenBy(odby);
+                    }
                 }
             }
 
@@ -630,6 +591,10 @@ namespace GushWeb.Controllers
 
             NetbuyMode[] subArray =
             {
+                NetbuyMode.昨日上涨,
+                NetbuyMode.昨日下跌,
+                NetbuyMode.只看净买,
+                NetbuyMode.只看净卖,
                 NetbuyMode.昨日主力洗筹初期,
                 NetbuyMode.昨日主力大互盘,
                 NetbuyMode.昨日主力洗筹末期,
@@ -736,6 +701,18 @@ namespace GushWeb.Controllers
 
                 switch (mode)
                 {
+                    case NetbuyMode.昨日上涨:
+                        count = subpd.Where(d => d.Change >= 0m).Count();
+                        break;
+                    case NetbuyMode.昨日下跌:
+                        count = subpd.Where(d => d.Change < 0m).Count();
+                        break;
+                    case NetbuyMode.昨日净买:
+                        count = subpd.Where(d => d.Netbuy >= 0m).Count();
+                        break;
+                    case NetbuyMode.昨日净卖:
+                        count = subpd.Where(d => d.Netbuy < 0m).Count();
+                        break;
                     case NetbuyMode.昨日主力洗筹初期:
                         count = subpd.Where(d => d.State == ForceState.XI).Count();
                         break;
@@ -780,7 +757,7 @@ namespace GushWeb.Controllers
             {
                 return NetbuyAsynByDate(Today, col, odcol, mode, index, false, daytype, true);
             }
-            return NetbuyAsynByCodeOrName(date, mode, index, true);
+            return NetbuyAsynByCodeOrName(date, col, odcol, mode, index, false, daytype, true);
         }
 
         public ActionResult NetbuyOnsPage(string date, string daytype, int col = 0, int odcol = 0, NetbuyMode mode = 0, int index = 1)
@@ -792,7 +769,7 @@ namespace GushWeb.Controllers
             {
                 return NetbuyAsynByDate(Today, col, odcol, mode, index, true, daytype, true);
             }
-            return NetbuyAsynByCodeOrName(date, mode, index, true);
+            return NetbuyAsynByCodeOrName(date, col, odcol, mode, index, true, daytype, true);
         }
 
         private ActionResult NetbuyStatusByDate(string date, int col, bool isPage, int index)
@@ -818,22 +795,31 @@ namespace GushWeb.Controllers
             //    expression = d => d.Status.IndexOf(s.ToArray()) == 0;
 
             //}
-
-            var queue = db.SettlementList.GroupBy(d => d.Code).Select(g => new
+            var fs = db.SettlementList.GroupBy(d => d.Code).Select(g => new
             { code = g.Key, queue = g.Where(d => d.Date.CompareTo(date) <= 0).OrderByDescending(d => d.Date) }).ConvertAll(d => new t_foamState(d.queue));
-            Expression<Func<t_foamState, decimal?>> odby = d => d.Volume;
+            var queue = from s in fs
+                        join f in db.FoamList.Where(d => d.Date.CompareTo(date) <= 0) on new { s.Code, s.Date } equals new
+                        { f.Code, f.Date } into temp
+                        from t in temp.DefaultIfEmpty()
+                        select s.SetLtotal(t?.Ltotal);
+
+            Expression<Func<t_foamState, decimal?>> odby = d => d.Quantity;
 
             switch (col)
             {
                 case 2:
                 case 3:
+                    odby = d => d.Ltotal;
+                    break;
+                case 4:
+                case 5:
                     odby = d => d.Funds;
                     break;
                 default:
                     break;
             }
 
-            var pd = col % 2 == 0 ? queue.AsQueryable().OrderBy(odby).Take(pageSize).ToPagedList(index, pageSize) : queue.AsQueryable().OrderByDescending(odby).Take(pageSize).ToPagedList(index, pageSize);
+            var pd = col % 2 == 0 ? queue.AsQueryable().OrderBy(odby).ToPagedList(index, pageSize) : queue.AsQueryable().OrderByDescending(odby).ToPagedList(index, pageSize);
 
             if (isPage)
             {
@@ -843,7 +829,7 @@ namespace GushWeb.Controllers
             return View(pd);
         }
 
-        private ActionResult NetbuyStatusByCodeOrName(string date, int col, bool isPage, int index)
+        private ActionResult NetbuyStatusByCodeOrName(string date, bool isPage, int index)
         {
             //Expression<Func<t_foamState, bool>> expression = d => true;
 
@@ -866,22 +852,23 @@ namespace GushWeb.Controllers
             //    expression = d => d.Status.IndexOf(s.ToArray()) == 0;
 
             //}
+            var queue = new List<t_foamState>();
+            var list = db.SettlementList.Where(d => date.Contains(d.Code) || date.Contains(d.Name)).ToList();
+            var fs = db.FoamList.Where(d => date.Contains(d.Code) || date.Contains(d.Name)).ToList();
 
-            var queue = db.SettlementList.Where(d=> date.Contains(d.Code) || date.Contains(d.Name)).GroupBy(d => d.Code).Select(g => new
-            { code = g.Key, queue = g }).ConvertAll(d => new t_foamState(d.queue));
-            Expression<Func<t_foamState, decimal?>> odby = d => d.Volume;
-
-            switch (col)
+            foreach (var obj in list)
             {
-                case 2:
-                case 3:
-                    odby = d => d.Funds;
-                    break;
-                default:
-                    break;
+                var ltotal = fs.Where(d => d.Name == obj.Name && d.Date == obj.Date).FirstOrDefault()?.Ltotal;
+
+                var gp = list.Where(d => d.Date.CompareTo(obj.Date) <= 0)
+                .GroupBy(d => d.Code).Select(g => new { code = g.Key, queue = g })
+                .ConvertAll(d => new t_foamState(d.queue).SetLtotal(ltotal));
+
+                queue.AddRange(gp);
             }
 
-            var pd = col % 2 == 0 ? queue.AsQueryable().OrderBy(odby).Take(pageSize).ToPagedList(index, pageSize) : queue.AsQueryable().OrderByDescending(odby).Take(pageSize).ToPagedList(index, pageSize);
+            Expression<Func<t_foamState, decimal?>> odby = d => d.Quantity;
+            var pd = queue.AsQueryable().OrderBy(d => d.Code).ThenByDescending(d => d.Date).ToPagedList(index, pageSize);
 
             if (isPage)
             {
@@ -891,9 +878,9 @@ namespace GushWeb.Controllers
             return View(pd);
         }
 
-        public ActionResult NetbuyStatus()
+        public ActionResult NetbuyStatus(string date)
         {
-            string date = Today;
+            date = date ?? Today;
             int col = 0;
 
             ViewData["date"] = date;
@@ -904,7 +891,7 @@ namespace GushWeb.Controllers
                 return NetbuyStatusByDate(date, col, false, 1);
             }
 
-            return NetbuyStatusByCodeOrName(date, col, false, 1);
+            return NetbuyStatusByCodeOrName(date, false, 1);
         }
 
         [HttpPost]
@@ -923,7 +910,168 @@ namespace GushWeb.Controllers
                 return NetbuyStatusByDate(date, col, true, index);
             }
 
-            return NetbuyStatusByCodeOrName(date, col, true, index);
+            return NetbuyStatusByCodeOrName(date, true, index);
+        }
+
+        public Dictionary<string, int?> GetSamples(string date, string skip, bool isOns)
+        {
+            return isOns ? OnsSamples(date, skip) : SetSamplesByDate(date);
+        }
+
+        private Dictionary<string, int?> OnsSamples(string date, string skip)
+        {
+            Dictionary<string, int?> samples = new Dictionary<string, int?>();
+
+            var list = db.ChangesList.Where(d => (d.Date_x ?? d.Date_9).CompareTo(date) == 0)
+                .OrderByDescending(d => d.Change_x);
+            int? num = 0;
+            decimal? prevChange = decimal.MaxValue;
+
+            foreach (var obj in list)
+            {
+                if (samples.ContainsKey(obj.Code))
+                {
+                    continue;
+                }
+
+                if (obj.Change_x.HasValue && obj.Change_x < prevChange)
+                {
+                    prevChange = obj.Change_x;
+                    num++;
+                }
+
+                switch (skip)
+                {
+                    case "-1":
+                        samples.Add(obj.Code, num); //-1
+                        break;
+                    case "1":
+                        samples.Add(obj.Code,
+                            String.IsNullOrEmpty(obj.Date_x) ? obj.Num_7 - num : obj.Num_8 - num); //2
+                        break;
+                    case "2":
+                        samples.Add(obj.Code,
+                            String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num); //3
+                        break;
+                    case "3":
+                        samples.Add(obj.Code,
+                            String.IsNullOrEmpty(obj.Date_x) ? obj.Num_5 - num : obj.Num_6 - num); //4
+                        break;
+                    case "4":
+                        samples.Add(obj.Code,
+                            String.IsNullOrEmpty(obj.Date_x) ? obj.Num_4 - num : obj.Num_5 - num); //5
+                        break;
+                    case "5":
+                        samples.Add(obj.Code,
+                            String.IsNullOrEmpty(obj.Date_x) ? obj.Num_3 - num : obj.Num_4 - num); //6
+                        break;
+                    case "6":
+                        samples.Add(obj.Code,
+                            String.IsNullOrEmpty(obj.Date_x) ? obj.Num_2 - num : obj.Num_3 - num); //7
+                        break;
+                    case "7":
+                        samples.Add(obj.Code,
+                            String.IsNullOrEmpty(obj.Date_x) ? obj.Num_1 - num : obj.Num_2 - num); //8
+                        break;
+                    default:
+                        samples.Add(obj.Code,
+                            String.IsNullOrEmpty(obj.Date_x) ? obj.Num_6 - num : obj.Num_7 - num); //3
+                        break;
+                }
+            }
+
+            return samples;
+        }
+
+        private Dictionary<string, int?> SetSamplesByDate(string date)
+        {
+            Dictionary<string, int?> samples;
+
+            samples = db.ChangesList.GroupBy(d => d.Date_9)
+                .Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0)
+                .OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_9);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_8).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_8);
+
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_7).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_7);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_6).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_6);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_5).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_5);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_4).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_4);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_3).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_3);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_2).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_2);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_1).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_1);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = new Dictionary<string, int?>();
+            return samples;
         }
     }
 }

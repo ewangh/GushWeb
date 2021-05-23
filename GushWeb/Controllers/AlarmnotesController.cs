@@ -56,8 +56,17 @@ namespace GushWeb.Controllers
                 ViewBag.Current = Today;
             }
 
-            var expression = getExpression(date,Notestate.Opn);
-            var pageData = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
+            var expression = getExpression(date, Notestate.Opn);
+            var queue = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
+
+            var samples = GetSamples(date, date == Today);// date == Today ? OnsSamples(date) : SetSamplesByDate(date);
+
+            var pageData = from a in queue
+                           orderby a.Time
+                           join f in db.FoamList.Where(d => d.Date.CompareTo(date) == 0) on new { a.Code, a.Date } equals new
+                           { f.Code, f.Date } into temp
+                           from t in temp.DefaultIfEmpty()
+                           select a.ToAlarmnotes(samples.ContainsKey(a.Code) ? t?.SetNum(samples[a.Code]) : t);
 
             if (User.Identity.IsAuthenticated)
             {
@@ -79,9 +88,15 @@ namespace GushWeb.Controllers
                 return PartialView("pviewIndex", new List<t_alarmnotes>());
             }
             string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-            var expression = getExpression(Today,Notestate.Opn, codeArray);
-            var pageData = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
-
+            var expression = getExpression(Today, Notestate.Opn, codeArray);
+            var queue = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
+            var samples = GetSamples(Today, true);
+            var pageData = from a in queue
+                orderby a.Time
+                join f in db.FoamList.Where(d => d.Date.CompareTo(Today) == 0) on new { a.Code, a.Date } equals new
+                    { f.Code, f.Date } into temp
+                from t in temp.DefaultIfEmpty()
+                select a.ToAlarmnotes(samples.ContainsKey(a.Code) ? t?.SetNum(samples[a.Code]) : t);
             return PartialView("pviewIndex", pageData);
         }
 
@@ -231,6 +246,130 @@ namespace GushWeb.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+
+        public Dictionary<string, int?> GetSamples(string date, bool isOns)
+        {
+            return isOns ? OnsSamples(date) : SetSamplesByDate(date);
+        }
+
+        private Dictionary<string, int?> OnsSamples(string date)
+        {
+            Dictionary<string, int?> samples = new Dictionary<string, int?>();
+
+            var list = db.ChangesList.Where(d => (d.Date_x ?? d.Date_9).CompareTo(date) == 0)
+                .OrderByDescending(d => d.Change_x);
+            int? num = 0;
+            decimal? prevChange = decimal.MaxValue;
+
+            foreach (var obj in list)
+            {
+                if (samples.ContainsKey(obj.Code))
+                {
+                    continue;
+                }
+
+                if (obj.Change_x.HasValue && obj.Change_x < prevChange)
+                {
+                    prevChange = obj.Change_x;
+                    num++;
+                }
+                samples.Add(obj.Code, num); //-1
+            }
+
+            return samples;
+        }
+
+        private Dictionary<string, int?> SetSamplesByDate(string date)
+        {
+            Dictionary<string, int?> samples;
+
+            samples = db.ChangesList.GroupBy(d => d.Date_9)
+                .Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0)
+                .OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_9);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_8).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_8);
+
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_7).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_7);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_6).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_6);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_5).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_5);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_4).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_4);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_3).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_3);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_2).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_2);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = db.ChangesList.GroupBy(d => d.Date_1).Select(g => new { date = g.Key, queue = g })
+                .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
+                .ToDictionary(pair => pair.Code, pair => pair.Num_1);
+
+            if (samples != null)
+            {
+                return samples;
+            }
+
+            samples = new Dictionary<string, int?>();
+            return samples;
         }
     }
 }
