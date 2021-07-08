@@ -4,6 +4,9 @@
         loading...
     </h4>
 </div>
+<div id="popup" style="position:fixed;right:0px;bottom:0px;height:300px;width:545px" onmousewheel="return zoomImg(this)">
+
+</div>
 <script>
     var loading = {
         show: function () {
@@ -12,6 +15,39 @@
         hide: function () {
             $('#loading').modal('hide');
         }
+    }
+
+    var popup = {
+        show: function () {
+            $('#popup').modal('show');
+        },
+        hide: function () {
+            $('#popup').modal('hide');
+        },
+        clear: function() {
+            $('#popup').empty();
+        },
+        appendImg: function (src) {
+            $('#popup').empty().append(
+                $('<img>')
+                    //.addClass('events-profilePic')
+                    .attr({
+                        'src': src,
+                        'alt': ''
+                    })
+            )
+        }
+    }
+
+    function zoomImg(obj){          
+        // 一开始默认是100%         
+        let zoom = parseInt(obj.style.zoom, 10) || 100;       
+        // 滚轮滚一下wheelDelta的值增加或减少120         
+        zoom += event.wheelDelta/12;      
+        if(zoom>0)    {          
+            obj.style.zoom = zoom + '%';  
+        }    
+        return false;      
     }
 
     function isEmpty(obj) {

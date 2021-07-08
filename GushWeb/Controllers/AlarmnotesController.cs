@@ -58,15 +58,29 @@ namespace GushWeb.Controllers
 
             var expression = getExpression(date, Notestate.Opn);
             var queue = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
-
+            var codes = queue.ConvertAll(d => d.Code);
+            var stateDic=db.FoamList.Where(d=>d.Date.CompareTo(date)<0 && codes.Contains(d.Code)).GroupBy(d => d.Code)
+                .Select(g => new { code = g.Key, queue = g }).ToDictionary(d=>d.code,d=>d.queue.OrderByDescending(p=>p.Date).FirstOrDefault()?.State);
             var samples = GetSamples(date, date == Today);// date == Today ? OnsSamples(date) : SetSamplesByDate(date);
 
+            foreach (var obj in queue)
+            {
+                if (samples.ContainsKey(obj.Code))
+                {
+                    obj.Num = samples[obj.Code];
+                }
+                if (stateDic.ContainsKey(obj.Code))
+                {
+                    obj.ForceState = stateDic[obj.Code];
+                }
+            }
+
             var pageData = from a in queue
-                           orderby a.Time
+                           orderby a.Num,a.Time
                            join f in db.FoamList.Where(d => d.Date.CompareTo(date) == 0) on new { a.Code, a.Date } equals new
                            { f.Code, f.Date } into temp
                            from t in temp.DefaultIfEmpty()
-                           select a.ToAlarmnotes(samples.ContainsKey(a.Code) ? t?.SetNum(samples[a.Code]) : t);
+                           select a.ToAlarmnotes(t);
 
             if (User.Identity.IsAuthenticated)
             {
@@ -90,13 +104,28 @@ namespace GushWeb.Controllers
             string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
             var expression = getExpression(Today, Notestate.Opn, codeArray);
             var queue = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
+            var stateDic = await db.FoamList.Where(d => d.Date.CompareTo(Today) < 0 && codeArray.Contains(d.Code)).GroupBy(d => d.Code)
+                .Select(g => new { code = g.Key, queue = g }).ToDictionaryAsync(d => d.code, d => d.queue.OrderByDescending(p => p.Date).FirstOrDefault()?.State);
             var samples = GetSamples(Today, true);
+
+            foreach (var obj in queue)
+            {
+                if (samples.ContainsKey(obj.Code))
+                {
+                    obj.Num = samples[obj.Code];
+                }
+                if (stateDic.ContainsKey(obj.Code))
+                {
+                    obj.ForceState = stateDic[obj.Code];
+                }
+            }
+
             var pageData = from a in queue
-                orderby a.Time
-                join f in db.FoamList.Where(d => d.Date.CompareTo(Today) == 0) on new { a.Code, a.Date } equals new
-                    { f.Code, f.Date } into temp
-                from t in temp.DefaultIfEmpty()
-                select a.ToAlarmnotes(samples.ContainsKey(a.Code) ? t?.SetNum(samples[a.Code]) : t);
+                           orderby a.Num, a.Time
+                           join f in db.FoamList.Where(d => d.Date.CompareTo(Today) == 0) on new { a.Code, a.Date } equals new
+                           { f.Code, f.Date } into temp
+                           from t in temp.DefaultIfEmpty()
+                           select a.ToAlarmnotes(t);
             return PartialView("pviewIndex", pageData);
         }
 

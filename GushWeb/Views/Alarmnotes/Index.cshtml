@@ -34,10 +34,13 @@
                     <a href="javascript:;" onclick="getChkNames()">@Html.DisplayNameFor(model => model.Name)</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Price)%
+                    <a href="javascript:;" onclick="updateAlarm()">@Html.DisplayNameFor(model => model.Price)%</a>
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Ltotal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ForceState)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Num)
@@ -68,11 +71,7 @@
         }
 
         function onComplete() {
-            asyncGetStockData(getCodes).then(function(dataArray) {
-                dataArray.forEach(function(item, index) {
-                    updateAlarm(item[6], item[1]);
-                });
-            });
+            getStockData();
         }
 
         var today = new Date();
@@ -81,46 +80,55 @@
             window.location.href = '@Url.Action("Index")?date=' + date;
         }
 
-        (function () {
+        (function() {
             enableShiftCheck($('input[name="ckb"]'));
             if (isToday()) {
-                var timer = setInterval(function() { $("form").submit(); }, 30000);
+                var timer = setInterval(function () { $("form").submit(); }, 30000);
+                getStockData();
             }
-            asyncGetStockData(getCodes).then(function(dataArray) {
-                dataArray.forEach(function(item, index) {
-                    updateAlarm(item[6], item[1]);
-                });
-            });
         })()
 
-        function updateAlarm(code, price) {
-            $("span").each(function() {
-                if ($(this).attr("name") == code) {
-                    var mode = $(this).attr("mode");
-                    switch (mode) {
-                        case 'change':
-                            updateChange($(this),price);
-                            break;
-                        case 'cprice':
-                            updateCprice($(this),price);
-                            break;
-                        default:
-                            break;
-                    }
+        function updateAlarm() {
+            if (isToday()) {
+                loading.show();
+                sleep(1000).then(() => {
+                    getStockData();
+                    loading.hide();
+                });
+            }
+        }
 
-                }
+        function getStockData() {
+            asyncGetStockData(getCodes).then(function (dataArray) {
+                dataArray.forEach(function (item, index) {
+                    let code = item[6];
+                    let price = item[1];
+                    $("span").each(function () {
+                        if ($(this).attr("name") == code) {
+                            var mode = $(this).attr("mode");
+                            switch (mode) {
+                                case 'change':
+                                    updateChange($(this), price);
+                                    break;
+                                case 'cprice':
+                                    updateCprice($(this), price);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+                });
             });
         }
 
-        function updateChange(span,price) {
+        function updateChange(span, price) {
             var tagPrice = parseFloat(span.attr("tagp"));
             var tagClosed = parseFloat(span.attr("tagc"));
-            if (isToday()) {
-                if (!tagClosed.isNaN || tagClosed != 0) {
-                    var color = tagPrice < price ? "red" : "green";
-                    span.html(((price / tagClosed - 1) * 100).toFixed(2) + '%');
-                    span.css("color", color);
-                }
+            if (!tagClosed.isNaN || tagClosed != 0) {
+                var color = tagPrice < price ? price < tagClosed ? "purple" : "red" : "green";
+                span.html(((price / tagClosed - 1) * 100).toFixed(2) + '%');
+                span.css("color", color);
             }
             //else {
             //    if (!tagPrice.isNaN || tagPrice != 0) {
@@ -131,7 +139,7 @@
             //}
         }
 
-        function updateCprice(span,price) {
+        function updateCprice(span, price) {
             var tagCprice = parseFloat(span.attr("tagc"));
             if (isToday()) {
                 if (!tagCprice.isNaN) {

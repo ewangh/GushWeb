@@ -1,4 +1,17 @@
 ﻿@using GushLibrary.Models
+@helper AmplitudeConvert(decimal? closed, decimal? price, bool isRed)
+{
+    if (closed.HasValue && closed != 0 && price.HasValue && price != 0)
+    {
+        <font color=@(isRed? (price<closed)?"purple":"red":"green")>@String.Format("{0:P}", price / closed - 1)</font>
+        //@:%
+    }
+    else
+    {
+        @String.Empty
+    }
+}
+
 @helper AmplitudeConvert(decimal? closed, decimal? price)
 {
     if (closed.HasValue && closed != 0 && price.HasValue && price != 0)
@@ -14,11 +27,11 @@
 
 @helper AmplitudeConvert(decimal? val, decimal offset = 0)
 {
-    if (val >= offset)
+    if (val > offset)
     {
         <font color="red">@String.Format("{0:P}", val / 100)</font>
     }
-    else if (val < offset)
+    else if (val <= offset)
     {
         <font color="green">@String.Format("{0:P}", val / 100)</font>
     }
@@ -26,11 +39,11 @@
 
 @helper ColorConvert(decimal? val, decimal offset = 0)
 {
-    if (val >= offset)
+    if (val > offset)
     {
         <font color="red">@val</font>
     }
-    else if (val < offset)
+    else if (val <= offset)
     {
         <font color="green">@val</font>
     }

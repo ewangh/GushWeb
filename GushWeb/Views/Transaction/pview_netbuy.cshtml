@@ -1,7 +1,11 @@
 ﻿@using System.Configuration
 @using GushWeb.Utility
+@using System.Configuration
 @model IEnumerable<t_foam>
 @{
+    var url = ConfigurationManager.AppSettings["iwc"];
+    var img = ConfigurationManager.AppSettings["ddk"];
+
     var ajaxOption = new AjaxOptions
     {
         UpdateTargetId = "app",
@@ -89,10 +93,10 @@
                         @Html.Hidden("codes", item.Date == maxDate ? item.Code : "")
                     </td>
                     <td>
-                        @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
+                        @ControlHelper.UrlControl(url, item.Code)
                     </td>
                     <td>
-                        <a href="javascript:;" onclick="getCodeQueue('@item.Code')">@item.Name</a>
+                        <a href="javascript:;" onclick="getCodeQueue('@item.Code')" onmouseover = "showImg('@String.Format(img,item.Code)')" >@item.Name</a>
                         @Html.CheckBox("ckb", new { value = @item.Name })
                     </td>
                     <td>
@@ -131,6 +135,10 @@
             var content = prompt("", chk_value);
             window.clipboardData.setData("Text", content);
         }
+    }
+
+    function showImg(url) {
+        popup.appendImg(url);
     }
 </script>
 

@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<t_opennotes>
+@using System.Configuration
+@{
+    var img = ConfigurationManager.AppSettings["ddk"];
+}
 @foreach (var item in Model)
 {
     <tr>
@@ -9,10 +13,15 @@
             @Html.DisplayFor(modelItem => item.Code)
         </td>
         <td>
-            @Html.ActionLink(item.Name, "Details", new { id = item.Code, date = item.CoordDate }, new { target = "_blank" })
+            @Html.ActionLink(item.Name, "Details", new { id = item.Code, date = item.CoordDate }, new { target = "_blank", name = item.Code, onmouseover = "showImg('" + String.Format(img, item.Code) + "')" })
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Date)
         </td>
     </tr>
 }
+<script>
+    function showImg(url) {
+        popup.appendImg(url);
+    }
+</script>

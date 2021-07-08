@@ -59,3 +59,7 @@ function enableShiftCheck(checkboxs) {
     }
     checkboxs.click(handleCheck);
 }
+
+function sleep(time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
