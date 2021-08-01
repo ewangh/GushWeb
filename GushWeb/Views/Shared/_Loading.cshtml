@@ -1,12 +1,19 @@
-﻿<div class="modal fade;" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+﻿@using System.Configuration
+@{
+    var hmk = ConfigurationManager.AppSettings["hmk"];
+    var ddk = ConfigurationManager.AppSettings["ddk"];
+}
+<div class="modal fade;" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
     <h4 style="color:#FFFFFF;position: relative;
             top: 50%;" class="text-center">
         loading...
     </h4>
 </div>
-<div id="popup" style="position:fixed;right:0px;bottom:0px;height:300px;width:545px" onmousewheel="return zoomImg(this)">
-
+<div id="popup" style="position:fixed;right:0px;bottom:0px;height:600px;width:545px" onmousewheel="return zoomImg(this)">
+    <div id="ppp0" style="height:300px;"></div>
+    <div id="ppp1" style="height:300px;"></div>
 </div>
+<textarea style="visibility:hidden" id="copyContent"></textarea>
 <script>
     var loading = {
         show: function () {
@@ -25,29 +32,47 @@
             $('#popup').modal('hide');
         },
         clear: function() {
-            $('#popup').empty();
+            $('#ppp0').empty();
+            $('#ppp1').empty();
         },
-        appendImg: function (src) {
-            $('#popup').empty().append(
+        appendImg: function (val) {
+            $('#ppp0').empty().append(
                 $('<img>')
-                    //.addClass('events-profilePic')
-                    .attr({
-                        'src': src,
-                        'alt': ''
-                    })
+                //.addClass('events-profilePic')
+                .attr({
+                    'src': '@hmk'.replace('{0}', val) + '?t=' + new Date().Format("HHmm"),
+                    'alt': ''
+                })
+            );
+            $('#ppp1').empty().append(
+                $('<img>')
+                //.addClass('events-profilePic')
+                .attr({
+                    'src': '@ddk'.replace('{0}', val) + '?t=' + new Date().Format("HHmm"),
+                    'alt': ''
+                })
             )
         }
     }
 
-    function zoomImg(obj){          
-        // 一开始默认是100%         
-        let zoom = parseInt(obj.style.zoom, 10) || 100;       
-        // 滚轮滚一下wheelDelta的值增加或减少120         
-        zoom += event.wheelDelta/12;      
-        if(zoom>0)    {          
-            obj.style.zoom = zoom + '%';  
-        }    
-        return false;      
+    var clipboard = {
+        copy: function(content) {
+            var input = document.getElementById("copyContent");
+            input.value = content; // 修改文本框的内容
+            input.select(); // 选中文本
+            document.execCommand("copy"); // 执行浏览器复制命令
+        }
+    }
+
+    function zoomImg(obj){
+        // 一开始默认是100%
+        let zoom = parseInt(obj.style.zoom, 10) || 100;
+        // 滚轮滚一下wheelDelta的值增加或减少120
+        zoom += event.wheelDelta/12;
+        if(zoom>0)    {
+            obj.style.zoom = zoom + '%';
+        }
+        return false;
     }
 
     function isEmpty(obj) {

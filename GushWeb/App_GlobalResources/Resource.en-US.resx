@@ -207,4 +207,7 @@
   <data name="netbuyFund" xml:space="preserve">
     <value>NetbuyFund</value>
   </data>
+  <data name="limit" xml:space="preserve">
+    <value>Limit</value>
+  </data>
 </root>

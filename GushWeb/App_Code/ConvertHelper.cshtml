@@ -54,9 +54,20 @@
     <font color=@(state==ForceState.LA?"green":state==ForceState.la?"red":"grey")>@state.ToString()</font>
 }
 
-
 @helper BoardRemarkConvert(int days, int plates)
 {
     <span>@($"{days}天{plates}板")</span>
+}
+
+@helper BoardLimitConvert(int days, int plates)
+{
+    if (plates == 0)
+    {
+        <font color="red">@($"{days + 1}天{plates + 1}板")</font>
+    }
+    else
+    {
+        <span>@($"{days + 1}天{plates + 1}板")</span>
+    }
 }
 

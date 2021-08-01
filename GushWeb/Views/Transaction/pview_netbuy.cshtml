@@ -4,7 +4,6 @@
 @model IEnumerable<t_foam>
 @{
     var url = ConfigurationManager.AppSettings["iwc"];
-    var img = ConfigurationManager.AppSettings["ddk"];
 
     var ajaxOption = new AjaxOptions
     {
@@ -96,7 +95,7 @@
                         @ControlHelper.UrlControl(url, item.Code)
                     </td>
                     <td>
-                        <a href="javascript:;" onclick="getCodeQueue('@item.Code')" onmouseover = "showImg('@String.Format(img,item.Code)')" >@item.Name</a>
+                        <a href="javascript:;" onclick="getCodeQueue('@item.Code')" onmouseover="showImg('@item.Code')">@item.Name</a>
                         @Html.CheckBox("ckb", new { value = @item.Name })
                     </td>
                     <td>
@@ -112,7 +111,7 @@
                         @Html.DisplayFor(modelItem => item.Num)
                     </td>
                     <td>
-                        @ConvertHelper.ForceConvert(item.State)
+                        <a name="state" href="javascript:;" onclick="samenum('@item.State')" value="@item.State">@ConvertHelper.ForceConvert(item.State)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Time)
@@ -133,12 +132,26 @@
         });
         if (chk_value.length > 0) {
             var content = prompt("", chk_value);
-            window.clipboardData.setData("Text", content);
+            //window.clipboardData.setData("Text", content);//无效复制
+            if (content) {
+                clipboard.copy(content);
+            }
         }
     }
 
-    function showImg(url) {
-        popup.appendImg(url);
+    function showImg(val) {
+        popup.appendImg(val);
+    }
+
+    function samenum(val) {
+        $("a[name='state']").each(function () {
+            var i = $(this).attr("value");
+            if (i === val) {
+                $(this).css({ "border": "solid" })
+            } else {
+                $(this).css({ "border": "" })
+            }
+        });
     }
 </script>
 

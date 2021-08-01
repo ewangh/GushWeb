@@ -2,7 +2,7 @@
 @model IEnumerable<t_alarmnotes>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = String.Format("{0}({1})","Index",Model.Count());
 
     var ajaxOption = new AjaxOptions
     {
@@ -45,6 +45,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Num)
                 </th>
+                <th>Remark</th>
                 <th>
                     @Html.DisplayNameFor(model => model.Time)
                 </th>
@@ -72,6 +73,7 @@
 
         function onComplete() {
             getStockData();
+            document.title = 'Index(@Model.Count())';
         }
 
         var today = new Date();
@@ -83,7 +85,7 @@
         (function() {
             enableShiftCheck($('input[name="ckb"]'));
             if (isToday()) {
-                var timer = setInterval(function () { $("form").submit(); }, 30000);
+                var timer = setInterval(function () { $("form").submit(); }, 10000);//1s=1000
                 getStockData();
             }
         })()

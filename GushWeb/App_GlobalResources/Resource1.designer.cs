@@ -205,6 +205,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 涨停板 的本地化字符串。
+        /// </summary>
+        internal static string limit {
+            get {
+                return ResourceManager.GetString("limit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 登录 的本地化字符串。
         /// </summary>
         internal static string login {

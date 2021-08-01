@@ -3,58 +3,61 @@
 @model IEnumerable<t_alarmnotes>
 @{
     var url = ConfigurationManager.AppSettings["iwc"];
-    var img = ConfigurationManager.AppSettings["ddk"];
     //GushDBContext db = new GushDBContext();
     //var max_date = db.ChangesList.Max(d => d.Date_9);
     //Dictionary<string, int?> samples = db.ChangesList.Where(pair => pair.Date_9.CompareTo(max_date) == 0).ToDictionary(pair => pair.Code, pair => pair.Num);
 }
 @foreach (var item in Model)
 {
-    <tr>
-        <td>
-            @Html.Hidden("codes", item.Code)
-        </td>
-        <td>
-            @ControlHelper.UrlControl(url, item.Code)
-        </td>
-        <td>
-            @*@Html.ActionLink(item.Name, "Details", new { id = item.Code }, new { target = "_blank" })*@
-            @Html.ActionLink(item.Name, "Netbuy", "Transaction", new {date = item.Code}, new {target = "_blank", name = item.Code, onmouseover = "showImg('" + String.Format(img, item.Code) + "')"})
-            @Html.CheckBox("ckb", new {value = @item.Name})
-        </td>
-        <td>
-            <span name="@item.Code" mode="change" tagp="@item.Price" tagc="@item.Closed">@ConvertHelper.AmplitudeConvert(item.Closed, item.Price2, item.Price2 > item.Price)</span>
-            <span>|</span>
-            <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ltotal)
-        </td>
-        <td>
-            <a name="state" href="javascript:;" onclick="samenum('@item.ForceState')" value="@item.ForceState">@ConvertHelper.ForceConvert(item.ForceState)</a>
-        </td>
-        <td>
-            @item.Num
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Time)
-        </td>
-    </tr>
+<tr>
+    <td>
+        @Html.Hidden("codes", item.Code)
+    </td>
+    <td>
+        @ControlHelper.UrlControl(url, item.Code)
+    </td>
+    <td>
+        @*@Html.ActionLink(item.Name, "Details", new { id = item.Code }, new { target = "_blank" })*@
+        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank", name = item.Code, onmouseover = "showImg('" + @item.Code + "')" })
+        @Html.CheckBox("ckb", new { value = @item.Name })
+    </td>
+    <td>
+        <span name="@item.Code" mode="change" tagp="@item.Price" tagc="@item.Closed">@ConvertHelper.AmplitudeConvert(item.Closed, item.LPrice, item.LPrice > item.Price)</span>
+        <span>|</span>
+        <span>@ConvertHelper.AmplitudeConvert(item.Closed, item.Price)</span>
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Ltotal)
+    </td>
+    <td>
+        <a name="state" href="javascript:;" onclick="samenum('@item.ForceState')" value="@item.ForceState">@ConvertHelper.ForceConvert(item.ForceState)</a>
+    </td>
+    <td>
+        @item.Num
+    </td>
+    <td>@ConvertHelper.BoardLimitConvert(item.Limit, item.Plate)</td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Time)
+    </td>
+</tr>
 }
 <script>
     function getChkNames() {
         var chk_value = [];
-        $('input[name="ckb"]:checked').each(function() {
+        $('input[name="ckb"]:checked').each(function () {
             chk_value.push($(this).val());
         });
         if (chk_value.length > 0) {
             var content = prompt("", chk_value);
-            window.clipboardData.setData("Text", content);
+            //window.clipboardData.setData("Text", content);//无效复制
+            if (content) {
+                clipboard.copy(content);
+            }
         }
     }
 
     function samenum(val) {
-        $("a[name='state']").each(function() {
+        $("a[name='state']").each(function () {
             var i = $(this).attr("value");
             if (i === val) {
                 $(this).css({ "border": "solid" })
@@ -64,7 +67,7 @@
         });
     }
 
-    function showImg(url) {
-        popup.appendImg(url);
+    function showImg(val) {
+        popup.appendImg(val);
     }
 </script>

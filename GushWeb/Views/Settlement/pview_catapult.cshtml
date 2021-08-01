@@ -27,7 +27,7 @@
                     @Html.DisplayNameFor(model => model.Code)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    <a href="javascript:;" onclick="getChkNames()">@Html.DisplayNameFor(model => model.Name)</a>
                 </th>
                 <th>
                     <button class="btn-link" type="submit" onclick="setCol(3,4)">@Html.DisplayNameFor(model => model.Ltotal)</button>
@@ -60,8 +60,8 @@
                         @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
                     </td>
                     <td>
-                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
-                        @Html.CheckBox("ckb")
+                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank", onmouseover = "showImg('" + @item.Code + "')" })
+                        @Html.CheckBox("ckb", new { value = @item.Name })
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Ltotal)
@@ -89,3 +89,18 @@
         @Html.PagedListPager(Model as IPagedList, page => Url.Action("CatapultAsyn", new { index = page, date = ViewData["date"], daytype = ViewData["daytype"], col = ViewData["col"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
     </div>
 </div>
+<script>
+    function getChkNames() {
+        var chk_value = [];
+        $('input[name="ckb"]:checked').each(function () {
+            chk_value.push($(this).val());
+        });
+        if (chk_value.length > 0) {
+            var content = prompt("", chk_value);
+            //window.clipboardData.setData("Text", content);//无效复制
+            if (content) {
+                clipboard.copy(content);
+            }
+        }
+    }
+</script>

@@ -25,13 +25,13 @@ namespace GushWeb.Controllers
         private GushDBContext db = new GushDBContext();
         const int pageSize = 30;
         // GET: Alarmnotes
-        private Expression<Func<t_alarmnotes, bool>> getExpression(string date, Notestate state, string[] array = null)
+        private Expression<Func<t_alarmnotes, bool>> getExpression(string date, Notestate?[] status, string[] array = null)
         {
             Expression<Func<t_alarmnotes, bool>> expression = t => true;
             //expression = expression.And(d => d.Date.CompareTo(date) == 0 && !d.Name.ToLower().Contains("st") && d.Price < d.Closed * 1.097m && d.Time.CompareTo("09:32:03") < 0);
             expression = expression.And(d => d.Date.CompareTo(date) == 0);
-            expression = expression.And(d => d.Price < d.Closed * 1.097m);
-            expression = expression.And(d => d.State == state);
+            //expression = expression.And(d => d.Price < d.Closed * 1.097m);
+            expression = expression.And(d => status.Contains(d.State));
             //expression = expression.And(d => d.Time.CompareTo("09:32:03") < 0);
             if (!array.IsNullOrEmpty())
             {
@@ -56,18 +56,21 @@ namespace GushWeb.Controllers
                 ViewBag.Current = Today;
             }
 
-            var expression = getExpression(date, Notestate.Opn);
+            var expression = getExpression(date, new Notestate?[] { Notestate.Lm, Notestate.Cp });
             var queue = db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToList();
             var codes = queue.ConvertAll(d => d.Code);
-            var stateDic=db.FoamList.Where(d=>d.Date.CompareTo(date)<0 && codes.Contains(d.Code)).GroupBy(d => d.Code)
-                .Select(g => new { code = g.Key, queue = g }).ToDictionary(d=>d.code,d=>d.queue.OrderByDescending(p=>p.Date).FirstOrDefault()?.State);
-            var samples = GetSamples(date, date == Today);// date == Today ? OnsSamples(date) : SetSamplesByDate(date);
+            var stateDic = db.FoamList.Where(d => d.Date.CompareTo(date) < 0 && codes.Contains(d.Code)).GroupBy(d => d.Code)
+                .Select(g => new { code = g.Key, queue = g }).ToDictionary(d => d.code, d => d.queue.OrderByDescending(p => p.Date).FirstOrDefault()?.State);
+            var samples = SetSamplesByDate(date);// date == Today ? OnsSamples(date) : SetSamplesByDate(date);
 
             foreach (var obj in queue)
             {
                 if (samples.ContainsKey(obj.Code))
                 {
-                    obj.Num = samples[obj.Code];
+                    obj.Num = (int?)samples[obj.Code][0] ?? -1;
+                    obj.Change = (decimal?)samples[obj.Code][1] ?? 0;
+                    obj.Limit = (int?)samples[obj.Code][2] ?? -1;
+                    obj.Plate = (int?)samples[obj.Code][3] ?? -1;
                 }
                 if (stateDic.ContainsKey(obj.Code))
                 {
@@ -75,21 +78,21 @@ namespace GushWeb.Controllers
                 }
             }
 
-            var pageData = from a in queue
-                           orderby a.Num,a.Time
-                           join f in db.FoamList.Where(d => d.Date.CompareTo(date) == 0) on new { a.Code, a.Date } equals new
-                           { f.Code, f.Date } into temp
-                           from t in temp.DefaultIfEmpty()
-                           select a.ToAlarmnotes(t);
+            //var pageData = from a in queue
+            //               orderby a.Time
+            //               join f in db.FoamList.Where(d => d.Date.CompareTo(date) == 0) on new { a.Code, a.Date } equals new
+            //               { f.Code, f.Date } into temp
+            //               from t in temp.DefaultIfEmpty()
+            //               select a.ToAlarmnotes(t);
 
             if (User.Identity.IsAuthenticated)
             {
-                return View("Index", pageData);
+                return View("Index", queue);
                 //TODO:vue request
                 //return View("IndexNew", pageData);
             }
 
-            return View(pageData);
+            return View(queue);
         }
 
         [HttpPost]
@@ -102,17 +105,20 @@ namespace GushWeb.Controllers
                 return PartialView("pviewIndex", new List<t_alarmnotes>());
             }
             string[] codeArray = codes.Split(new string[] { " ", "," }, StringSplitOptions.RemoveEmptyEntries);
-            var expression = getExpression(Today, Notestate.Opn, codeArray);
+            var expression = getExpression(Today, new Notestate?[] { Notestate.Lm, Notestate.Cp }, codeArray);
             var queue = await db.AlarmNotesList.Where(expression).OrderBy(d => d.Time).ToListAsync();
             var stateDic = await db.FoamList.Where(d => d.Date.CompareTo(Today) < 0 && codeArray.Contains(d.Code)).GroupBy(d => d.Code)
                 .Select(g => new { code = g.Key, queue = g }).ToDictionaryAsync(d => d.code, d => d.queue.OrderByDescending(p => p.Date).FirstOrDefault()?.State);
-            var samples = GetSamples(Today, true);
+            var samples = SetSamplesByDate(Today);
 
             foreach (var obj in queue)
             {
                 if (samples.ContainsKey(obj.Code))
                 {
-                    obj.Num = samples[obj.Code];
+                    obj.Num = (int?)samples[obj.Code][0] ?? -1;
+                    obj.Change = (decimal?)samples[obj.Code][1] ?? 0;
+                    obj.Limit = (int?)samples[obj.Code][2] ?? -1;
+                    obj.Plate = (int?)samples[obj.Code][3] ?? -1;
                 }
                 if (stateDic.ContainsKey(obj.Code))
                 {
@@ -120,13 +126,14 @@ namespace GushWeb.Controllers
                 }
             }
 
-            var pageData = from a in queue
-                           orderby a.Num, a.Time
-                           join f in db.FoamList.Where(d => d.Date.CompareTo(Today) == 0) on new { a.Code, a.Date } equals new
-                           { f.Code, f.Date } into temp
-                           from t in temp.DefaultIfEmpty()
-                           select a.ToAlarmnotes(t);
-            return PartialView("pviewIndex", pageData);
+            //var pageData = from a in queue
+            //               orderby a.Time
+            //               join f in db.FoamList.Where(d => d.Date.CompareTo(Today) == 0) on new { a.Code, a.Date } equals new
+            //               { f.Code, f.Date } into temp
+            //               from t in temp.DefaultIfEmpty()
+            //               select a.ToAlarmnotes(t);
+
+            return PartialView("pviewIndex", queue);
         }
 
         private ForceState? GetForceState(string code, string date)
@@ -278,10 +285,10 @@ namespace GushWeb.Controllers
         }
 
 
-        public Dictionary<string, int?> GetSamples(string date, bool isOns)
-        {
-            return isOns ? OnsSamples(date) : SetSamplesByDate(date);
-        }
+        //public Dictionary<string, int?[]> GetSamples(string date, bool isOns)
+        //{
+        //    return isOns ? OnsSamples(date) : SetSamplesByDate(date);
+        //}
 
         private Dictionary<string, int?> OnsSamples(string date)
         {
@@ -310,14 +317,14 @@ namespace GushWeb.Controllers
             return samples;
         }
 
-        private Dictionary<string, int?> SetSamplesByDate(string date)
+        private Dictionary<string, object[]> SetSamplesByDate(string date)
         {
-            Dictionary<string, int?> samples;
+            Dictionary<string, object[]> samples;
 
             samples = db.ChangesList.GroupBy(d => d.Date_9)
                 .Select(g => new { date = g.Key, queue = g }).Where(d => d.date.CompareTo(date) < 0)
                 .OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_9);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_9, ((pair.Change_x / pair.Change_9) - 1) * 100, pair.Num_Limit, pair.Num_Plate });
 
             if (samples != null)
             {
@@ -326,7 +333,7 @@ namespace GushWeb.Controllers
 
             samples = db.ChangesList.GroupBy(d => d.Date_8).Select(g => new { date = g.Key, queue = g })
                 .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_8);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_8, ((pair.Change_9 / pair.Change_8) - 1) * 100, pair.Num_Limit, pair.Num_Plate });
 
 
             if (samples != null)
@@ -336,7 +343,7 @@ namespace GushWeb.Controllers
 
             samples = db.ChangesList.GroupBy(d => d.Date_7).Select(g => new { date = g.Key, queue = g })
                 .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_7);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_7, ((pair.Change_8 / pair.Change_7) - 1) * 100, pair.Num_Limit, pair.Num_Plate });
 
             if (samples != null)
             {
@@ -345,7 +352,7 @@ namespace GushWeb.Controllers
 
             samples = db.ChangesList.GroupBy(d => d.Date_6).Select(g => new { date = g.Key, queue = g })
                 .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_6);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_6, ((pair.Change_7 / pair.Change_6) - 1) * 100, pair.Num_Limit, pair.Num_Plate });
 
             if (samples != null)
             {
@@ -354,7 +361,7 @@ namespace GushWeb.Controllers
 
             samples = db.ChangesList.GroupBy(d => d.Date_5).Select(g => new { date = g.Key, queue = g })
                 .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_5);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_5, ((pair.Change_6 / pair.Change_5) - 1) * 100, pair.Num_Limit, pair.Num_Plate });
 
             if (samples != null)
             {
@@ -363,7 +370,7 @@ namespace GushWeb.Controllers
 
             samples = db.ChangesList.GroupBy(d => d.Date_4).Select(g => new { date = g.Key, queue = g })
                 .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_4);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_4, ((pair.Change_5 / pair.Change_4) - 1) * 100, pair.Num_Limit, pair.Num_Plate });
 
             if (samples != null)
             {
@@ -372,7 +379,7 @@ namespace GushWeb.Controllers
 
             samples = db.ChangesList.GroupBy(d => d.Date_3).Select(g => new { date = g.Key, queue = g })
                 .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_3);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_3, ((pair.Change_4 / pair.Change_8) - 3) * 100, pair.Num_Limit, pair.Num_Plate });
 
             if (samples != null)
             {
@@ -381,7 +388,7 @@ namespace GushWeb.Controllers
 
             samples = db.ChangesList.GroupBy(d => d.Date_2).Select(g => new { date = g.Key, queue = g })
                 .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_2);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_2, ((pair.Change_3 / pair.Change_2) - 1) * 100, pair.Num_Limit, pair.Num_Plate });
 
             if (samples != null)
             {
@@ -390,14 +397,14 @@ namespace GushWeb.Controllers
 
             samples = db.ChangesList.GroupBy(d => d.Date_1).Select(g => new { date = g.Key, queue = g })
                 .Where(d => d.date.CompareTo(date) < 0).OrderByDescending(d => d.date).FirstOrDefault()?.queue
-                .ToDictionary(pair => pair.Code, pair => pair.Num_1);
+                .ToDictionary(pair => pair.Code, pair => new object[] { pair.Num_1, ((pair.Change_2 / pair.Change_1) - 1) * 100, pair.Num_Limit, pair.Num_Plate });
 
             if (samples != null)
             {
                 return samples;
             }
 
-            samples = new Dictionary<string, int?>();
+            samples = new Dictionary<string, object[]>();
             return samples;
         }
     }

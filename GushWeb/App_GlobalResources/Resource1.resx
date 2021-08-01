@@ -207,4 +207,7 @@
   <data name="netbuyFund" xml:space="preserve">
     <value>资金板</value>
   </data>
+  <data name="limit" xml:space="preserve">
+    <value>涨停板</value>
+  </data>
 </root>

@@ -44,7 +44,7 @@
                         @ControlHelper.UrlControl(@ConfigurationManager.AppSettings["iwc"], item.Code)
                     </td>
                     <td>
-                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank" })
+                        @Html.ActionLink(item.Name, "Netbuy", "Transaction", new { date = item.Code }, new { target = "_blank", onmouseover = "showImg('" + @item.Code + "')" })
                         @Html.CheckBox("ckb")
                     </td>
                     <td>
