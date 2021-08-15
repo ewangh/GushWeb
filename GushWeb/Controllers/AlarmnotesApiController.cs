@@ -21,8 +21,8 @@ namespace GushWeb.Controllers
         {
             Expression<Func<t_alarmnotes, bool>> expression = t => true;
             expression = expression.And(d => d.Date.CompareTo(date) == 0);
-            //expression = expression.And(d => !d.Name.ToLower().Contains(Pre.pre_st) || !d.Name.ToLower().Contains(Pre.pre_xst));
-            //expression = expression.And(d => d.Price < d.Closed * 1.097m);
+            expression = expression.And(d => !d.Name.ToLower().Contains(Pre.pre_st) || !d.Name.ToLower().Contains(Pre.pre_xst));
+            expression = expression.And(d => d.Price < d.Closed * 1.097m);
             //expression = expression.And(d => d.Time.CompareTo("09:32:03") < 0);
             if (!array.IsNullOrEmpty())
             {
@@ -32,7 +32,7 @@ namespace GushWeb.Controllers
             return expression;
         }
 
-        [HttpGet,HttpPost]
+        [HttpGet, HttpPost]
         [Route("getalarm")]
         public async Task<IHttpActionResult> GetAlarm([FromBody]JObject data)
         {

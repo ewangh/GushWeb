@@ -119,13 +119,13 @@
         })()
 
         function elapsed() {
-            //if (isToday()) {
-            asyncGetStockData(getCodes).then(function(dataArray) {
-                dataArray.forEach(function(item, index) {
-                    updateChange(item[6], item[3]);
+            if (isToday()) {
+                asyncGetStockData(getCodes).then(function(dataArray) {
+                    dataArray.forEach(function(item, index) {
+                        updateChange(item[6], item[3]);
+                    });
                 });
-            });
-            //}
+            }
         }
 
         function updateChange(code, change) {

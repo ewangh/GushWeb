@@ -210,4 +210,7 @@
   <data name="limit" xml:space="preserve">
     <value>涨停板</value>
   </data>
+  <data name="breakThrough" xml:space="preserve">
+    <value>突破板</value>
+  </data>
 </root>

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
-using GushLibrary;
 using GushLibrary.Models;
 using GushWeb.ActionFilters;
 using GushWeb.Helpers;
@@ -71,6 +70,41 @@ namespace GushWeb.Controllers
             }
 
             return View(t_opennotes);
+        }
+
+        [AllowAnonymous]
+        public ActionResult BreakThrough()
+        {
+            IEnumerable<t_delta> t_delta = new List<t_delta>();
+            var pd = t_delta.ToPagedList(1, pageSize * 10);
+            return View(pd);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult BreakThroughAsync(string begin, string end, int index = 1)
+        {
+            IEnumerable<t_delta> t_delta = new List<t_delta>();
+
+            if (!String.IsNullOrWhiteSpace(begin))
+            {
+                if (String.IsNullOrWhiteSpace(end))
+                {
+                    end = db.SettlementList.Max(d => d.Date);
+                }
+
+                ViewData["begin"] = begin;
+                ViewData["end"] = end;
+
+                var q1 = db.SettlementList.Where(d => d.Date.CompareTo(begin) == 0);
+                var q2 = db.SettlementList.Where(d => d.Date.CompareTo(end) == 0);
+
+                t_delta = from s in q1
+                          join f in q2 on s.Code equals f.Code into temp
+                          from t in temp.Where(d => d.Price >= s.Highest)
+                          select new t_delta() { Code = t.Code, Name = t.Name, Delta = t.Price / s.Highest, Change = (t.Price / t.Closed - 1) * 100, BeginDate = s.Date, EndDate = t.Date };
+            }
+            return PartialView("pview_through", t_delta.OrderBy(d => d.Delta).ThenBy(d => d.Change).ToPagedList(index, pageSize * 10));
         }
 
         public ActionResult Finace()
@@ -249,7 +283,7 @@ namespace GushWeb.Controllers
                         t_catapults = t_catapults.OrderByDescending(d => d.Price / d.Closed);
                         break;
                     default:
-                        t_catapults = t_catapults.OrderByDescending(d => d.NextOpen/d.Price).ThenBy(d => d.Price / d.Closed);
+                        t_catapults = t_catapults.OrderByDescending(d => d.NextOpen / d.Price).ThenBy(d => d.Price / d.Closed);
                         break;
                 }
             }

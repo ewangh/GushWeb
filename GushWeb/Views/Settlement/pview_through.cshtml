@@ -1,0 +1,101 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@using GushWeb.Utility
+@using System.Configuration
+@model IEnumerable<t_delta>
+@{
+    var url = ConfigurationManager.AppSettings["iwc"];
+
+    var ajaxOption = new AjaxOptions
+    {
+        UpdateTargetId = "app",
+        LoadingElementId = "loading",
+        HttpMethod = "POST",
+        //Confirm = "确认提交？",
+        OnBegin = "onBegin()",
+        OnSuccess = "onSuccess()",
+        OnFailure = "onFailure()",
+        OnComplete = "onComplete()",
+        InsertionMode = InsertionMode.Replace
+    };
+}
+<div id="app">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th>
+                    <a href="javascript:;" onclick="getChkNames()">@Html.DisplayNameFor(model => model.Name)</a>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Delta)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Num)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Change)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BeginDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EndDate)
+                </th>
+            </tr>
+        </thead>
+        <tbody id="tb">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @ControlHelper.UrlControl(url, item.Code)
+                    </td>
+                    <td>
+                        <a href="javascript:;" onmouseover="showImg('@item.Code')">@item.Name</a>
+                        @Html.CheckBox("ckb", new { value = @item.Name })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Delta)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Num)
+                    </td>
+                    <td>
+                        @ConvertHelper.AmplitudeConvert(item.Change)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BeginDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        @Html.PagedListPager(Model as IPagedList, page => Url.Action("BreakThroughAsync", new { index = page, begin = ViewData["begin"], end = ViewData["end"] }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.OnlyShowFivePagesAtATime, ajaxOption))
+    </div>
+</div>
+<script>
+    function getChkNames() {
+        var chk_value = [];
+        $('input[name="ckb"]:checked').each(function () {
+            chk_value.push($(this).val());
+        });
+        if (chk_value.length > 0) {
+            var content = prompt("", chk_value);
+            //window.clipboardData.setData("Text", content);//无效复制
+            if (content) {
+                clipboard.copy(content);
+            }
+        }
+    }
+
+    function showImg(val) {
+        popup.appendImg(val);
+    }
+</script>

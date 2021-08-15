@@ -210,4 +210,7 @@
   <data name="limit" xml:space="preserve">
     <value>Limit</value>
   </data>
+  <data name="breakThrough" xml:space="preserve">
+    <value>BreakThrough</value>
+  </data>
 </root>

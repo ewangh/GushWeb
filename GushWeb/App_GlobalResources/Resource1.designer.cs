@@ -106,6 +106,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///  查找类似 突破板 的本地化字符串。
+        /// </summary>
+        internal static string breakThrough {
+            get {
+                return ResourceManager.GetString("breakThrough", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///  查找类似 取消 的本地化字符串。
         /// </summary>
         internal static string cancel {
