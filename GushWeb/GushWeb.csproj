@@ -260,6 +260,7 @@
     <Compile Include="Models\t_foamState.cs" />
     <Compile Include="Utility\ConfigEntity.cs" />
     <Compile Include="Utility\CookieDocument.cs" />
+    <Compile Include="Utility\DateTimeUtil.cs" />
     <Compile Include="Utility\MyExtensions.cs" />
     <Compile Include="Utility\PredicateExtensions.cs" />
     <Compile Include="Utility\RedisServer.cs" />

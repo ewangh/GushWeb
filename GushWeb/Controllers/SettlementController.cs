@@ -82,7 +82,7 @@ namespace GushWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult BreakThroughAsync(string begin, string end, int index = 1)
+        public ActionResult BreakThroughAsync(string ptype, string begin, string end, int index = 1)
         {
             IEnumerable<t_delta> t_delta = new List<t_delta>();
 
@@ -95,14 +95,15 @@ namespace GushWeb.Controllers
 
                 ViewData["begin"] = begin;
                 ViewData["end"] = end;
+                ViewData["ptype"] = ptype;
 
-                var q1 = db.SettlementList.Where(d => d.Date.CompareTo(begin) == 0);
-                var q2 = db.SettlementList.Where(d => d.Date.CompareTo(end) == 0);
+                var q1 = db.SettlementList.Where(d => d.Date.CompareTo(begin) == 0 && d.Code.StartsWith(ptype));
+                var q2 = db.SettlementList.Where(d => d.Date.CompareTo(end) == 0 && d.Code.StartsWith(ptype));
 
                 t_delta = from s in q1
                           join f in q2 on s.Code equals f.Code into temp
-                          from t in temp.Where(d => d.Price >= s.Highest)
-                          select new t_delta() { Code = t.Code, Name = t.Name, Delta = t.Price / s.Highest, Change = (t.Price / t.Closed - 1) * 100, BeginDate = s.Date, EndDate = t.Date };
+                          from t in temp.Where(d => d.Price >= s.Highest && d.Volume > s.Volume)
+                          select new t_delta() { Code = t.Code, Name = t.Name, Delta = s.Highest.HasValue ? t.Price / s.Highest : null, Change = t.Closed.HasValue ? (t.Price / t.Closed - 1) * 100 : null, BeginDate = s.Date, EndDate = t.Date };
             }
             return PartialView("pview_through", t_delta.OrderBy(d => d.Delta).ThenBy(d => d.Change).ToPagedList(index, pageSize * 10));
         }
@@ -473,6 +474,7 @@ namespace GushWeb.Controllers
         public async Task<JsonResult> GetChanges(string ptype)
         {
             IEnumerable<t_change> changesList = new List<t_change>();
+            Dictionary<string, int> dic = new Dictionary<string, int>();
 
             if (String.IsNullOrEmpty(ptype))
             {
@@ -486,7 +488,18 @@ namespace GushWeb.Controllers
 
                 changesList = await (from v in db.ChangesList
                                      where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
-                                     select v).OrderByDescending(v => v.Change_x).Take(_skip + _size).Skip(_skip).ToArrayAsync();
+                                     select v)
+                    .OrderByDescending(v => v.Change_x - v.Change_9)
+                    .ThenByDescending(v => v.Change_9 - v.Change_8)
+                    .ThenByDescending(v => v.Change_8 - v.Change_7)
+                    .ThenByDescending(v => v.Change_7 - v.Change_6)
+                    .ThenByDescending(v => v.Change_6 - v.Change_5)
+                    .ThenByDescending(v => v.Change_5 - v.Change_4)
+                    .ThenByDescending(v => v.Change_4 - v.Change_3)
+                    .ThenByDescending(v => v.Change_3 - v.Change_2)
+                    .ThenByDescending(v => v.Change_2 - v.Change_1)
+                    .ThenByDescending(v => v.Change_1)
+                    .Take(_skip + _size).Skip(_skip).ToArrayAsync();
             }
             else
             {
@@ -495,13 +508,24 @@ namespace GushWeb.Controllers
 
                 changesList = await (from v in db.ChangesList
                                      where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
-                                     select v).Where(v => codeArray.Contains(v.Code)).OrderByDescending(v => v.Change_x).ToArrayAsync();
-            }
+                                     select v).Where(v => codeArray.Contains(v.Code)).OrderByDescending(v => v.Change_x - v.Change_9)
+                    .OrderByDescending(v => v.Change_x - v.Change_9)
+                    .ThenByDescending(v => v.Change_9 - v.Change_8)
+                    .ThenByDescending(v => v.Change_8 - v.Change_7)
+                    .ThenByDescending(v => v.Change_7 - v.Change_6)
+                    .ThenByDescending(v => v.Change_6 - v.Change_5)
+                    .ThenByDescending(v => v.Change_5 - v.Change_4)
+                    .ThenByDescending(v => v.Change_4 - v.Change_3)
+                    .ThenByDescending(v => v.Change_3 - v.Change_2)
+                    .ThenByDescending(v => v.Change_2 - v.Change_1)
+                    .ThenByDescending(v => v.Change_1).ToArrayAsync();
 
+                dic = TotalSamples(codeArray);
+            }
 
             var pd = changesList.Select(d => new
             {
-                name = d.Name,
+                name = String.Format("{0}({1})", d.Name, (dic.ContainsKey(d.Code) ? dic[d.Code].ToString() : "")),
                 type = "line",
                 axis = new string[]
                 {
@@ -515,6 +539,13 @@ namespace GushWeb.Controllers
             });
 
             return Json(pd);
+        }
+
+        private Dictionary<string, int> TotalSamples(string[] codes)
+        {
+            return db.FoamList.Where(d => codes.Contains(d.Code)).GroupBy(d => d.Date)
+                .Select(g => new { date = g.Key, queue = g }).OrderByDescending(d => d.date).FirstOrDefault()?.queue.OrderByDescending(d => d.Total)
+                .Select((item, index) => new { Key = item.Code, Num = index }).ToDictionary(d => d.Key, d => d.Num);
         }
 
         [HttpPost]
@@ -534,10 +565,9 @@ namespace GushWeb.Controllers
             {
                 var codeArray = GetPlateCodes(pkey);
                 {
-                    var sum = (from v in db.ChangesList
-                               where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
+                    var sum = (from v in db.ChangesList.GroupBy(d => d.Date_9).Select(g => (new { date = g.Key, queue = g })).OrderByDescending(d => d.date).FirstOrDefault()?.queue
                                where codeArray.Contains(v.Code)
-                               select v).Take(top).Sum(d => d.Change_x - d.Change_9);
+                               select v).Take(top).Sum(d => String.IsNullOrEmpty(d.Date_x) ? d.Change_9 - d.Change_8 : d.Change_x - d.Change_9);
 
                     var riseObj = new Rise(pkey, pkey, sum) { IsCheck = pkey == ptype };
                     rises.Add(riseObj);

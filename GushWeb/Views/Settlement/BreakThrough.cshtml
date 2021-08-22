@@ -1,4 +1,6 @@
-﻿@model IEnumerable<t_delta>
+﻿@using System.Configuration
+@using GushWeb.Utility
+@model IEnumerable<t_delta>
 
 @{
     ViewBag.Title = "BreakThrough";
@@ -15,13 +17,45 @@
         OnComplete = "onComplete()",
         InsertionMode = InsertionMode.Replace
     };
+
+    var ddk = ConfigurationManager.AppSettings["ddk"];
+    var plateTypes = new List<SelectListItem>()
+{
+new SelectListItem(){Text = "SH",Value = "sh"},
+new SelectListItem(){Text = "SZ",Value = "sz"},
+new SelectListItem(){Text = "CY",Value = "sz300"},
+new SelectListItem(){Text = "KC",Value = "sh688"},
+};
 }
 @using (Ajax.BeginForm("BreakThroughAsync", ajaxOption))
 {
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-4 column">
+                <h2>
+                    SH000001
+                </h2>
+                <img src="@String.Format(ddk+"?t={1}", "sh000001",DateTimeUtil.DateTimeToTimeStamp(DateTime.Now))" />
+            </div>
+            <div class="col-md-4 column">
+                <h2>
+                    SZ399001
+                </h2>
+                <img src="@String.Format(ddk+"?t={1}", "sz399001",DateTimeUtil.DateTimeToTimeStamp(DateTime.Now))" />
+            </div>
+            <div class="col-md-4 column">
+                <h2>
+                    SZ399006
+                </h2>
+                <img src="@String.Format(ddk+"?t={1}", "sz399006",DateTimeUtil.DateTimeToTimeStamp(DateTime.Now))" />
+            </div>
+        </div>
+    </div>
     <br />
     <div class="input-group">
         @Html.TextBox("end", null, new { @class = "form-control pull-right", @placeholder = "End date", @readonly = "readonly" })
         @Html.TextBox("begin", null, new { @class = "form-control pull-right", @placeholder = "Begin date", @readonly = "readonly" })
+        @Html.DropDownList("ptype", plateTypes, new { data_live_search = "false", @class = "queryDevice form-control pull-right" })
         <span class="input-group-btn">
             <button class="btn btn-default" type="submit">
                 <span class="glyphicon glyphicon-search"></span>
@@ -42,6 +76,7 @@
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/bootstrap-select.min.js"></script>
     <script src="~/Scripts/stockBase.js"></script>
     <script src="~/Scripts/stockData.js"></script>
     <script>

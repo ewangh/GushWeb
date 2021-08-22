@@ -28,9 +28,9 @@ namespace GushWeb.Utility
             return _int ?? 0;
         }
 
-        public static decimal ToDecimal(this decimal? _decimal)
+        public static decimal ToDecimal(this decimal? _decimal, short f)
         {
-            return _decimal ?? 0;
+            return _decimal.HasValue ? Math.Round(_decimal.Value, f) : 0m;
         }
 
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> list)
