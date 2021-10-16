@@ -24,7 +24,7 @@ namespace GushWeb.Helpers
         {
             StringBuilder s = new StringBuilder(102400);
             GetPrivateProfileString(section, key, string.Empty, s, 102400, inifilepath);
-            return s.ToString();
+            return s.ToString().Trim();
         }
 
 

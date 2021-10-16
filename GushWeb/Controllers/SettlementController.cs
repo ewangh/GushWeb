@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Security.Policy;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -552,13 +553,7 @@ namespace GushWeb.Controllers
         public JsonResult GetRises(string ptype)
         {
             List<Rise> rises = new List<Rise>();
-
             var plateArray = GetPlateTypes();
-            //long changesCount = (from v in db.ChangesList
-            //                     where v.Date_x == db.ChangesList.Max(dx => dx.Date_x)
-            //                     select v).Count();
-
-            //int _size = 10;
             int top = 6;
 
             foreach (var pkey in plateArray)
@@ -567,27 +562,87 @@ namespace GushWeb.Controllers
                 {
                     var sum = (from v in db.ChangesList.GroupBy(d => d.Date_9).Select(g => (new { date = g.Key, queue = g })).OrderByDescending(d => d.date).FirstOrDefault()?.queue
                                where codeArray.Contains(v.Code)
-                               select v).Take(top).Sum(d => String.IsNullOrEmpty(d.Date_x) ? d.Change_9 - d.Change_8 : d.Change_x - d.Change_9);
+                               select v).OrderByDescending(d => String.IsNullOrEmpty(d.Date_x) ? d.Change_9 - d.Change_8 : d.Change_x - d.Change_9).Take(top).Sum(d => String.IsNullOrEmpty(d.Date_x) ? d.Change_9 - d.Change_8 : d.Change_x - d.Change_9);
 
                     var riseObj = new Rise(pkey, pkey, sum) { IsCheck = pkey == ptype };
                     rises.Add(riseObj);
                 }
             }
 
-            //for (int i = 0; i < changesCount; i = i + _size)
-            //{
-            //    var riseObj = new Rise()
-            //    {
-            //        Ptype = i.ToString(),
-            //        Change = null,
-            //        IsCheck = i.ToString() == ptype
-            //    };
-            //    rises.Add(riseObj);
-            //}
-
             return Json(rises.OrderByDescending(d => d.Change));
         }
 
+        [Route("hello")]
+        [HttpGet]
+        public JsonResult JsRises()
+        {
+            List<Rise> rises = new List<Rise>();
 
+            var plateArray = GetPlateTypes();
+            int top = 6;
+
+            foreach (var pkey in plateArray)
+            {
+                var codeArray = GetPlateCodes(pkey);
+                var list = (from v in db.ChangesList.GroupBy(d => d.Date_9)
+                        .Select(g => (new { date = g.Key, queue = g })).OrderByDescending(d => d.date)
+                        .FirstOrDefault()?.queue
+                            where codeArray.Contains(v.Code)
+                            select v).OrderByDescending(d => String.IsNullOrEmpty(d.Date_x) ? d.Change_9 - d.Change_8 : d.Change_x - d.Change_9).Take(top);
+                var sum = list.Sum(d => String.IsNullOrEmpty(d.Date_x) ? d.Change_9 - d.Change_8 : d.Change_x - d.Change_9);
+                var dic = TotalSamples(codeArray.ToArray());
+                var children = new List<Stock>();
+                foreach (var obj in list)
+                {
+                    children.Add(new Stock()
+                    {
+                        Code = obj.Code,
+                        Name = obj.Name,
+                        NumTotal = dic.ContainsKey(obj.Code) ? dic[obj.Code] : new Nullable<int>(),
+                        Change = String.IsNullOrEmpty(obj.Date_x) ? Math.Round((obj.Change_9 / obj.Change_8 - 1).Value * 100, 2) : Math.Round((obj.Change_x / obj.Change_9 - 1).Value * 100, 2),
+                        Date = obj.Date_x ?? obj.Date_9
+                    });
+                }
+
+                if (children.Any(d =>
+                    d.NumTotal == 0 || d.NumTotal == 1 || d.NumTotal == 2) && children.Max(d => d.Change > 5) && children.OrderBy(d => d.NumTotal).FirstOrDefault()?.Change > 1)
+                {
+                    var riseObj = new Rise(pkey, pkey, sum) { Length = codeArray.Count(), Stocks = children };
+                    rises.Add(riseObj);
+                }
+            }
+
+            return Json(rises.OrderByDescending(d => d.Change), JsonRequestBehavior.AllowGet);
+        }
+
+        [Route("rises")]
+        [HttpGet]
+        public String RiseCodes(string id)
+        {
+            var plateArray = GetPlateTypes();
+            StringBuilder codes = new StringBuilder();
+
+            foreach (var pkey in plateArray)
+            {
+                if (String.IsNullOrEmpty(id))
+                {
+                    codes.AppendLine(pkey + "=");
+                    var codeArray = GetPlateCodes(pkey);
+                    var dic = TotalSamples(codeArray.ToArray());
+                    codes.AppendLine(String.Join(",", dic.OrderBy(d => d.Value).ToDictionary(d => d.Key).Keys));
+                }
+                else if (pkey == id)
+                {
+                    codes.AppendLine(pkey + "=");
+                    var codeArray = GetPlateCodes(pkey);
+                    var dic = TotalSamples(codeArray.ToArray());
+                    codes.AppendLine(String.Join(",", dic.OrderBy(d => d.Value).ToDictionary(d => d.Key).Keys));
+
+                    break;
+                }
+            }
+
+            return codes.ToString();
+        }
     }
 }
